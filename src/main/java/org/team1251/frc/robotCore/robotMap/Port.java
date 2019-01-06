@@ -2,24 +2,24 @@ package org.team1251.frc.robotCore.robotMap;
 
 import java.util.Objects;
 
-public class Assignment {
+public class Port {
 
     private final PortType type;
-    private final int port;
+    private final int portNumber;
 
-    public Assignment(PortType type, int port) {
+    public Port(PortType type, int portNumber) {
         // Make sure we haven't violated the boundaries of the device type.
-        if (port < 0 || port > type.maxPort) {
+        if (portNumber < 0 || portNumber > type.maxPort) {
             throw new IllegalArgumentException(
                     "Invalid ID for " + type.name() + " device - must be between 0 and " + type.maxPort);
         }
 
         this.type = type;
-        this.port = port;
+        this.portNumber = portNumber;
     }
 
-    public int getPort() {
-        return port;
+    public int getPortNumber() {
+        return portNumber;
     }
 
     public PortType getPortType() {
@@ -41,18 +41,18 @@ public class Assignment {
             return false;
 
         // Cast it and compare individual fields
-        Assignment assignment = (Assignment) o;
-        return Objects.equals(port, assignment.port)
-                && Objects.equals(type, assignment.type);
+        Port port = (Port) o;
+        return Objects.equals(this.portNumber, port.portNumber)
+                && Objects.equals(type, port.type);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, port);
+        return Objects.hash(type, portNumber);
     }
 
     @Override
     public String toString() {
-        return type.toString() + "(" + port + ")";
+        return type.toString() + "(" + portNumber + ")";
     }
 }
