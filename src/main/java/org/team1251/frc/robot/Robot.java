@@ -1,7 +1,8 @@
 package org.team1251.frc.robot;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
 
 /**
@@ -11,17 +12,33 @@ import org.team1251.frc.robot.robotMap.DeviceManager;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
+public class Robot extends TimedRobot {
 
+    private static final double TICK_PERIOD = .01;
 
-    private DeviceManager deviceManager;
+    private final DeviceManager deviceManager = new DeviceManager();
+
+    private HumanInput humanInput;
+
+    public Robot() {
+        super();
+        setPeriod(TICK_PERIOD);
+    }
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-        deviceManager = new DeviceManager();
+
+        initDashboardInputs();
+        humanInput = new HumanInput();
+    }
+
+    private void initDashboardInputs() {
+
+        // TODO: Initialize input controls on the dashboard
+        // TODO-2019: Learn new ShuffleBoard API
     }
 
 
@@ -31,10 +48,12 @@ public class Robot extends IterativeRobot {
      * the robot is disabled.
      */
     public void disabledInit() {
-
+        // TODO: Clean up -- called once per disable.
     }
 
+    @Override
     public void disabledPeriodic() {
+        // TODO: Should we really be running scheduler? (I think so, because it will forcibly shutdown commands.. maybe?)
         Scheduler.getInstance().run();
     }
 
@@ -47,38 +66,43 @@ public class Robot extends IterativeRobot {
      * You can add additional auto modes by adding additional commands to the chooser code above (like the commented example)
      * or additional comparisons to the switch structure below with additional strings & commands.
      */
+    @Override
     public void autonomousInit() {
+        // TODO: Get ready to do autonomous stuff -- will auto mode even run?!
     }
 
     /**
      * This function is called periodically during autonomous
      */
+    @Override
     public void autonomousPeriodic() {
         Scheduler.getInstance().run();
     }
 
+    @Override
     public void teleopInit() {
-        // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-
-        //if (autonomousCommand != null) autonomousCommand.cancel();
-
+        // TODO: Cancel autonomous command -- will we even run autonomousPeriodic?
     }
 
     /**
      * This function is called periodically during operator control
      */
+    @Override
     public void teleopPeriodic() {
         Scheduler.getInstance().run();
+    }
+
+    @Override
+    public void testInit() {
+         // TODO: Get ready to test things.
     }
 
     /**
      * This function is called periodically during test mode
      */
+    @Override
     public void testPeriodic() {
-
+        // TODO: Test things.
     }
 
 }
