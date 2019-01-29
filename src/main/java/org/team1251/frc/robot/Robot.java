@@ -21,8 +21,7 @@ public class Robot extends TimedRobot {
     private HumanInput humanInput;
 
     public Robot() {
-        super();
-        setPeriod(TICK_PERIOD);
+        super(TICK_PERIOD);
     }
 
     /**

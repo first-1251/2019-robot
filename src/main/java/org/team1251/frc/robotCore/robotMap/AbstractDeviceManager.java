@@ -3,6 +3,7 @@ package org.team1251.frc.robotCore.robotMap;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.lang.IllegalArgumentException;
 
 /**
  * The DeviceManager interacts with the Enum of devices in useful ways.
