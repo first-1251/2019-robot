@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
-import org.team1251.frc.robot.subsystems.DriveBase;
+import org.team1251.frc.robot.subsystems.*;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -40,8 +40,39 @@ public class Robot extends TimedRobot {
     private DriveBase driveBase;
 
     /**
+     * The subsystem that controls the Claw and Arm for Cargo.
+     */
+
+    private CargoClarm cargoClarm;
+
+    /**
+     * The subsystem that controls the Claw and Arm for Panel.
+     */
+
+    private PanelClarm panelClarm;
+
+    /**
+     * The subsystem that controls the Elevator for Cargo.
+     */
+
+    private CargoElevator cargoElevator;
+
+    /**
+     * The subsystem that controls the Elevator for the Panel.
+     */
+
+    private PanelElevator panelElevator;
+
+
+    /**
+     * The subsystem that controls the Elevator for the Climb.
+     */
+    private ClimbElevator climbElevator;
+
+    /**
      * A command used to individually test motors.
      */
+
     private MotorTest motorTestCmd;
 
     /**
@@ -98,6 +129,12 @@ public class Robot extends TimedRobot {
      */
     private void createSubsystems() {
         driveBase = new DriveBase();
+        cargoClarm = new CargoClarm();
+        cargoElevator = new CargoElevator();
+        panelElevator = new PanelElevator();
+        panelClarm = new PanelClarm();
+        climbElevator = new ClimbElevator();
+
     }
 
     /**
