@@ -1,9 +1,10 @@
 package org.team1251.frc.robot.robotMap;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.*;
 import org.team1251.frc.robotCore.robotMap.AbstractDeviceManager;
 import org.team1251.frc.robotCore.robotMap.PortType;
 
@@ -46,6 +47,36 @@ public class DeviceManager extends AbstractDeviceManager<DeviceConnector> {
         occupyPort(connector);
         return new WPI_VictorSPX(getPortNumber(connector, PortType.CAN));
     }
+
+    public DoubleSolenoid createDoubleSolenoid(DeviceConnector forwardConnector, DeviceConnector backwardConnector){
+        occupyPort(forwardConnector);
+        occupyPort(backwardConnector);
+        return new DoubleSolenoid(getPortNumber(forwardConnector, PortType.PCM), getPortNumber(backwardConnector, PortType.PCM));
+    }
+
+    public Solenoid createSolenoid(DeviceConnector connector) {
+        occupyPort(connector);
+        return new Solenoid(getPortNumber(connector, PortType.PCM));
+    }
+
+    public Encoder createEncoder(DeviceConnector connectorA, DeviceConnector connectorB){
+        occupyPort(connectorA);
+        occupyPort(connectorB);
+        return new Encoder(getPortNumber(connectorA, PortType.DIO), getPortNumber (connectorB, PortType.DIO));
+    }
+
+    public AnalogInput createSonar(DeviceConnector connector){
+        occupyPort(connector);
+        return new AnalogInput(getPortNumber(connector, PortType.ANALOG));
+    }
+
+    public DigitalInput createDigitalInput(DeviceConnector connector) {
+        occupyPort(connector);
+        return new DigitalInput(getPortNumber(connector, PortType.DIO));
+
+    }
+
+
 
     public PowerDistributionPanel getPDP() {
         // Special handling for the PDP. Only ever create a single instance and always return that instance.
