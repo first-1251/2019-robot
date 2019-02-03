@@ -70,7 +70,7 @@ public class DeviceManager extends AbstractDeviceManager<DeviceConnector> {
         return new AnalogInput(getPortNumber(connector, PortType.ANALOG));
     }
 
-    public DigitalInput createDigitalInput(DeviceConnector connector) {
+    public DigitalInput createDigitalInput(DeviceConnector connector) { //Limit Switches
         occupyPort(connector);
         return new DigitalInput(getPortNumber(connector, PortType.DIO));
 

@@ -2,6 +2,8 @@ package org.team1251.frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import org.team1251.frc.robot.commands.ExtendPanelArm;
+import org.team1251.frc.robot.commands.OpenPanelClaw;
 import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
@@ -76,6 +78,18 @@ public class Robot extends TimedRobot {
     private MotorTest motorTestCmd;
 
     /**
+     * A command used to extend the panel arm.
+     */
+
+    private ExtendPanelArm extendPanelArm;
+
+    /**
+     * A command used to extend the panel arm.
+     */
+
+    private OpenPanelClaw openPanelClaw;
+
+    /**
      * Creates the robot!
      */
     public Robot() {
@@ -144,6 +158,9 @@ public class Robot extends TimedRobot {
      */
     private void createCommands() {
         // TODO: Make commands.
+        extendPanelArm = new ExtendPanelArm(panelClarm);
+        openPanelClaw = new OpenPanelClaw(panelClarm);
+
     }
 
     /**
