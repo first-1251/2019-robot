@@ -1,6 +1,5 @@
 package org.team1251.frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.robotMap.DeviceConnector;
@@ -32,7 +31,7 @@ public class CargoClarm extends Subsystem {
         cargoArmMotor.set(ARM_SPEED);
     }
 
-    public void OutakeCargo () {
+    public void OuttakeCargo() {
         cargoClawMotor.set(CLAW_SPEED);
     }
 

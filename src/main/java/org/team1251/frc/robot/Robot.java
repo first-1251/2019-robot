@@ -7,7 +7,6 @@ import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
 import org.team1251.frc.robot.subsystems.*;
-import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -108,16 +107,28 @@ public class Robot extends TimedRobot {
     private MoveCargoArmDown moveCargoArmDown;
 
     /**
-     * A command used to outake Cargo.
+     * A command used to outtake Cargo.
      */
 
-    private OutakeCargo outakeCargo;
+    private OuttakeCargo outtakeCargo;
 
     /**
      * A command used to move Intake Cargo.
      */
 
     private IntakeCargo intakeCargo;
+
+    /**
+     * A command used to drive the Climb Elevator Gearbox forward.
+     */
+
+    private DriveClimbElevatorGearboxForward driveClimbElevatorGearboxForward;
+
+    /**
+     * A command used to drive the Climb Elevator Gearbox reverse.
+     */
+
+    private DriveClimbElevatorGearboxReverse driveClimbElevatorGearboxReverse;
 
     /**
      * Creates the robot!
@@ -193,8 +204,12 @@ public class Robot extends TimedRobot {
         openPanelClaw = new OpenPanelClaw(panelClarm);
         moveCargoArmUp = new MoveCargoArmUp(cargoClarm);
         moveCargoArmDown = new MoveCargoArmDown(cargoClarm);
-        outakeCargo = new OutakeCargo(cargoClarm);
+        outtakeCargo = new OuttakeCargo(cargoClarm);
         intakeCargo = new IntakeCargo(cargoClarm);
+        driveClimbElevatorGearboxForward = new DriveClimbElevatorGearboxForward(climbElevator);
+        driveClimbElevatorGearboxReverse = new DriveClimbElevatorGearboxReverse(climbElevator);
+
+
 
     }
 

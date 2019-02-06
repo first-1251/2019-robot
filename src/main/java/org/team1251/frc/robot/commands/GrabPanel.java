@@ -6,8 +6,6 @@ import org.team1251.frc.robotCore.commands.TimedNothing;
 
 public class GrabPanel extends CommandGroup {
 
-    private TimedNothing timedNothing;
-
     public GrabPanel(PanelClarm panelClarm){
         addSequential(new ExtendPanelArm(panelClarm));
         addSequential(new TimedNothing(0.5));
