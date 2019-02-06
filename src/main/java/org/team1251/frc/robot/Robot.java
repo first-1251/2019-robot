@@ -2,13 +2,12 @@ package org.team1251.frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.team1251.frc.robot.commands.ExtendPanelArm;
-import org.team1251.frc.robot.commands.OpenPanelClaw;
-import org.team1251.frc.robot.commands.RetractPanelArm;
+import org.team1251.frc.robot.commands.*;
 import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
 import org.team1251.frc.robot.subsystems.*;
+import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -97,6 +96,30 @@ public class Robot extends TimedRobot {
     private OpenPanelClaw openPanelClaw;
 
     /**
+     * A command used to move Cargo Arm Up.
+     */
+
+    private MoveCargoArmUp moveCargoArmUp;
+
+    /**
+     * A command used to move Cargo Arm Down.
+     */
+
+    private MoveCargoArmDown moveCargoArmDown;
+
+    /**
+     * A command used to outake Cargo.
+     */
+
+    private OutakeCargo outakeCargo;
+
+    /**
+     * A command used to move Intake Cargo.
+     */
+
+    private IntakeCargo intakeCargo;
+
+    /**
      * Creates the robot!
      */
     public Robot() {
@@ -168,6 +191,10 @@ public class Robot extends TimedRobot {
         extendPanelArm = new ExtendPanelArm(panelClarm);
         retractPanelArm = new RetractPanelArm(panelClarm);
         openPanelClaw = new OpenPanelClaw(panelClarm);
+        moveCargoArmUp = new MoveCargoArmUp(cargoClarm);
+        moveCargoArmDown = new MoveCargoArmDown(cargoClarm);
+        outakeCargo = new OutakeCargo(cargoClarm);
+        intakeCargo = new IntakeCargo(cargoClarm);
 
     }
 
@@ -224,6 +251,11 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         // TODO: Cancel autonomous command(s)
         // TODO: Prepare for teleop.
+
+        //Command Init
+        //TODO uncomment this comment when needed for use.
+        //createCommands();
+
     }
 
     /**
