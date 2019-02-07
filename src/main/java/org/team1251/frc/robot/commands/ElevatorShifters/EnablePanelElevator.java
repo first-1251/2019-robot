@@ -1,20 +1,22 @@
-package org.team1251.frc.robot.commands;
+package org.team1251.frc.robot.commands.ElevatorShifters;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.team1251.frc.robot.subsystems.Elevators;
 
-public class DriveClimbElevatorGearboxForward extends Command {
+public class EnablePanelElevator extends Command {
 
     private final Elevators elevators;
 
-    public DriveClimbElevatorGearboxForward(Elevators elevators){
+    public EnablePanelElevator(Elevators elevators){
+
         this.elevators = elevators;
         requires(elevators);
+
     }
 
     @Override
     protected void execute() {
-        this.elevators.MoveClimbElevatorGearboxForward();
+        this.elevators.EnablePanelElevator();
     }
 
     @Override
