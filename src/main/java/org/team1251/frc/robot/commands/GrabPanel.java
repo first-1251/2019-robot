@@ -9,7 +9,7 @@ public class GrabPanel extends CommandGroup {
     public GrabPanel(PanelClarm panelClarm){
         addSequential(new ExtendPanelArm(panelClarm));
         addSequential(new TimedNothing(0.5));
-        addSequential(new GrabPanel(panelClarm));
+        addSequential(new OpenPanelClaw(panelClarm));
         addParallel(new TimedNothing(.10));
         addSequential(new RetractPanelArm(panelClarm));
     }
