@@ -2,8 +2,9 @@ package org.team1251.frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.team1251.frc.robot.commands.ExtendPanelArm;
-import org.team1251.frc.robot.commands.OpenPanelClaw;
+import org.team1251.frc.robot.commands.*;
+import org.team1251.frc.robot.commands.ElevatorShifters.DisablePanelElevator;
+import org.team1251.frc.robot.commands.ElevatorShifters.EnablePanelElevator;
 import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
@@ -22,6 +23,11 @@ public class Robot extends TimedRobot {
      * How fast to iterate.
      */
     private static final double TICK_PERIOD = .01;
+
+    //Elevator Enable Flags
+    public static boolean isClimbElevatorEnabled = false;
+    public static boolean isCargoElevatorEnabled = false;
+    public static boolean isPanelElevatorEnabled = false;
 
     /**
      * The device manager which is used to create various devices.
@@ -54,22 +60,9 @@ public class Robot extends TimedRobot {
     private PanelClarm panelClarm;
 
     /**
-     * The subsystem that controls the Elevator for Cargo.
+     * The subsystem that controls all of the Elevators.
      */
-
-    private CargoElevator cargoElevator;
-
-    /**
-     * The subsystem that controls the Elevator for the Panel.
-     */
-
-    private PanelElevator panelElevator;
-
-
-    /**
-     * The subsystem that controls the Elevator for the Climb.
-     */
-    private ClimbElevator climbElevator;
+    private Elevators elevators;
 
     /**
      * A command used to individually test motors.
@@ -84,10 +77,62 @@ public class Robot extends TimedRobot {
     private ExtendPanelArm extendPanelArm;
 
     /**
+     * A command used to retract the panel arm.
+     */
+
+    private RetractPanelArm retractPanelArm;
+
+    /**
      * A command used to extend the panel arm.
      */
 
     private OpenPanelClaw openPanelClaw;
+
+    /**
+     * A command used to move Cargo Arm Up.
+     */
+
+    private MoveCargoArmUp moveCargoArmUp;
+
+    /**
+     * A command used to move Cargo Arm Down.
+     */
+
+    private MoveCargoArmDown moveCargoArmDown;
+
+    /**
+     * A command used to outtake Cargo.
+     */
+
+    private OuttakeCargo outtakeCargo;
+
+    /**
+     * A command used to move Intake Cargo.
+     */
+
+    private IntakeCargo intakeCargo;
+
+    /**
+     * A command used to drive the Climb Elevator Gearbox forward.
+     */
+
+    private DriveClimbElevatorGearboxForward driveClimbElevatorGearboxForward;
+
+    /**
+     * A command used to drive the Climb Elevator Gearbox reverse.
+     */
+
+    private DriveClimbElevatorGearboxReverse driveClimbElevatorGearboxReverse;
+
+    /**
+     * These Commands below will initialize all of the elevator shifters.
+     * These are also known as the ,"I'm far too lazy to actually write a
+     * description for each so I am grouping them. - KAZQ46
+    **/
+
+    private EnablePanelElevator enablePanelElevator;
+    private DisablePanelElevator disablePanelElevator;
+
 
     /**
      * Creates the robot!
@@ -144,10 +189,8 @@ public class Robot extends TimedRobot {
     private void createSubsystems() {
         driveBase = new DriveBase();
         cargoClarm = new CargoClarm();
-        cargoElevator = new CargoElevator();
-        panelElevator = new PanelElevator();
         panelClarm = new PanelClarm();
-        climbElevator = new ClimbElevator();
+        elevators = new Elevators();
 
     }
 
@@ -159,7 +202,18 @@ public class Robot extends TimedRobot {
     private void createCommands() {
         // TODO: Make commands.
         extendPanelArm = new ExtendPanelArm(panelClarm);
+        retractPanelArm = new RetractPanelArm(panelClarm);
         openPanelClaw = new OpenPanelClaw(panelClarm);
+        moveCargoArmUp = new MoveCargoArmUp(cargoClarm);
+        moveCargoArmDown = new MoveCargoArmDown(cargoClarm);
+        outtakeCargo = new OuttakeCargo(cargoClarm);
+        intakeCargo = new IntakeCargo(cargoClarm);
+        driveClimbElevatorGearboxForward = new DriveClimbElevatorGearboxForward(elevators);
+        driveClimbElevatorGearboxReverse = new DriveClimbElevatorGearboxReverse(elevators);
+
+        //Elevator Shifter Commands
+        enablePanelElevator = new EnablePanelElevator(elevators);
+        disablePanelElevator = new DisablePanelElevator(elevators);
 
     }
 
@@ -216,6 +270,11 @@ public class Robot extends TimedRobot {
     public void teleopInit() {
         // TODO: Cancel autonomous command(s)
         // TODO: Prepare for teleop.
+
+        //Command Init
+        //TODO uncomment this comment when needed for use.
+        //createCommands();
+
     }
 
     /**

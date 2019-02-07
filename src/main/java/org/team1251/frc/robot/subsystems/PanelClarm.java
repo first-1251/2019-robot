@@ -27,6 +27,10 @@ public class PanelClarm extends Subsystem {
         panelArmSolenoid.set(DoubleSolenoid.Value.kForward);
     }
 
+    public void RetractPanelArm(){
+        panelArmSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
     public void OpenPanelClaw(){
         panelClawSolenoid.set(true);
     }
