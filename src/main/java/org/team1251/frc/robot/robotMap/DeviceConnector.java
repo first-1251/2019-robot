@@ -19,13 +19,13 @@ public enum DeviceConnector implements DeviceConnectorInterface {
      */
     PDP_CAN(PortType.CAN, 0),
 
-    MC_DRIVE_LEFT_BOTTOM(PortType.CAN, 1), // Talon
-    MC_DRIVE_LEFT_TOP_FRONT(PortType.CAN, 2), // Victor
-    MC_DRIVE_LEFT_TOP_REAR(PortType.CAN, 3), // Victor
+    MC_DRIVE_LEFT_TOP(PortType.CAN, 1), // Talon
+    MC_DRIVE_LEFT_BOTTOM_FRONT(PortType.CAN, 2), // Victor
+    MC_DRIVE_LEFT_BOTTOM_REAR(PortType.CAN, 3), // Victor
 
-    MC_DRIVE_RIGHT_BOTTOM(PortType.CAN, 4), // Talon
-    MC_DRIVE_RIGHT_TOP_FRONT(PortType.CAN, 5), // Victor
-    MC_DRIVE_RIGHT_TOP_REAR(PortType.CAN, 6), // Victor
+    MC_DRIVE_RIGHT_TOP(PortType.CAN, 4), // Talon
+    MC_DRIVE_RIGHT_BOTTOM_FRONT(PortType.CAN, 5), // Victor
+    MC_DRIVE_RIGHT_BOTTOM_REAR(PortType.CAN, 6), // Victor
 
     MC_ELEVATOR_GEARBOX_FRONT(PortType.CAN, 7), //Talon
     MC_ELEVATOR_GEARBOX_REAR(PortType.CAN, 8), //Talon

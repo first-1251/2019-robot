@@ -34,90 +34,95 @@ public class DriveBase extends Subsystem {
     private final SpeedController rightTrain;
 
     /**
-     * The motor controller that controls the bottom motor on the left side of the robot.
+     * The motor controller that controls the top motor on the left side of the robot.
      *
      * ```
+     *     ---         F
+     *    | x |        R
+     *     ---         O
+     *  ---   ---      N
+     * |   | |   |     T
      *  ---   ---
-     * |   | |   |
-     *  ---   ---
-     *     ---
-     *    | x |
-     *     ---
      * ```
      */
-    private final WPI_TalonSRX leftBottomMotorController;
+    private final WPI_TalonSRX leftTopMotorController;
 
 
     /**
-     * The motor controller that controls the top, left motor on the left side of the robot.
+     * The motor controller that controls the bottom, front motor on the left side of the robot.
      *
      * ```
+     *     ---         F
+     *    |   |        R
+     *     ---         O
+     *  ---   ---      N
+     * |   | | x |     T
      *  ---   ---
-     * | x | |   |
-     *  ---   ---
-     *     ---
-     *    |   |
-     *     ---
      * ```
      */
-    private final WPI_VictorSPX leftTopFrontMotorController;
+    private final WPI_VictorSPX leftBottomFrontMotorController;
 
     /**
-     * The motor controller that controls the top, rear motor on the left side of the robot.
+     * The motor controller that controls the bottom, rear motor on the left side of the robot.
      *
      * ```
+     * ```
+     *     ---         F
+     *    |   |        R
+     *     ---         O
+     *  ---   ---      N
+     * | x | |   |     T
      *  ---   ---
-     * |   | | x |
-     *  ---   ---
-     *     ---
-     *    |   |
-     *     ---
+     * ```
      * ```
      */
-    private final WPI_VictorSPX leftTopRearMotorController;
+    private final WPI_VictorSPX leftBottomRearMotorController;
 
     /**
-     * The motor controller that controls the bottom motor on the right side of the robot.
+     * The motor controller that controls the top motor on the right side of the robot.
      *
      * ```
+     *     ---         F
+     *    | x |        R
+     *     ---         O
+     *  ---   ---      N
+     * |   | |   |     T
      *  ---   ---
-     * |   | |   |
-     *  ---   ---
-     *     ---
-     *    | x |
-     *     ---
      * ```
      */
-    private final WPI_TalonSRX rightBottomMotorController;
+    private final WPI_TalonSRX rightTopMotorController;
 
 
     /**
-     * The motor controller that controls the top, right motor on the right side of the robot.
+     * The motor controller that controls the bottom, front motor on the right side of the robot.
      *
      * ```
+     *     ---         F
+     *    |   |        R
+     *     ---         O
+     *  ---   ---      N
+     * |   | | x |     T
      *  ---   ---
-     * | x | |   |
-     *  ---   ---
-     *     ---
-     *    |   |
-     *     ---
      * ```
      */
-    private final WPI_VictorSPX rightTopFrontMotorController;
+    private final WPI_VictorSPX rightBottomFrontMotorController;
 
     /**
-     * The motor controller that controls the top, rear motor on the right side of the robot.
+     * The motor controller that controls the bottom, rear motor on the right side of the robot.
      *
      * ```
+     * ```
+     *     ---         F
+     *    |   |        R
+     *     ---         O
+     *  ---   ---      N
+     * | x | |   |     T
      *  ---   ---
-     * |   | | x |
-     *  ---   ---
-     *     ---
-     *    |   |
-     *     ---
+     * ```
      * ```
      */
-    private final WPI_VictorSPX rightTopRearMotorController;
+    private final WPI_VictorSPX rightBottomRearMotorController;
+
 
     /**
      * The motor which is currently in testing or `null` if no motor is in testing.
@@ -142,8 +147,8 @@ public class DriveBase extends Subsystem {
      * Each motor is labeled by its physical location on the robot.
      */
     public enum Motor {
-        LEFT_BOTTOM, LEFT_TOP_FRONT, LEFT_TOP_REAR,
-        RIGHT_BOTTOM, RIGHT_TOP_FRONT, RIGHT_TOP_REAR
+        LEFT_TOP, LEFT_BOTTOM_FRONT, LEFT_BOTTOM_REAR,
+        RIGHT_TOP, RIGHT_BOTTOM_FRONT, RIGHT_BOTTOM_REAR
     }
 
     /**
@@ -151,23 +156,23 @@ public class DriveBase extends Subsystem {
      */
     public DriveBase() {
 
-        leftTrain = leftBottomMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_LEFT_BOTTOM);
-        configureTalon(leftBottomMotorController, false);
+        leftTrain = leftTopMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_LEFT_TOP);
+        configureTalon(leftTopMotorController, false);
 
-        leftTopFrontMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_TOP_FRONT);
-        configurePhoenixController(leftTopFrontMotorController, false);
+        leftBottomFrontMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_BOTTOM_FRONT);
+        configurePhoenixController(leftBottomFrontMotorController, false);
 
-        leftTopRearMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_TOP_REAR);
-        configurePhoenixController(leftTopRearMotorController, false);
+        leftBottomRearMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_BOTTOM_REAR);
+        configurePhoenixController(leftBottomRearMotorController, false);
 
-        rightTrain = rightBottomMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_RIGHT_BOTTOM);
-        configureTalon(rightBottomMotorController, false);
+        rightTrain = rightTopMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_RIGHT_TOP);
+        configureTalon(rightTopMotorController, false);
 
-        rightTopFrontMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_RIGHT_TOP_FRONT);
-        configurePhoenixController(rightTopFrontMotorController, false);
+        rightBottomFrontMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_RIGHT_BOTTOM_FRONT);
+        configurePhoenixController(rightBottomFrontMotorController, false);
 
-        rightTopRearMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_RIGHT_TOP_REAR);
-        configurePhoenixController(rightTopRearMotorController, false);
+        rightBottomRearMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_RIGHT_BOTTOM_REAR);
+        configurePhoenixController(rightBottomRearMotorController, false);
 
         // Turn on following by default.
         setControllerFollowMode(true);
@@ -218,19 +223,19 @@ public class DriveBase extends Subsystem {
         // See if we are turning following on or off.
         if (isEnabled) {
             // Set up following.
-            leftTopRearMotorController.follow(leftBottomMotorController);
-            leftTopFrontMotorController.follow(leftBottomMotorController);
+            leftBottomRearMotorController.follow(leftTopMotorController);
+            leftBottomFrontMotorController.follow(leftTopMotorController);
 
-            rightTopRearMotorController.follow(rightBottomMotorController);
-            rightTopFrontMotorController.follow(rightBottomMotorController);
+            rightBottomRearMotorController.follow(rightTopMotorController);
+            rightBottomFrontMotorController.follow(rightTopMotorController);
 
         } else {
             // Turn off following by explicitly setting speed on following controllers
-            leftTopRearMotorController.set(ControlMode.PercentOutput, 0);
-            leftTopFrontMotorController.set(ControlMode.PercentOutput, 0);
+            leftBottomRearMotorController.set(ControlMode.PercentOutput, 0);
+            leftBottomFrontMotorController.set(ControlMode.PercentOutput, 0);
 
-            rightTopRearMotorController.set(ControlMode.PercentOutput, 0);
-            rightTopFrontMotorController.set(ControlMode.PercentOutput, 0);
+            rightBottomRearMotorController.set(ControlMode.PercentOutput, 0);
+            rightBottomFrontMotorController.set(ControlMode.PercentOutput, 0);
         }
     }
 
@@ -241,28 +246,28 @@ public class DriveBase extends Subsystem {
 
         IMotorController controller;
         switch (motor) {
-            case LEFT_BOTTOM:
-                controller = leftBottomMotorController;
+            case LEFT_TOP:
+                controller = leftTopMotorController;
                 break;
 
-            case LEFT_TOP_FRONT:
-                controller = leftTopFrontMotorController;
+            case LEFT_BOTTOM_FRONT:
+                controller = leftBottomFrontMotorController;
                 break;
 
-            case LEFT_TOP_REAR:
-                controller = leftTopRearMotorController;
+            case LEFT_BOTTOM_REAR:
+                controller = leftBottomRearMotorController;
                 break;
 
-            case RIGHT_BOTTOM:
-                controller = rightBottomMotorController;
+            case RIGHT_TOP:
+                controller = rightTopMotorController;
                 break;
 
-            case RIGHT_TOP_FRONT:
-                controller = rightTopFrontMotorController;
+            case RIGHT_BOTTOM_FRONT:
+                controller = rightBottomFrontMotorController;
                 break;
 
-            case RIGHT_TOP_REAR:
-                controller = rightTopRearMotorController;
+            case RIGHT_BOTTOM_REAR:
+                controller = rightBottomRearMotorController;
                 break;
 
             default:

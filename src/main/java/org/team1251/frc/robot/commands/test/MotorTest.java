@@ -92,34 +92,34 @@ public class MotorTest extends Command {
         // Figure out which motor to run next.
         if (currentMotor == null) {
             // No current motor, select the first one in the sequence.
-            currentMotor = DriveBase.Motor.LEFT_BOTTOM;
+            currentMotor = DriveBase.Motor.LEFT_TOP;
             return;
         }
 
         // There is a current motor, advance to the next one in the sequence.
         switch (currentMotor) {
 
-            case LEFT_BOTTOM:
-                currentMotor = DriveBase.Motor.LEFT_TOP_FRONT;
+            case LEFT_TOP:
+                currentMotor = DriveBase.Motor.LEFT_BOTTOM_FRONT;
                 break;
 
-            case LEFT_TOP_FRONT:
-                currentMotor = DriveBase.Motor.LEFT_TOP_REAR;
+            case LEFT_BOTTOM_FRONT:
+                currentMotor = DriveBase.Motor.LEFT_BOTTOM_REAR;
                 break;
 
-            case LEFT_TOP_REAR:
-                currentMotor = DriveBase.Motor.RIGHT_BOTTOM;
+            case LEFT_BOTTOM_REAR:
+                currentMotor = DriveBase.Motor.RIGHT_TOP;
                 break;
 
-            case RIGHT_BOTTOM:
-                currentMotor = DriveBase.Motor.RIGHT_TOP_FRONT;
+            case RIGHT_TOP:
+                currentMotor = DriveBase.Motor.RIGHT_BOTTOM_FRONT;
                 break;
 
-            case RIGHT_TOP_FRONT:
-                currentMotor = DriveBase.Motor.RIGHT_TOP_REAR;
+            case RIGHT_BOTTOM_FRONT:
+                currentMotor = DriveBase.Motor.RIGHT_BOTTOM_REAR;
                 break;
 
-            case RIGHT_TOP_REAR:
+            case RIGHT_BOTTOM_REAR:
                 currentMotor = null; // Rest period after we've ran all motors.
         }
 
