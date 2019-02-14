@@ -157,13 +157,13 @@ public class DriveBase extends Subsystem {
     public DriveBase() {
 
         leftTrain = leftTopMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_LEFT_TOP);
-        configureTalon(leftTopMotorController, false);
+        configureTalon(leftTopMotorController, true);
 
         leftBottomFrontMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_BOTTOM_FRONT);
-        configurePhoenixController(leftBottomFrontMotorController, false);
+        configurePhoenixController(leftBottomFrontMotorController, true);
 
         leftBottomRearMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_BOTTOM_REAR);
-        configurePhoenixController(leftBottomRearMotorController, false);
+        configurePhoenixController(leftBottomRearMotorController, true);
 
         rightTrain = rightTopMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_RIGHT_TOP);
         configureTalon(rightTopMotorController, false);
