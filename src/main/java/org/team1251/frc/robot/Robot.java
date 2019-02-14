@@ -1,6 +1,5 @@
 package org.team1251.frc.robot;
 
-import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import org.team1251.frc.robot.commands.*;
 import org.team1251.frc.robot.commands.ElevatorShifters.DisablePanelElevator;
@@ -8,7 +7,11 @@ import org.team1251.frc.robot.commands.ElevatorShifters.EnablePanelElevator;
 import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
-import org.team1251.frc.robot.subsystems.*;
+import org.team1251.frc.robot.subsystems.CargoClarm;
+import org.team1251.frc.robot.subsystems.DriveBase;
+import org.team1251.frc.robot.subsystems.Elevators;
+import org.team1251.frc.robot.subsystems.PanelClarm;
+import org.team1251.frc.robotCore.TigerTimedRobot;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -17,7 +20,7 @@ import org.team1251.frc.robot.subsystems.*;
  * creating this project, you must also update the `MAIN_CLASS` property in
  * the `build.gradle` file.
  */
-public class Robot extends TimedRobot {
+public class Robot extends TigerTimedRobot {
 
     /**
      * How fast to iterate.
@@ -142,65 +145,70 @@ public class Robot extends TimedRobot {
     }
 
     /**
-     * This function is run when the robot is first started up and should be
-     * used for any initialization code.
-     *
-     * NOTE: Things that are *only* used during "test mode" should NOT be created here -- it would be a waste of
-     * resources since test mode is not part of competition; use {@link #testInit()} instead.
+     * Does any work that must be done before an other initialization methods.
+     * 
+     * Anything that needs to happen before everything else should be done here.
+     * 
+     * This method is useful for performing tasks which don't "fit" into other `robotInit*()` methods and don't rely
+     * on objects created in those methods.
+     * 
+     * This is always invoked immediately before {@link #robotInitCreateFeedbackSystems()}}.
      */
-    public void robotInit() {
-        // Build the feedback systems first. All other things, including human interfaces may rely on these.
-        createFeedbackSystems();
-
-        // Create the human input/output interfaces. These may rely on feedback systems, commands and (less often)
-        // subsystems may rely on the human interfaces.
-        createHumanInterfaces();
-
-        // Create the robot's subsystems. These may rely on feedback systems and (less often) human interfaces.
-        createSubsystems();
-
-        // Create the commands. These may rely on feedback systems, human input, and/or subsystems.
-        createCommands();
-    }
+    @Override
+    protected void robotInitPrep() { }
 
     /**
-     * Creates all feedback systems that will be used by the robot. These may be systems which provide feedback to
-     * the robot or to the human players.
+     * Creates all standalone feedback systems that will be used by the robot. These may be systems which provide
+     * feedback to the robot or to the human players.
+     * 
+     * These are the first to be created because it may be a dependency of anything else. However, because they are
+     * created first, they may not use anything else as a dependency. For feedback systems that rely on particular
+     * subsystems or commands, use the {@link #robotInitFinalize()} method.
+     * 
+     * This is always invoked immediately before {@link #robotInitCreateSubsystems()} and after {@link #robotInitPrep()}};
      */
-    private void createFeedbackSystems() {
-        // TODO: Create feedback systems and capture in class fields for later use.
-    }
+    @Override
+    protected void robotInitCreateFeedbackSystems() { }
 
     /**
      * Creates interfaces used for interaction with humans. This may be things which allow the humans to provide
      * instructions to the robot or allow the robot to provide feedback to the human.
-     *
-     * Note: Use {@link #testInit()} to create human interfaces *only* used during test mode.
+     * 
+     * May rely on feedback systems since they have already been created. Subsystems or Commands may rely on these
+     * since they are created later.
+     * 
+     * This is always invoked immediately before {@link #robotInitCreateSubsystems()} and after {@link #robotInitCreateFeedbackSystems()}};
      */
-    private void createHumanInterfaces() {
+    @Override
+    protected void robotInitCreateHumanInterfaces() {
         humanInput = new HumanInput();
     }
 
     /**
      * Creates the robot's subsystems.
-     *
-     * Note: Use {@link #testInit()} to create subsystems *only* used during test mode.
+     * 
+     * Feedback systems and human interfaces are now available for use as dependencies. Commands are not yet available,
+     * so default commands are set into subsystems later.
+     * 
+     * This is always invoked immediately before {@link #robotInitCreateCommands()} and after {@link #robotInitCreateHumanInterfaces()};
      */
-    private void createSubsystems() {
+    @Override
+    protected void robotInitCreateSubsystems() {
         driveBase = new DriveBase();
         cargoClarm = new CargoClarm();
         panelClarm = new PanelClarm();
         elevators = new Elevators();
-
     }
 
     /**
      * Creates the commands which make the robot do stuff.
-     *
-     * Note: Use {@link #testInit()} to create commands only used during test mode.
+     * 
+     * Feedback systems, human interfaces, and subsystems are now available for use as dependencies.
+     * 
+     * This is always invoked immediately before {@link #robotInitFinalize()} and after {@link #robotInitCreateSubsystems()};
      */
-    private void createCommands() {
-        // TODO: Make commands.
+    @Override
+    protected void robotInitCreateCommands() {
         extendPanelArm = new ExtendPanelArm(panelClarm);
         retractPanelArm = new RetractPanelArm(panelClarm);
         openPanelClaw = new OpenPanelClaw(panelClarm);
@@ -214,8 +222,76 @@ public class Robot extends TimedRobot {
         //Elevator Shifter Commands
         enablePanelElevator = new EnablePanelElevator(elevators);
         disablePanelElevator = new DisablePanelElevator(elevators);
-
     }
+
+    /**
+     * Executed as the final step in robot initialization.
+     * 
+     * This method is useful for solving certain chicken/egg problems, especially circular dependencies. For example,
+     * this is a good place to set default subsystem commands -- default commands rely on their subsystems and
+     * subsystems rely on their default commands so they have a circular dependency.
+     * 
+     * NOTE: If you have default commands that change based on game mode, use the appropriate `*EveryInit()` method.
+     * This can avoid confusing behavior, especially during practice sessions where you switch modes back and
+     * forth several times without restarting the robot!
+     * 
+     * This method is also useful for creating any additional objects which do not "fit" into the other `robotInit*()`
+     * methods and rely on objects created by those methods.
+     * 
+     * This is always invoked immediately after {@link #robotInitCreateCommands()}. By default, this method does nothing.
+     */
+    @Override
+    protected void robotInitFinalize() { }
+
+    /**
+     * Called every time the autonomous game mode is activated.
+     *
+     * Be fast here! The game is running at this point. Any slower tasks should happen during one of the robotInit*()
+     * methods.
+     */
+    @Override
+    protected void autonomousFirstInit() { }
+
+
+    /**
+     * Called the first time the autonomous game mode is activated.
+     *
+     * Be fast here! The game is running at this point. Any slower tasks should happen during one of the robotInit*()
+     * methods.
+     */
+    @Override
+    protected void autonomousEveryInit() { }
+
+
+    /**
+     * Called the first time the teleop game mode is activated.
+     *
+     * Be fast here! The game is running at this point. Any slower tasks should happen during one of the robotInit*()
+     * methods.
+     */
+    @Override
+    protected void teleopEveryInit() { }
+
+    /**
+     * Called every time the teleop game mode is activated.
+     *
+     * Be fast here! The game is running at this point. Any slower tasks should happen during one of the robotInit*()
+     * methods.
+     */
+    @Override
+    protected void teleopFirstInit() { }
+
+    /**
+     * Called the first time the test game mode is activated.
+     */
+    @Override
+    protected void testEveryInit() { }
+
+    /**
+     * Called every time the test game mode is activated.
+     */
+    @Override
+    protected void testFirstInit() { }
 
     /**
      * This function is called once each time the robot enters Disabled mode.
@@ -236,23 +312,8 @@ public class Robot extends TimedRobot {
     }
 
     /**
-     * Gets the robot ready for sandstorm mode. This is fired once at the start of the sandstorm.
-     *
-     * For the 2019 game, there is no strictly "autonomous" mode; it is replaced by the "sandstorm" which allows for
-     * human input. From a software-perspective, it is still called "autonomous". The terms "sandstorm" and
-     * "autonomous" may be used interchangeably for this robot, although "sandstorm" is preferred unless directly
-     * referencing method names.
-     */
-    @Override
-    public void autonomousInit() {
-        // TODO: Get ready to do stuff in Sandstorm mode.
-
-    }
-
-    /**
      * This function is called once per "tick" during the sandstorm.
      *
-
      * For the 2019 game, there is no strictly "autonomous" mode; it is replaced by the "sandstorm" which allows for
      * human input. From a software-perspective, it is still called "autonomous". The terms "sandstorm" and
      * "autonomous" may be used interchangeably for this robot, although "sandstorm" is preferred unless directly
@@ -264,20 +325,6 @@ public class Robot extends TimedRobot {
     }
 
     /**
-     * This function is called once at the start of operator control mode.
-     */
-    @Override
-    public void teleopInit() {
-        // TODO: Cancel autonomous command(s)
-        // TODO: Prepare for teleop.
-
-        //Command Init
-        //TODO uncomment this comment when needed for use.
-        //createCommands();
-
-    }
-
-    /**
      * This function is called once per tick during operator control mode.
      */
     @Override
@@ -286,30 +333,10 @@ public class Robot extends TimedRobot {
     }
 
     /**
-     * This function is called once at the beginning of test mode.
-     */
-    @Override
-    public void testInit() {
-        motorTestCmd = new MotorTest(driveBase);
-    }
-
-    /**
      * This function is called once per tick during test mode.
      */
     @Override
     public void testPeriodic() {
-
-        // IMPORTANT: We don't use command triggers in test mode because there is no way to remove command triggers
-        // once they have been attached.
-        // TODO: Can we just nullify triggers and let garbage collection take care of it?
-        if (humanInput.isMotorTestResetButtonPressed()) {
-            motorTestCmd.reset();
-        } else if (humanInput.isMotorTestButtonPressed()) {
-            motorTestCmd.start();
-        } else {
-            motorTestCmd.cancel();
-        }
-
         Scheduler.getInstance().run();
     }
 }
