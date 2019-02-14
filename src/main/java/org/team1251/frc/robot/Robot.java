@@ -72,6 +72,10 @@ public class Robot extends TigerTimedRobot {
      */
     private Elevators elevators;
 
+    /**
+     * The command that gives the human players the ability to move the robot around the field.
+     */
+    private TeleopDrive teleopDrive;
 
     /**
      * A command used to extend the panel arm.
@@ -221,6 +225,7 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void robotInitCreateCommands() {
+        teleopDrive = new TeleopDrive(driveBase, humanInput);
         // TODO: Uncomment once related subsystems are available.
 //        extendPanelArm = new ExtendPanelArm(panelClarm);
 //        retractPanelArm = new RetractPanelArm(panelClarm);
@@ -283,7 +288,10 @@ public class Robot extends TigerTimedRobot {
      * methods.
      */
     @Override
-    protected void teleopEveryInit() { }
+    protected void teleopEveryInit() {
+        // TODO: Do we want to turn teleop drive on for every game mode since it is allowed during sandstorm?
+        driveBase.setDefaultCommand(teleopDrive);
+    }
 
     /**
      * Called every time the teleop game mode is activated.

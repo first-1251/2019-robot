@@ -19,6 +19,11 @@ import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
 public class HumanInput {
 
     /**
+     * Helper to get drive power from the human input.
+     */
+    private final HumanDriveInput humanDriveInput;
+
+    /**
      * Indicates that command triggers have already been attached.
      */
     private boolean commandTriggersAttached = false;
@@ -39,6 +44,8 @@ public class HumanInput {
                 new SimpleAnalogButtonConfig(.05, .50),
                 new SimpleAnalogButtonConfig(.05, .50)
         );
+
+        humanDriveInput = new TigerDriveInput();
     }
 
     /**
@@ -77,6 +84,6 @@ public class HumanInput {
      * @return A `DrivePower` instance representing the power to be applied ot the left and right drive trains.
      */
     public DrivePower getDrivePower() {
-        return new DrivePower(0, 0);
+        return humanDriveInput.getDrivePower(this);
     }
 }
