@@ -1,6 +1,8 @@
 package org.team1251.frc.robot;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.team1251.frc.robot.commands.*;
 import org.team1251.frc.robot.commands.ElevatorShifters.DisablePanelElevator;
 import org.team1251.frc.robot.commands.ElevatorShifters.EnablePanelElevator;
@@ -12,6 +14,9 @@ import org.team1251.frc.robot.subsystems.DriveBase;
 import org.team1251.frc.robot.subsystems.Elevators;
 import org.team1251.frc.robot.subsystems.PanelClarm;
 import org.team1251.frc.robotCore.TigerTimedRobot;
+import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
+import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
+import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -67,11 +72,6 @@ public class Robot extends TigerTimedRobot {
      */
     private Elevators elevators;
 
-    /**
-     * A command used to individually test motors.
-     */
-
-    private MotorTest motorTestCmd;
 
     /**
      * A command used to extend the panel arm.
@@ -136,6 +136,17 @@ public class Robot extends TigerTimedRobot {
     private EnablePanelElevator enablePanelElevator;
     private DisablePanelElevator disablePanelElevator;
 
+    //// TEST RELATED fields start here
+
+    /**
+     * The game pad used as input during test.
+     */
+    private GamePad testerGamePad;
+
+    /**
+     * A command used to individually test motors.
+     */
+    private MotorTest motorTestCmd;
 
     /**
      * Creates the robot!
@@ -146,12 +157,12 @@ public class Robot extends TigerTimedRobot {
 
     /**
      * Does any work that must be done before an other initialization methods.
-     * 
+     *
      * Anything that needs to happen before everything else should be done here.
-     * 
+     *
      * This method is useful for performing tasks which don't "fit" into other `robotInit*()` methods and don't rely
      * on objects created in those methods.
-     * 
+     *
      * This is always invoked immediately before {@link #robotInitCreateFeedbackSystems()}}.
      */
     @Override
@@ -160,11 +171,11 @@ public class Robot extends TigerTimedRobot {
     /**
      * Creates all standalone feedback systems that will be used by the robot. These may be systems which provide
      * feedback to the robot or to the human players.
-     * 
+     *
      * These are the first to be created because it may be a dependency of anything else. However, because they are
      * created first, they may not use anything else as a dependency. For feedback systems that rely on particular
      * subsystems or commands, use the {@link #robotInitFinalize()} method.
-     * 
+     *
      * This is always invoked immediately before {@link #robotInitCreateSubsystems()} and after {@link #robotInitPrep()}};
      */
     @Override
@@ -173,10 +184,10 @@ public class Robot extends TigerTimedRobot {
     /**
      * Creates interfaces used for interaction with humans. This may be things which allow the humans to provide
      * instructions to the robot or allow the robot to provide feedback to the human.
-     * 
+     *
      * May rely on feedback systems since they have already been created. Subsystems or Commands may rely on these
      * since they are created later.
-     * 
+     *
      * This is always invoked immediately before {@link #robotInitCreateSubsystems()} and after {@link #robotInitCreateFeedbackSystems()}};
      */
     @Override
@@ -186,10 +197,10 @@ public class Robot extends TigerTimedRobot {
 
     /**
      * Creates the robot's subsystems.
-     * 
+     *
      * Feedback systems and human interfaces are now available for use as dependencies. Commands are not yet available,
      * so default commands are set into subsystems later.
-     * 
+     *
      * This is always invoked immediately before {@link #robotInitCreateCommands()} and after {@link #robotInitCreateHumanInterfaces()};
      */
     @Override
@@ -202,9 +213,9 @@ public class Robot extends TigerTimedRobot {
 
     /**
      * Creates the commands which make the robot do stuff.
-     * 
+     *
      * Feedback systems, human interfaces, and subsystems are now available for use as dependencies.
-     * 
+     *
      * This is always invoked immediately before {@link #robotInitFinalize()} and after {@link #robotInitCreateSubsystems()};
      */
     @Override
@@ -285,13 +296,23 @@ public class Robot extends TigerTimedRobot {
      * Called the first time the test game mode is activated.
      */
     @Override
-    protected void testEveryInit() { }
+    protected void testEveryInit() {
+        // Turn off live window, we don't use it. This will re-enable our ability to use the command-based system
+        // while in test mode.
+        LiveWindow.setEnabled(false);
+        motorTestCmd.reset();
+    }
 
     /**
      * Called every time the test game mode is activated.
      */
     @Override
-    protected void testFirstInit() { }
+    protected void testFirstInit() {
+        // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
+        testerGamePad = new ModernGamePad(new Joystick(4));
+        motorTestCmd = new MotorTest(driveBase);
+        (new ButtonTrigger(testerGamePad.x())).whileHeld(motorTestCmd);
+    }
 
     /**
      * This function is called once each time the robot enters Disabled mode.

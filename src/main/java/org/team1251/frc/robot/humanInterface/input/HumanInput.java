@@ -79,26 +79,4 @@ public class HumanInput {
     public DrivePower getDrivePower() {
         return new DrivePower(0, 0);
     }
-
-    /**
-     * Indicates whether or not the button for testing motors is currently pressed.
-     *
-     * This should only be used when in test mode.
-     *
-     * @return Returns `true` if button is pressed, otherwise `false`.
-     */
-    public boolean isMotorTestButtonPressed() {
-        return driverPad.x().isPressed();
-    }
-
-    /**
-     * Indicates whether or not the resetting the motor test is currently pressed.
-     *
-     * This should only be used when in test mode.
-     *
-     * @return Returns `true` if button is pressed, otherwise `false`.
-     */
-    public boolean isMotorTestResetButtonPressed() {
-        return driverPad.select().isPressed();
-    }
 }

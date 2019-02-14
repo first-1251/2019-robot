@@ -1,6 +1,8 @@
 package org.team1251.frc.robotCore.humanInterface.input.gamepad;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import org.team1251.frc.robotCore.humanInterface.input.SimpleAnalogButtonConfig;
+import org.team1251.frc.robotCore.humanInterface.input.SimpleStickConfig;
 import org.team1251.frc.robotCore.humanInterface.input.hid.HIDAnalogButton;
 import org.team1251.frc.robotCore.humanInterface.input.AnalogButtonConfig;
 import org.team1251.frc.robotCore.humanInterface.input.StickConfig;
@@ -11,6 +13,21 @@ public class ModernGamePad extends GamePad {
 
     private final GenericHID rawDevice;
 
+    /**
+     * Create a new instance with default stick and trigger configurations.
+     */
+    public ModernGamePad(GenericHID rawDevice) {
+        this(rawDevice,
+                new SimpleStickConfig(.05, false, false),
+                new SimpleStickConfig(.05, false, false),
+                new SimpleAnalogButtonConfig(.05, .50),
+                new SimpleAnalogButtonConfig(.05, .50)
+        );
+    }
+
+    /**
+     * Create a new instance with specific stick and trigger configurations
+     */
     public ModernGamePad(GenericHID rawDevice,
                          StickConfig leftStickConfig,
                          StickConfig rightStickConfig,
