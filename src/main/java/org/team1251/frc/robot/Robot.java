@@ -206,9 +206,10 @@ public class Robot extends TigerTimedRobot {
     @Override
     protected void robotInitCreateSubsystems() {
         driveBase = new DriveBase();
-        cargoClarm = new CargoClarm();
-        panelClarm = new PanelClarm();
-        elevators = new Elevators();
+        // TODO: Uncomment as they become available -- robot dies if we try to initialize devices that don't exist.
+//        cargoClarm = new CargoClarm();
+//        panelClarm = new PanelClarm();
+//        elevators = new Elevators();
     }
 
     /**
@@ -220,19 +221,20 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void robotInitCreateCommands() {
-        extendPanelArm = new ExtendPanelArm(panelClarm);
-        retractPanelArm = new RetractPanelArm(panelClarm);
-        openPanelClaw = new OpenPanelClaw(panelClarm);
-        moveCargoArmUp = new MoveCargoArmUp(cargoClarm);
-        moveCargoArmDown = new MoveCargoArmDown(cargoClarm);
-        outtakeCargo = new OuttakeCargo(cargoClarm);
-        intakeCargo = new IntakeCargo(cargoClarm);
-        driveClimbElevatorGearboxForward = new DriveClimbElevatorGearboxForward(elevators);
-        driveClimbElevatorGearboxReverse = new DriveClimbElevatorGearboxReverse(elevators);
-
-        //Elevator Shifter Commands
-        enablePanelElevator = new EnablePanelElevator(elevators);
-        disablePanelElevator = new DisablePanelElevator(elevators);
+        // TODO: Uncomment once related subsystems are available.
+//        extendPanelArm = new ExtendPanelArm(panelClarm);
+//        retractPanelArm = new RetractPanelArm(panelClarm);
+//        openPanelClaw = new OpenPanelClaw(panelClarm);
+//        moveCargoArmUp = new MoveCargoArmUp(cargoClarm);
+//        moveCargoArmDown = new MoveCargoArmDown(cargoClarm);
+//        outtakeCargo = new OuttakeCargo(cargoClarm);
+//        intakeCargo = new IntakeCargo(cargoClarm);
+//        driveClimbElevatorGearboxForward = new DriveClimbElevatorGearboxForward(elevators);
+//        driveClimbElevatorGearboxReverse = new DriveClimbElevatorGearboxReverse(elevators);
+//
+//        //Elevator Shifter Commands
+//        enablePanelElevator = new EnablePanelElevator(elevators);
+//        disablePanelElevator = new DisablePanelElevator(elevators);
     }
 
     /**
