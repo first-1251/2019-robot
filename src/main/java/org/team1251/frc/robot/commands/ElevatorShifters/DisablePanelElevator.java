@@ -16,7 +16,7 @@ public class DisablePanelElevator extends Command {
 
     @Override
     protected void execute() {
-        this.manipulatorElevator.DisablePanelElevator();
+        //this.manipulatorElevator.DisablePanelElevator();
     }
 
     @Override
