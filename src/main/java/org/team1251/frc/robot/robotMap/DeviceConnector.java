@@ -27,8 +27,10 @@ public enum DeviceConnector implements DeviceConnectorInterface {
     MC_DRIVE_RIGHT_BOTTOM_FRONT(PortType.CAN, 5), // Victor
     MC_DRIVE_RIGHT_BOTTOM_REAR(PortType.CAN, 6), // Victor
 
-    MC_ELEVATOR_GEARBOX_FRONT(PortType.CAN, 7), //Talon
-    MC_ELEVATOR_GEARBOX_REAR(PortType.CAN, 8), //Talon
+    MC_CLIMB_ELEVATOR_GEARBOX_FRONT(PortType.CAN, 7), //Talon
+    MC_CLIMB_ELEVATOR_GEARBOX_REAR(PortType.CAN, 8), //Talon
+
+
 
     MC_CARGO_ARM(PortType.CAN, 9), // Victor
     MC_CARGO_CLAW(PortType.CAN, 10), // Victor

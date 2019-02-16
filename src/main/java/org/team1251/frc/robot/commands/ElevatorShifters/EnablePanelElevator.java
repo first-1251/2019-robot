@@ -1,7 +1,6 @@
 package org.team1251.frc.robot.commands.ElevatorShifters;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.team1251.frc.robot.subsystems.Elevators;
 
 public class EnablePanelElevator extends Command {
 

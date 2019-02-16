@@ -9,10 +9,7 @@ import org.team1251.frc.robot.commands.ElevatorShifters.EnablePanelElevator;
 import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
-import org.team1251.frc.robot.subsystems.CargoClarm;
-import org.team1251.frc.robot.subsystems.DriveBase;
-import org.team1251.frc.robot.subsystems.Elevators;
-import org.team1251.frc.robot.subsystems.PanelClarm;
+import org.team1251.frc.robot.subsystems.*;
 import org.team1251.frc.robotCore.TigerTimedRobot;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
@@ -71,6 +68,12 @@ public class Robot extends TigerTimedRobot {
      * The subsystem that controls all of the Elevators.
      */
     private Elevators elevators;
+
+    /**
+     * The subsystem that controls the climb Elevators
+     */
+
+    private ClimbElevator climbElevator;
 
     /**
      * The command that gives the human players the ability to move the robot around the field.
@@ -213,7 +216,6 @@ public class Robot extends TigerTimedRobot {
         // TODO: Uncomment as they become available -- robot dies if we try to initialize devices that don't exist.
 //        cargoClarm = new CargoClarm();
 //        panelClarm = new PanelClarm();
-//        elevators = new Elevators();
     }
 
     /**
