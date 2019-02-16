@@ -7,6 +7,9 @@ import org.team1251.frc.robot.commands.*;
 import org.team1251.frc.robot.commands.ElevatorShifters.DisablePanelElevator;
 import org.team1251.frc.robot.commands.ElevatorShifters.EnablePanelElevator;
 import org.team1251.frc.robot.commands.test.MotorTest;
+import org.team1251.frc.robot.feedback.Gyro;
+import org.team1251.frc.robot.feedback.LimeLight;
+import org.team1251.frc.robot.feedback.PathUtils;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
 import org.team1251.frc.robot.subsystems.CargoClarm;
@@ -151,6 +154,9 @@ public class Robot extends TigerTimedRobot {
      * A command used to individually test motors.
      */
     private MotorTest motorTestCmd;
+    private Gyro gyro;
+    private LimeLight limelight;
+    private PathUtils pathUtils;
 
     /**
      * Creates the robot!
@@ -183,7 +189,11 @@ public class Robot extends TigerTimedRobot {
      * This is always invoked immediately before {@link #robotInitCreateSubsystems()} and after {@link #robotInitPrep()}};
      */
     @Override
-    protected void robotInitCreateFeedbackSystems() { }
+    protected void robotInitCreateFeedbackSystems() {
+        gyro = new Gyro();
+        limelight = new LimeLight();
+        pathUtils = new PathUtils(gyro, limelight);
+    }
 
     /**
      * Creates interfaces used for interaction with humans. This may be things which allow the humans to provide
@@ -368,6 +378,19 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     public void testPeriodic() {
+        if (testerGamePad.b().isPressed()) {
+            if (gyro.isReady()) {
+                System.out.println(gyro.getHeading());
+            } else {
+                System.out.println("Gyro calibrating");
+            }
+        } else if (testerGamePad.y().isPressed()) {
+            try {
+                System.out.println(pathUtils.calculateDistance2D(PathUtils.Target.SHIP));
+            } catch (Exception e) {
+                System.out.println("Unable to acquire target! " + e.getMessage());
+            }
+        }
         Scheduler.getInstance().run();
     }
 }
