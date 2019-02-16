@@ -17,7 +17,7 @@ public class MotorTest extends Command {
     /**
      * The number of ticks to test each motor.
      */
-    private final static int TEST_DURATION = 1000;
+    private final static int TEST_DURATION = 300; // 3 seconds
 
     /**
      * The number of ticks that the test has been running for a given motor.
