@@ -12,10 +12,7 @@ import org.team1251.frc.robot.feedback.LimeLight;
 import org.team1251.frc.robot.feedback.PathUtils;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
-import org.team1251.frc.robot.subsystems.CargoClarm;
-import org.team1251.frc.robot.subsystems.DriveBase;
-import org.team1251.frc.robot.subsystems.Elevators;
-import org.team1251.frc.robot.subsystems.PanelClarm;
+import org.team1251.frc.robot.subsystems.*;
 import org.team1251.frc.robotCore.TigerTimedRobot;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
@@ -71,9 +68,15 @@ public class Robot extends TigerTimedRobot {
     private PanelClarm panelClarm;
 
     /**
-     * The subsystem that controls all of the Elevators.
+     * The subsystem that controls all of the ManipulatorElevator.
      */
-    private Elevators elevators;
+    private ManipulatorElevator manipulatorElevator;
+
+    /**
+     * The subsystem that controls the climb Elevators
+     */
+
+    private ClimbElevator climbElevator;
 
     /**
      * The command that gives the human players the ability to move the robot around the field.
@@ -223,7 +226,6 @@ public class Robot extends TigerTimedRobot {
         // TODO: Uncomment as they become available -- robot dies if we try to initialize devices that don't exist.
 //        cargoClarm = new CargoClarm();
 //        panelClarm = new PanelClarm();
-//        elevators = new Elevators();
     }
 
     /**
@@ -244,12 +246,12 @@ public class Robot extends TigerTimedRobot {
 //        moveCargoArmDown = new MoveCargoArmDown(cargoClarm);
 //        outtakeCargo = new OuttakeCargo(cargoClarm);
 //        intakeCargo = new IntakeCargo(cargoClarm);
-//        driveClimbElevatorGearboxForward = new DriveClimbElevatorGearboxForward(elevators);
-//        driveClimbElevatorGearboxReverse = new DriveClimbElevatorGearboxReverse(elevators);
+//        driveClimbElevatorGearboxForward = new DriveClimbElevatorGearboxForward(climbElevator);
+//        driveClimbElevatorGearboxReverse = new DriveClimbElevatorGearboxReverse(climbElevator);
 //
 //        //Elevator Shifter Commands
-//        enablePanelElevator = new EnablePanelElevator(elevators);
-//        disablePanelElevator = new DisablePanelElevator(elevators);
+//        enablePanelElevator = new EnablePanelElevator(manipulatorElevator);
+//        disablePanelElevator = new DisablePanelElevator(manipulatorElevator);
     }
 
     /**
