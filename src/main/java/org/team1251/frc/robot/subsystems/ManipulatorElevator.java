@@ -10,12 +10,11 @@ import org.team1251.frc.robotCore.subsystems.Subsystem;
 public class ManipulatorElevator extends Subsystem {
     /**
      * PRE MESSAGE TO ALL THOSE READING
-     * WHY ARE ALL 4 ELEVATORS ON ONE GEARBOX, THIS IS VERY VERY STUPID DESIGN
-     * THIS SUBSYSTEM IS GOING TO BE TERRIBLE
-     * PRAISE Nobuaki Katayama || JTHBD192620052807
+     * 1996 NISSAN 240SX. The car for the guy that says. My BMW is too reliable.
+     * PRAISE Some Nissan Dude || (INSERT MORENO VIN HERE)
      **/
 
-    //Just Incase Motors are Inverted
+    //Just In case Motors are Inverted
     private static final boolean isManipulatorElevatorGearboxInvertedFront = false;
     private static final boolean isManipulatorElevatorGearboxInvertedRear = false;
 

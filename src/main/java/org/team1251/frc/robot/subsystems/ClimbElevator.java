@@ -15,14 +15,14 @@ public class ClimbElevator extends Subsystem {
      * PRAISE Nobuaki Katayama || JTHBD192620052807
      **/
 
-    //Just Incase Motors are Inverted
+    //Just In case Motors are Inverted
     private static final boolean isClimbDriveGearboxInverted = false;
     private static final boolean isFrontClimbElevatorGearboxInverted = false;
     private static final boolean isRearClimbElevatorGearboxInverted = false;
 
     //Gearbox Speed
-    public static final double FRONT_CLIMB_GEARBOX_SPEED = 0.5;
-    public static final double REAR_CLIMB_GEARBOX_SPEED = 0.5;
+    public static final double FORWARD_CLIMB_GEARBOX_SPEED = 0.5;
+    public static final double REVERSE_CLIMB_GEARBOX_SPEED = 0.5;
     public static final double CLIMB_ELEVATOR_SPEED = 0.5;
 
     private final DeviceManager deviceManager = Robot.deviceManager;
@@ -53,13 +53,13 @@ public class ClimbElevator extends Subsystem {
     }
 
     public void DriveClimbGearboxForward(){
-        climbElevatorGearboxFront.set(FRONT_CLIMB_GEARBOX_SPEED);
-        climbElevatorGearboxRear.set(FRONT_CLIMB_GEARBOX_SPEED);
+        climbElevatorGearboxFront.set(FORWARD_CLIMB_GEARBOX_SPEED);
+        climbElevatorGearboxRear.set(FORWARD_CLIMB_GEARBOX_SPEED);
     }
 
     public void DriveClimbGearboxReverse(){
-        climbElevatorGearboxFront.set(-REAR_CLIMB_GEARBOX_SPEED);
-        climbElevatorGearboxRear.set(-REAR_CLIMB_GEARBOX_SPEED);
+        climbElevatorGearboxFront.set(-REVERSE_CLIMB_GEARBOX_SPEED);
+        climbElevatorGearboxRear.set(-REVERSE_CLIMB_GEARBOX_SPEED);
     }
 
     public void MoveClimbElevatorUp(){

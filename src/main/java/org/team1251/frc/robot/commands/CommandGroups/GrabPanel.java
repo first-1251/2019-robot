@@ -1,6 +1,9 @@
-package org.team1251.frc.robot.commands;
+package org.team1251.frc.robot.commands.CommandGroups;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import org.team1251.frc.robot.commands.ExtendPanelArm;
+import org.team1251.frc.robot.commands.OpenPanelClaw;
+import org.team1251.frc.robot.commands.RetractPanelArm;
 import org.team1251.frc.robot.subsystems.PanelClarm;
 import org.team1251.frc.robotCore.commands.TimedNothing;
 
