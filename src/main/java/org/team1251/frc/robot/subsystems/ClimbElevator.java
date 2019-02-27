@@ -71,4 +71,23 @@ public class ClimbElevator extends Subsystem {
         climbElevatorGearboxFront.set(-CLIMB_ELEVATOR_SPEED);
         climbElevatorGearboxRear.set(-CLIMB_ELEVATOR_SPEED);
     }
+
+    public void EnableFrontClimbElevator(){
+        frontClimbElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+        frontClimbElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+    public void DisableFrontClimbElevator(){
+        frontClimbElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+        frontClimbElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public void EnableRearClimbElevator(){
+        rearClimbElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+        rearClimbElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void DisableRearClimbElevator(){
+        rearClimbElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+        rearClimbElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
 }

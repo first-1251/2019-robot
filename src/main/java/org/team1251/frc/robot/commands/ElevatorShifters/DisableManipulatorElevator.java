@@ -8,10 +8,8 @@ public class DisableManipulatorElevator extends Command {
     private final ManipulatorElevator manipulatorElevator;
 
     public DisableManipulatorElevator(ManipulatorElevator manipulatorElevator){
-
         this.manipulatorElevator = manipulatorElevator;
         requires(manipulatorElevator);
-
     }
 
     @Override
