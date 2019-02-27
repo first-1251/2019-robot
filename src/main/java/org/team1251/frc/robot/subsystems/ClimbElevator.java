@@ -42,8 +42,8 @@ public class ClimbElevator extends Subsystem {
         climbElevatorGearboxRear = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_GEARBOX_REAR);
         climbDriveGearbox = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_FWD);
 
-        frontClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_FORWARD, DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_BACKWARD);
-        rearClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_FORWARD, DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_BACKWARD);
+        frontClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_ENABLE, DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_DISABLE);
+        rearClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_ENABLE, DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_DISABLE);
 
         climbElevatorGearboxFront.setInverted(isFrontClimbElevatorGearboxInverted);
         climbElevatorGearboxRear.setInverted(isRearClimbElevatorGearboxInverted);
@@ -62,4 +62,13 @@ public class ClimbElevator extends Subsystem {
         climbElevatorGearboxRear.set(-REAR_CLIMB_GEARBOX_SPEED);
     }
 
+    public void MoveClimbElevatorUp(){
+        climbElevatorGearboxFront.set(CLIMB_ELEVATOR_SPEED);
+        climbElevatorGearboxRear.set(CLIMB_ELEVATOR_SPEED);
+    }
+
+    public void MoveClimbElevatorDown(){
+        climbElevatorGearboxFront.set(-CLIMB_ELEVATOR_SPEED);
+        climbElevatorGearboxRear.set(-CLIMB_ELEVATOR_SPEED);
+    }
 }

@@ -3,11 +3,11 @@ package org.team1251.frc.robot.commands.ElevatorShifters;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team1251.frc.robot.subsystems.ManipulatorElevator;
 
-public class DisablePanelElevator extends Command {
+public class EnableManipulatorElevator extends Command {
 
     private final ManipulatorElevator manipulatorElevator;
 
-    public DisablePanelElevator(ManipulatorElevator manipulatorElevator){
+    public EnableManipulatorElevator(ManipulatorElevator manipulatorElevator){
 
         this.manipulatorElevator = manipulatorElevator;
         requires(manipulatorElevator);
@@ -16,7 +16,7 @@ public class DisablePanelElevator extends Command {
 
     @Override
     protected void execute() {
-        //this.manipulatorElevator.DisablePanelElevator();
+        this.manipulatorElevator.EnableManipulatorElevator();
     }
 
     @Override

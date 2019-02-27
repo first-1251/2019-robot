@@ -30,20 +30,35 @@ public class ManipulatorElevator extends Subsystem {
     private SpeedController manipulatorElevatorGearboxRear;
 
     //Solenoid Initialization
-    private DoubleSolenoid panelElevatorSolenoid;
-    private DoubleSolenoid cargoElevatorSolenoid;
+    private DoubleSolenoid manipulatorElevatorSolenoid;
 
     public ManipulatorElevator(){
 
         manipulatorElevatorGearboxFront = deviceManager.createTalonSRX(DeviceConnector.MANIPULATOR_MC_ELEVATOR_GEARBOX_FRONT);
         manipulatorElevatorGearboxRear = deviceManager.createTalonSRX(DeviceConnector.MANIPULATOR_MC_ELEVATOR_GEARBOX_REAR);
 
-        panelElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_PANEL_ELEV_SHIFT_FORWARD, DeviceConnector.DSOL_PANEL_ELEV_SHIFT_BACKWARD);
-        cargoElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CARGO_ELEV_SHIFT_FORWARD, DeviceConnector.DSOL_CARGO_ELEV_SHIFT_BACKWARD);
+        manipulatorElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_MANIPULATOR_ELEV_SHIFT_ENABLE, DeviceConnector.DSOL_MANIPULATOR_ELEV_SHIFT_DISABLE);
 
-       manipulatorElevatorGearboxFront.setInverted(isManipulatorElevatorGearboxInvertedFront);
-       manipulatorElevatorGearboxRear.setInverted(isManipulatorElevatorGearboxInvertedRear);
+        manipulatorElevatorGearboxFront.setInverted(isManipulatorElevatorGearboxInvertedFront);
+        manipulatorElevatorGearboxRear.setInverted(isManipulatorElevatorGearboxInvertedRear);
     }
 
+    public void MoveManipulatorElevatorUp(){
+        manipulatorElevatorGearboxFront.set(MANIPULATOR_ELEVATOR_SPEED);
+        manipulatorElevatorGearboxRear.set(MANIPULATOR_ELEVATOR_SPEED);
+    }
 
+    public void MoveManipulatorElevatorDown(){
+        manipulatorElevatorGearboxFront.set(-MANIPULATOR_ELEVATOR_SPEED);
+        manipulatorElevatorGearboxFront.set(-MANIPULATOR_ELEVATOR_SPEED);
+    }
+
+    public void EnableManipulatorElevator(){
+        manipulatorElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+    public void DisableManipulatorElevator(){
+        manipulatorElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
 }
+
+

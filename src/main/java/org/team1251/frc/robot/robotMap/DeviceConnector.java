@@ -41,17 +41,14 @@ public enum DeviceConnector implements DeviceConnectorInterface {
     DSOL_FORWARD_PANEL_ARM(PortType.PCM, 1), // Double Solenoid
     DSOL_BACKWARD_PANEL_ARM(PortType.PCM, 2), // Double Solenoid
 
-    DSOL_PANEL_ELEV_SHIFT_FORWARD(PortType.PCM, 3), // Double Solenoid
-    DSOL_PANEL_ELEV_SHIFT_BACKWARD(PortType.PCM, 4), // Double Solenoid
+    DSOL_MANIPULATOR_ELEV_SHIFT_ENABLE(PortType.PCM, 3), // Double Solenoid
+    DSOL_MANIPULATOR_ELEV_SHIFT_DISABLE(PortType.PCM, 4), // Double Solenoid
 
-    DSOL_CARGO_ELEV_SHIFT_FORWARD(PortType.PCM,5), // Double Solenoid
-    DSOL_CARGO_ELEV_SHIFT_BACKWARD(PortType.PCM,6), // Double Solenoid
+    DSOL_FRONT_CLIMB_ELEV_SHIFT_ENABLE(PortType.PCM, 7), // Double Solenoid
+    DSOL_FRONT_CLIMB_ELEV_SHIFT_DISABLE(PortType.PCM, 8), // Double Solenoid
 
-    DSOL_FRONT_CLIMB_ELEV_SHIFT_FORWARD(PortType.PCM, 7), // Double Solenoid
-    DSOL_FRONT_CLIMB_ELEV_SHIFT_BACKWARD(PortType.PCM, 8), // Double Solenoid
-
-    DSOL_REAR_CLIMB_ELEV_SHIFT_FORWARD(PortType.PCM, 9), // Double Solenoid
-    DSOL_REAR_CLIMB_ELEV_SHIFT_BACKWARD(PortType.PCM, 10), // Double Solenoid
+    DSOL_REAR_CLIMB_ELEV_SHIFT_ENABLE(PortType.PCM, 9), // Double Solenoid
+    DSOL_REAR_CLIMB_ELEV_SHIFT_DISABLE(PortType.PCM, 10), // Double Solenoid
 
     ENC_A_CLIMB_FRONT(PortType.DIO, 0), //Encoder
     ENC_B_CLIMB_FRONT(PortType.DIO, 1), //Encoder
