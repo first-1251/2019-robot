@@ -1,6 +1,5 @@
 package org.team1251.frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.SpeedController;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.robotMap.DeviceConnector;
@@ -31,7 +30,7 @@ public class ManipulatorElevator extends Subsystem {
 
     public ManipulatorElevator(){
 
-        manipulatorElevatorGearbox = deviceManager.createTalonSRX(DeviceConnector.MANIPULATOR_MC_ELEVATOR_GEARBOX);
+        manipulatorElevatorGearbox = deviceManager.createTalonSRX(DeviceConnector.MC_MANIPULATOR_ELEVATOR);
         //manipulatorElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_MANIPULATOR_ELEV_SHIFT_ENABLE, DeviceConnector.DSOL_MANIPULATOR_ELEV_SHIFT_DISABLE);
 
         manipulatorElevatorGearbox.setInverted(isManipulatorElevatorGearboxInverted);

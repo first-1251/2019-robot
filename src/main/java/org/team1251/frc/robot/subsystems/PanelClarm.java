@@ -1,7 +1,6 @@
 package org.team1251.frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.robotMap.DeviceConnector;
 import org.team1251.frc.robot.robotMap.DeviceManager;
@@ -20,8 +19,8 @@ public class PanelClarm extends Subsystem {
 
     public PanelClarm(){
 
-        panelArmSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FORWARD_PANEL_ARM, DeviceConnector.DSOL_REVERSE_PANEL_ARM);
-        panelClawSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FORWARD_PANEL_CLAW, DeviceConnector.DSOL_REVERSE_PANEL_CLAW);
+        panelArmSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_PANEL_ARM_FWD, DeviceConnector.DSOL_PANEL_ARM_REV);
+        panelClawSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_PANEL_CLAW_FWD, DeviceConnector.DSOL_PANEL_CLAW_REV);
 
     }
 

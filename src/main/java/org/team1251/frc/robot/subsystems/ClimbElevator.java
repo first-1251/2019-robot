@@ -38,12 +38,12 @@ public class ClimbElevator extends Subsystem {
 
     public ClimbElevator(){
 
-        climbElevatorGearboxFront = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_GEARBOX_FRONT);
-        climbElevatorGearboxRear = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_GEARBOX_REAR);
-        climbDriveGearbox = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_FWD);
+        climbElevatorGearboxFront = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_FRONT);
+        climbElevatorGearboxRear = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_REAR);
+        climbDriveGearbox = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_FRONT);
 
-        frontClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_ENABLE, DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_DISABLE);
-        rearClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_ENABLE, DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_DISABLE);
+        frontClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV);
+        rearClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_REV);
 
         climbElevatorGearboxFront.setInverted(isFrontClimbElevatorGearboxInverted);
         climbElevatorGearboxRear.setInverted(isRearClimbElevatorGearboxInverted);

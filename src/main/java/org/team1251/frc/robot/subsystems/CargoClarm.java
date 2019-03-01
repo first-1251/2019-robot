@@ -9,8 +9,7 @@ import org.team1251.frc.robotCore.subsystems.Subsystem;
 public class CargoClarm extends Subsystem {
 
     private final static double CLAW_SPEED = 0.5;
-     private final static double ARM_SPEED = 0.25;
-
+    private final static double ARM_SPEED = 0.25;
 
     private final DeviceManager deviceManager = Robot.deviceManager;
 
@@ -20,7 +19,7 @@ public class CargoClarm extends Subsystem {
     public CargoClarm(){
 
         cargoArmMotor = deviceManager.createVictorSPX(DeviceConnector.MC_CARGO_ARM);
-        cargoClawMotor = deviceManager.createVictorSPX(DeviceConnector.MC_CARGO_CLAW);
+
     }
 
     public void MoveCargoArmUp (){

@@ -28,61 +28,47 @@ public enum DeviceConnector implements DeviceConnectorInterface {
     MC_DRIVE_RIGHT_BOTTOM_FRONT(PortType.CAN, 5), // Victor
     MC_DRIVE_RIGHT_BOTTOM_REAR(PortType.CAN, 6), // Victor
 
-    MC_CLIMB_ELEVATOR_GEARBOX_FRONT(PortType.CAN, 21), //Talon
-    MC_CLIMB_ELEVATOR_GEARBOX_REAR(PortType.CAN, 22), //Talon
+    MC_MANIPULATOR_ELEVATOR(PortType.CAN, 11), //Talon
+    MC_CARGO_ARM(PortType.CAN, 12), // Talon
+    MC_CARGO_COLLECTOR(PortType.CAN, 13), // Talon
 
-    MANIPULATOR_MC_ELEVATOR_GEARBOX(PortType.CAN, 11), //Talon
-    //TODO Remove Line Below Soon.
-    //MANIPULATOR_MC_ELEVATOR_GEARBOX_REAR(PortType.CAN, 13), //Talon
+    MC_CLIMB_ELEVATOR_FRONT(PortType.CAN, 21), // Talon
+    MC_CLIMB_ELEVATOR_REAR(PortType.CAN, 22), // Talon
 
-    MC_CARGO_ARM(PortType.CAN, 12), // Victor
-    MC_CARGO_CLAW(PortType.CAN, 13), // Victor
-    MC_CLIMB_ELEVATOR_FWD(PortType.CAN, 23), // Victor
+    MC_CLIMB_DRIVE(PortType.CAN, 23), // Victor
 
     //Solenoids
-    DSOL_FORWARD_PANEL_ARM(PortType.PCM, 0), // Double Solenoid
-    DSOL_REVERSE_PANEL_ARM(PortType.PCM, 1), // Double Solenoid
+    DSOL_PANEL_ARM_FWD(PortType.PCM, 0), // Double Solenoid
+    DSOL_PANEL_ARM_REV(PortType.PCM, 1), // Double Solenoid
 
-    DSOL_FORWARD_PANEL_CLAW(PortType.PCM, 2), // Double Solenoid
-    DSOL_REVERSE_PANEL_CLAW(PortType.PCM, 3), // Double Solenoid
+    DSOL_PANEL_CLAW_FWD(PortType.PCM, 2), // Double Solenoid
+    DSOL_PANEL_CLAW_REV(PortType.PCM, 3), // Double Solenoid
 
-    //TODO I forgot the manipulator doesnt need a shifter now cause its only one lol.
-    //DSOL_MANIPULATOR_ELEV_SHIFT_ENABLE(PortType.PCM, 3), // Double Solenoid
-    //DSOL_MANIPULATOR_ELEV_SHIFT_DISABLE(PortType.PCM, 4), // Double Solenoid
+    DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD(PortType.PCM, 4), // Double Solenoid
+    DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV(PortType.PCM, 5), // Double Solenoid
 
-    DSOL_FRONT_CLIMB_ELEV_SHIFT_ENABLE(PortType.PCM, 4), // Double Solenoid
-    DSOL_FRONT_CLIMB_ELEV_SHIFT_DISABLE(PortType.PCM, 5), // Double Solenoid
-
-    DSOL_REAR_CLIMB_ELEV_SHIFT_ENABLE(PortType.PCM, 6), // Double Solenoid
-    DSOL_REAR_CLIMB_ELEV_SHIFT_DISABLE(PortType.PCM, 7), // Double Solenoid
-
-    //Encoders
-    ENC_A_CLIMB_FRONT(PortType.DIO, 77), //Encoder
-    ENC_B_CLIMB_FRONT(PortType.DIO, 77), //Encoder
-
-    ENC_A_CLIMB_REAR(PortType.DIO, 77), //Encoder
-    ENC_B_CLIMB_REAR(PortType.DIO, 77), //Encoder
+    DSOL_CLIMB_ELEV_REAR_SHIFTER_FWD(PortType.PCM, 6), // Double Solenoid
+    DSOL_CLIMB_ELEV_REAR_SHIFTER_REV(PortType.PCM, 7), // Double Solenoid
 
     //Limit Switch
-    LS_REAR_CLIMB_UP(PortType.DIO, 0), //Limit Switch
-    LS_REAR_CLIMB_DOWN(PortType.DIO, 1), //Limit Switch
+    LS_CLIMB_ELEV_FRONT_TOP(PortType.DIO, 0), // Lever Switch
+    LS_CLIMB_ELEV_FRONT_BOTTOM(PortType.DIO, 1), // Lever Switch
 
-    LS_MANIPULATER_ELEVATOR_UP(PortType.DIO, 2), //Limit Switch
-    LS_MANIPULATER_ELEVATOR_DOWN(PortType.DIO, 3), //Limit Switch
+    LS_CLIMB_ELEV_REAR_TOP(PortType.DIO, 6), // Lever Switch
+    LS_CLIMB_ELEV_REAR_BOTTOM(PortType.DIO, 7), // Lever Switch
 
-    LS_CARGO_CLAW_ARM_UP(PortType.DIO, 4), //Limit Switch
-    LS_CARGO_CLAW_ARM_DOWN(PortType.DIO, 5), //Limit Switch
+    LS_MANIPULATER_ELEVATOR_TOP(PortType.DIO, 2), // Lever Switch
+    LS_MANIPULATER_ELEVATOR_BOTTOM(PortType.DIO, 3), // Lever Switch
 
-    LS_FRONT_CLIMB_UP(PortType.DIO, 6), //Limit Switch
-    LS_FRONT_CLIMB_DOWN(PortType.DIO, 7), //Limit Switch
+    LS_CARGO_ARM_TOP(PortType.DIO, 4), // Lever Switch
+    
+    LS_CARGO_COLLECT_UPPER(PortType.DIO, 5), // Lever Switch
+    LS_CARGO_COLLECT_LOWER(PortType.DIO, 8), // Lever Switch
 
-    BS_CARGO_CLAW_ARM_COLLECT(PortType.DIO, 8), //Bumper Switch
-    BS_PATCH_CLAW_COLLECT(PortType.DIO, 9), //Bumper Switch
+    LS_PANEL_COLLECT(PortType.DIO, 9), // Lever Switch
 
-    SONAR_CLIMB_DETECTOR_FRONT(PortType.ANALOG, 1), //Sonar
-    SONAR_CLIMB_DETECTOR_REAR(PortType.ANALOG, 0); //Sonar
-
-
+    IR_CLIMB_FLOOR_SENSOR_FRONT(PortType.ANALOG, 1), // Sharp IR
+    IR_CLIMB_FLOOR_SENSOR_REAR(PortType.ANALOG, 0); //Sharp IR
 
 
     /**
