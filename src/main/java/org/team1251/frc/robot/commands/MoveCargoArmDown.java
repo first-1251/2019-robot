@@ -16,7 +16,7 @@ public class MoveCargoArmDown extends Command {
 
     @Override
     protected void execute() {
-        this.cargoClarm.MoveCargoArmDown();
+        this.cargoClarm.moveCargoArmDown();
     }
 
     @Override

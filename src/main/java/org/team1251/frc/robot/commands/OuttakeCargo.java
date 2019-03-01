@@ -16,7 +16,7 @@ public class OuttakeCargo extends Command {
 
     @Override
     protected void execute() {
-        this.cargoClarm.OuttakeCargo();
+        this.cargoClarm.collect(true);
     }
 
     @Override
