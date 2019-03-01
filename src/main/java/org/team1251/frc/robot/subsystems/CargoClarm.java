@@ -9,7 +9,7 @@ import org.team1251.frc.robotCore.subsystems.Subsystem;
 public class CargoClarm extends Subsystem {
 
     private final static double CLAW_SPEED = 0.5;
-    private final static double ARM_SPEED = 0.25;
+     private final static double ARM_SPEED = 0.25;
 
 
     private final DeviceManager deviceManager = Robot.deviceManager;

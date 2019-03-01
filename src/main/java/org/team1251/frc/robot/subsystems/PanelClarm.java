@@ -14,12 +14,14 @@ public class PanelClarm extends Subsystem {
 
 
     private DoubleSolenoid panelArmSolenoid;
-    private Solenoid panelClawSolenoid;
+
+    //Solenoid
+    private DoubleSolenoid panelClawSolenoid;
 
     public PanelClarm(){
 
-        panelArmSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FORWARD_PANEL_ARM, DeviceConnector.DSOL_BACKWARD_PANEL_ARM);
-        panelClawSolenoid = deviceManager.createSolenoid(DeviceConnector.SOL_PANEL_CLAW);
+        panelArmSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FORWARD_PANEL_ARM, DeviceConnector.DSOL_REVERSE_PANEL_ARM);
+        panelClawSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FORWARD_PANEL_CLAW, DeviceConnector.DSOL_REVERSE_PANEL_CLAW);
 
     }
 
@@ -32,7 +34,7 @@ public class PanelClarm extends Subsystem {
     }
 
     public void OpenPanelClaw(){
-        panelClawSolenoid.set(true);
+        panelClawSolenoid.set(DoubleSolenoid.Value.kForward);
     }
 
 }

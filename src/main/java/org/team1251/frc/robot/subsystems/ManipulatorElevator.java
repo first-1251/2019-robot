@@ -10,14 +10,12 @@ import org.team1251.frc.robotCore.subsystems.Subsystem;
 public class ManipulatorElevator extends Subsystem {
     /**
      * PRE MESSAGE TO ALL THOSE READING
-     * WHY ARE ALL 4 ELEVATORS ON ONE GEARBOX, THIS IS VERY VERY STUPID DESIGN
-     * THIS SUBSYSTEM IS GOING TO BE TERRIBLE
-     * PRAISE Nobuaki Katayama || JTHBD192620052807
+     * 1996 NISSAN 240SX. The car for the guy that says. My BMW is too reliable.
+     * PRAISE Some Nissan Dude || (INSERT MORENO VIN HERE)
      **/
 
-    //Just Incase Motors are Inverted
-    private static final boolean isManipulatorElevatorGearboxInvertedFront = false;
-    private static final boolean isManipulatorElevatorGearboxInvertedRear = false;
+    //Just In case Motors are Inverted
+    private static final boolean isManipulatorElevatorGearboxInverted = false;
 
     //Gearbox Speed Changes
     public static final double MANIPULATOR_ELEVATOR_SPEED = 0.5;
@@ -26,24 +24,35 @@ public class ManipulatorElevator extends Subsystem {
     private final DeviceManager deviceManager = Robot.deviceManager;
 
     //Speed Controller Initialization
-    private SpeedController manipulatorElevatorGearboxFront;
-    private SpeedController manipulatorElevatorGearboxRear;
+    private SpeedController manipulatorElevatorGearbox;
 
     //Solenoid Initialization
-    private DoubleSolenoid panelElevatorSolenoid;
-    private DoubleSolenoid cargoElevatorSolenoid;
+    //private DoubleSolenoid manipulatorElevatorSolenoid;
 
     public ManipulatorElevator(){
 
-        manipulatorElevatorGearboxFront = deviceManager.createTalonSRX(DeviceConnector.MANIPULATOR_MC_ELEVATOR_GEARBOX_FRONT);
-        manipulatorElevatorGearboxRear = deviceManager.createTalonSRX(DeviceConnector.MANIPULATOR_MC_ELEVATOR_GEARBOX_REAR);
+        manipulatorElevatorGearbox = deviceManager.createTalonSRX(DeviceConnector.MANIPULATOR_MC_ELEVATOR_GEARBOX);
+        //manipulatorElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_MANIPULATOR_ELEV_SHIFT_ENABLE, DeviceConnector.DSOL_MANIPULATOR_ELEV_SHIFT_DISABLE);
 
-        panelElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_PANEL_ELEV_SHIFT_FORWARD, DeviceConnector.DSOL_PANEL_ELEV_SHIFT_BACKWARD);
-        cargoElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CARGO_ELEV_SHIFT_FORWARD, DeviceConnector.DSOL_CARGO_ELEV_SHIFT_BACKWARD);
-
-       manipulatorElevatorGearboxFront.setInverted(isManipulatorElevatorGearboxInvertedFront);
-       manipulatorElevatorGearboxRear.setInverted(isManipulatorElevatorGearboxInvertedRear);
+        manipulatorElevatorGearbox.setInverted(isManipulatorElevatorGearboxInverted);
     }
 
+    public void MoveManipulatorElevatorUp(){
+        manipulatorElevatorGearbox.set(MANIPULATOR_ELEVATOR_SPEED);
+    }
 
+    public void MoveManipulatorElevatorDown(){
+        manipulatorElevatorGearbox.set(-MANIPULATOR_ELEVATOR_SPEED);
+    }
+
+    /**
+    public void EnableManipulatorElevator(){
+        manipulatorElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+    public void DisableManipulatorElevator(){
+        manipulatorElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+     **/
 }
+
+

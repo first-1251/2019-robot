@@ -14,7 +14,7 @@ public class DriveClimbElevatorGearboxForward extends Command {
 
     @Override
     protected void execute() {
-        this.climbElevator.DriveClimbGearboxForward();
+        this.climbElevator.DriveGearboxForward();
     }
 
     @Override

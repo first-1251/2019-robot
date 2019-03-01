@@ -15,14 +15,14 @@ public class ClimbElevator extends Subsystem {
      * PRAISE Nobuaki Katayama || JTHBD192620052807
      **/
 
-    //Just Incase Motors are Inverted
+    //Just In case Motors are Inverted
     private static final boolean isClimbDriveGearboxInverted = false;
     private static final boolean isFrontClimbElevatorGearboxInverted = false;
     private static final boolean isRearClimbElevatorGearboxInverted = false;
 
     //Gearbox Speed
-    public static final double FRONT_CLIMB_GEARBOX_SPEED = 0.5;
-    public static final double REAR_CLIMB_GEARBOX_SPEED = 0.5;
+    public static final double FORWARD_CLIMB_GEARBOX_SPEED = 0.5;
+    public static final double REVERSE_CLIMB_GEARBOX_SPEED = 0.5;
     public static final double CLIMB_ELEVATOR_SPEED = 0.5;
 
     private final DeviceManager deviceManager = Robot.deviceManager;
@@ -42,8 +42,8 @@ public class ClimbElevator extends Subsystem {
         climbElevatorGearboxRear = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_GEARBOX_REAR);
         climbDriveGearbox = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_FWD);
 
-        frontClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_FORWARD, DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_BACKWARD);
-        rearClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_FORWARD, DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_BACKWARD);
+        frontClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_ENABLE, DeviceConnector.DSOL_FRONT_CLIMB_ELEV_SHIFT_DISABLE);
+        rearClimbElevatorSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_ENABLE, DeviceConnector.DSOL_REAR_CLIMB_ELEV_SHIFT_DISABLE);
 
         climbElevatorGearboxFront.setInverted(isFrontClimbElevatorGearboxInverted);
         climbElevatorGearboxRear.setInverted(isRearClimbElevatorGearboxInverted);
@@ -52,14 +52,43 @@ public class ClimbElevator extends Subsystem {
 
     }
 
-    public void DriveClimbGearboxForward(){
-        climbElevatorGearboxFront.set(FRONT_CLIMB_GEARBOX_SPEED);
-        climbElevatorGearboxRear.set(FRONT_CLIMB_GEARBOX_SPEED);
+    //Elevator Drive
+    public void DriveGearboxForward(){
+        climbDriveGearbox.set(FORWARD_CLIMB_GEARBOX_SPEED);
     }
 
-    public void DriveClimbGearboxReverse(){
-        climbElevatorGearboxFront.set(-REAR_CLIMB_GEARBOX_SPEED);
-        climbElevatorGearboxRear.set(-REAR_CLIMB_GEARBOX_SPEED);
+    public void DriveGearboxReverse(){
+        climbDriveGearbox.set(-REVERSE_CLIMB_GEARBOX_SPEED);
     }
 
+    //Elevator Raise and Drop
+    public void MoveClimbElevatorUp(){
+        climbElevatorGearboxFront.set(CLIMB_ELEVATOR_SPEED);
+        climbElevatorGearboxRear.set(CLIMB_ELEVATOR_SPEED);
+    }
+
+    public void MoveClimbElevatorDown(){
+        climbElevatorGearboxFront.set(-CLIMB_ELEVATOR_SPEED);
+        climbElevatorGearboxRear.set(-CLIMB_ELEVATOR_SPEED);
+    }
+
+    //Elevator Solenoids
+    public void EnableFrontClimbElevator(){
+        frontClimbElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+        frontClimbElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+    public void DisableFrontClimbElevator(){
+        frontClimbElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+        frontClimbElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
+
+    public void EnableRearClimbElevator(){
+        rearClimbElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+        rearClimbElevatorSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    public void DisableRearClimbElevator(){
+        rearClimbElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+        rearClimbElevatorSolenoid.set(DoubleSolenoid.Value.kReverse);
+    }
 }
