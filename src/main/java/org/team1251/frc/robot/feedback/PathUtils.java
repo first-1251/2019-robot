@@ -2,11 +2,25 @@ package org.team1251.frc.robot.feedback;
 
 public class PathUtils {
 
-    private static double CAMERA_HEIGHT = 50;  // Distance of camera off floor, in inches
-    private static double CAMERA_ANGLE_DOWNWARDS = 16; // Angle of camera's vertical tilt towards target
 
-    // Height of center of target. (PoC only, real code will need variable height based on target).
+    // TODO: Calculate real value for ZERO_VERT_OFFSET_DISTANCE !
+    private static double ZERO_NET_VERT_OFFSET_DISTANCE = 24; // Distance from target when target is centered vertically.
+    private static double NET_VERT_OFFSET_EPSILON = .001; // Distance from value to consider negligible for net vertical offset.
+    private static double NET_HORIZ_OFFSET_EPSILON = .001; // Distance from value to consider negligible for net vertical offset.
+
+
+    // Height of center of target.
+    // TODO: This is the ship target height (same as human station) - provide different height for rocket.
     private static double TARGET_HEIGHT = 29;
+
+    // TODO: Figure out the appropriate place to use CAMERA_INSET, CAMERA_OFFSET, and BUMPER_DEPTH
+    // TODO: Set accurate values for physical camera/robot attributes
+    private static double CAMERA_ANGLE_DOWNWARDS = 16; // Angle of camera's vertical tilt towards target (degrees)
+    private static double CAMERA_HEIGHT = 50;  // Distance of camera off floor, in inches
+    private static double CAMERA_INSET = 0; // How far back the camera lens is from the front edge of the robot frame (inches)
+    private static double CAMERA_OFFSET = 0; // How far off-center the camera lens is (inches; negative = left; positive = right;)
+    private static double BUMPER_DEPTH = 0; // The depth of the FRONT side of the bumpers.
+
     private final Gyro gyro;
     private final LimeLight limeLight;
 
@@ -73,41 +87,55 @@ public class PathUtils {
         // the vertical target offset.  Relative to that angle, we know the *opposite* side based on the height of the
         // target and the height of the camera. We want to find the adjacent side (not the hypotenuse) -- so we want
         // to use TAN (t = opposite/angle)
-        double distanceY = (CAMERA_HEIGHT - TARGET_HEIGHT) / Math.tan(Math.toRadians(CAMERA_ANGLE_DOWNWARDS - targetVertOffset));
-
-
-        // Get the heading and use it to derive the most likely heading to point at the target plane
-        double targetPlaneHeading;
-        if (target == Target.SHIP) {
-            // Target is either at -90, 90, or 0  Find out which we are closest to.
-            if (robotHeading >= -135 && robotHeading <= -46) {
-                targetPlaneHeading = -90;
-            } else if (robotHeading >= -45 && robotHeading <= 44 ) {
-                targetPlaneHeading = 0;
-            } else if (robotHeading >= 45 && robotHeading <= 135 ) {
-                targetPlaneHeading = 90;
-            } else {
-                throw new RuntimeException("Can not figure out what you want -- point more towards target!");
-            }
+        double distance;
+        double netVerticalOffset = CAMERA_ANGLE_DOWNWARDS - targetVertOffset;
+        if (Math.abs(netVerticalOffset) < NET_VERT_OFFSET_EPSILON) {
+            // Our net offset is very close to zero. The distance trig won't work, use a pre-calculated distance.
+            distance = ZERO_NET_VERT_OFFSET_DISTANCE;
         } else {
-            // TODO: Target is either at -135, -90, -45, 135, 90, or 45 (confirm angles!)
-            throw new RuntimeException("Rocket targeting not implemented!");
+            // Calculate the distance.
+            distance = (CAMERA_HEIGHT - TARGET_HEIGHT) / Math.tan(Math.toRadians(netVerticalOffset));
         }
 
-        // Adjust to shift angles as if we were heading straight at the target plane
-        double headingAdjust = targetPlaneHeading - robotHeading;
-        double adjustedTargetHorizOffset = targetHorizOffset - headingAdjust;
+        // TODO: Figure out the intent of the driver based on the current robot heading and the known headings that
+        //       would point us directly at a target plane (different "known headings" for ship vs. rocket). For example,
+        //       if the SHIP is being targeted and the robot is at 80 degrees, they are probably targeting left side
+        //       of the SHIP since they are much closer to 90 degrees than to 0 or -90(a.k.a 270). For ROCKET targeting,
+        //       the
+        double targetPlaneHeading = 0;
 
-        // Our adjusted target offset is opposite our already-calculated distanceY, we need to find our adjacent side.
-        // Once again, we can use tangent:
-        //  tan = opposite / adjacent
-        //  adjacent = opposite / tan
-        //
-        // Note, target offset may be positive or negative, so use absolute value for this calculation.
-        double distanceX = distanceY / Math.tan(Math.toRadians(Math.abs(adjustedTargetHorizOffset)));
+        // We have the distance between the camera and the target along the floor, but we need to get our x/y position
+        // relative to the target. This requires more triangles! We can use the distance we already have as the
+        // hypotenuse of a new right triangle; the length of the other two sides of the triangle will tell us our x/y
+        // distances. We need another angle before we can figure out the sides, though. We can get it by combining
+        // robot angle with the horizontal offset reported by the limelight.
+        // TODO: Adjust angle of robot so that "0" represents the robot pointing straight at the target plane. Until
+        //       then this only works for the target plane which we are facing when we have a natural heading of 0.
+        double netHorizOffset = robotHeading + targetHorizOffset;
 
+        // Short circuit the calculations if we are sitting right in front of the target.
+        if (netHorizOffset < NET_HORIZ_OFFSET_EPSILON) {
+            // Our distance is our y position and our x position is 0.
+            // TODO: This is the x/y of the camera lens, account for offset within the robot frame (within bumper perimeter?)
+            return new Position2D(0, distance, robotHeading, targetPlaneHeading);
+        }
 
-        return new Position2D(distanceX, distanceY, robotHeading, targetPlaneHeading);
+        // Keep track of the sign of the horizontal angle. This indicates whether we are sitting to the left or right
+        // of the target and becomes the sign of our x position. More specifically, a negative value indicates we
+        // are sitting to the right of the target and will have a positive x position and vice versa.
+        int xSign = netHorizOffset < 0 ? 1 : -1;
+
+        // Lose the sign on the adjusted horizontal angle, and convert it to radians.
+        double netHorizOffsetRad = Math.toRadians(Math.abs(netHorizOffset));
+
+        // We have the hypotenuse and one of the angles, we can now rely on SOH CAH TOA to figure out x and y.
+        // x is opposite the known angle, so `SIN(angle) = x/h` or `x = SIN(angle) * h`
+        // y is adjacent to the known angle, so `COS(angle) = y/h` or `y = COS(angle) * h`
+        double x = Math.sin(netHorizOffsetRad) * distance;
+        double y = Math.cos(netHorizOffsetRad) * distance;
+
+        // TODO: This is the x/y of the camera lens, account for offset within the robot frame (within bumper perimeter?)
+        return new Position2D(x * xSign, y, robotHeading, targetPlaneHeading);
     }
 
     public enum Target { SHIP, ROCKET }
