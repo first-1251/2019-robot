@@ -4,7 +4,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.team1251.frc.robot.commands.*;
-import org.team1251.frc.robot.commands.ElevatorShifters.*;
 import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.feedback.Gyro;
 import org.team1251.frc.robot.feedback.LimeLight;
@@ -125,30 +124,6 @@ public class Robot extends TigerTimedRobot {
     private IntakeCargo intakeCargo;
 
     /**
-     * A command used to drive the Climb Elevator Gearbox forward.
-     */
-
-    private DriveClimbElevatorGearboxForward driveClimbElevatorGearboxForward;
-
-    /**
-     * A command used to drive the Climb Elevator Gearbox reverse.
-     */
-
-    private DriveClimbElevatorGearboxReverse driveClimbElevatorGearboxReverse;
-
-    /**
-     * A command used to move the Climb Elevator Up.
-     */
-
-    private MoveClimbElevatorUp moveClimbElevatorUp;
-
-    /**
-     * A command used to move the Climb Elevator Down.
-     */
-
-    private MoveClimbElevatorDown moveClimbElevatorDown;
-
-    /**
      * A command used to move the Manipulator Elevator Up.
      */
 
@@ -159,19 +134,6 @@ public class Robot extends TigerTimedRobot {
      */
 
     private MoveManipulatorElevatorDown moveManipulatorElevatorDown;
-
-    /**
-     * These Commands below will initialize all of the elevator shifters.
-     * These are also known as the ,"I'm far too lazy to actually write a
-     * description for each so I am grouping them. - KAZQ46
-    **/
-
-    private EnableManipulatorElevator enableManipulatorElevator;
-    private DisableManipulatorElevator disableManipulatorElevator;
-    private EnableFrontClimbElevator enableFrontClimbElevator;
-    private DisableFrontClimbElevator disableFrontClimbElevator;
-    private EnableRearClimbElevator enableRearClimbElevator;
-    private DisableRearClimbElevator disableRearClimbElevator;
 
 
     //// TEST RELATED fields start here

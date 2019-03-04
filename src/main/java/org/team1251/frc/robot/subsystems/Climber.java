@@ -208,6 +208,14 @@ public class Climber extends Subsystem {
         return isRearElevatorRetracted();
     }
 
+    public boolean isFrontOnSolidGround() {
+        return false;
+    }
+
+    public boolean isRearOnSolidGround() {
+        return false;
+    }
+
     public void sustain() {
         // TODO: position PID to sustain?
         liftControllerLead.set(LIFT_SUSTAIN_SPEED);

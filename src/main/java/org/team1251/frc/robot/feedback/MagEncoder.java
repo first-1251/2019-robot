@@ -19,6 +19,10 @@ public class MagEncoder {
         talon.setSensorPhase(isPhaseInverted);
     }
 
+    public double getVelocity() {
+        return talon.getSensorCollection().getQuadratureVelocity();
+    }
+
     public int getPosition() {
         return talon.getSensorCollection().getQuadraturePosition();
     }

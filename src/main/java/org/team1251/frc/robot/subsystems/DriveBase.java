@@ -327,6 +327,17 @@ public class DriveBase extends Subsystem {
     }
 
     /**
+     * Drive straight forward or backwards.
+     *
+     * @param power The power at which to drive. Negative drives backwards.
+     */
+    public void drive(double power) {
+        setControllerFollowMode(true); // Force following mode.
+        leftTrain.set(power);
+        rightTrain.set(power);
+    }
+
+    /**
      * Drive by applying power to the left and right drive train.
      *
      * @param power The power to apply to each train.
