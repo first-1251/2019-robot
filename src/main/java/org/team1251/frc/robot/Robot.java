@@ -75,7 +75,7 @@ public class Robot extends TigerTimedRobot {
      * The subsystem that controls the climb Elevators
      */
 
-    private ClimbElevator climbElevator;
+    private Climber climbElevator;
 
     /**
      * The command that gives the human players the ability to move the robot around the field.

@@ -1,13 +1,13 @@
 package org.team1251.frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.team1251.frc.robot.subsystems.ClimbElevator;
+import org.team1251.frc.robot.subsystems.Climber;
 
 public class MoveClimbElevatorDown extends Command {
 
-    private final ClimbElevator climbElevator;
+    private final Climber climbElevator;
 
-    public MoveClimbElevatorDown(ClimbElevator climbElevator){
+    public MoveClimbElevatorDown(Climber climbElevator){
         this.climbElevator = climbElevator;
         requires(climbElevator);
     }

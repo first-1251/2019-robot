@@ -3,6 +3,8 @@ package org.team1251.frc.robot.robotMap;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.*;
+import org.team1251.frc.robot.mechanism.NormallyClosedSwitch;
+import org.team1251.frc.robot.mechanism.NormallyOpenSwitch;
 import org.team1251.frc.robotCore.robotMap.AbstractDeviceManager;
 import org.team1251.frc.robotCore.robotMap.PortType;
 
@@ -63,7 +65,7 @@ public class DeviceManager extends AbstractDeviceManager<DeviceConnector> {
         return new Encoder(getPortNumber(connectorA, PortType.DIO), getPortNumber (connectorB, PortType.DIO));
     }
 
-    public AnalogInput createSonar(DeviceConnector connector){
+    public AnalogInput createClimbingFloorSensor(DeviceConnector connector){
         occupyPort(connector);
         return new AnalogInput(getPortNumber(connector, PortType.ANALOG));
     }
@@ -71,10 +73,17 @@ public class DeviceManager extends AbstractDeviceManager<DeviceConnector> {
     public DigitalInput createDigitalInput(DeviceConnector connector) { //Limit Switches
         occupyPort(connector);
         return new DigitalInput(getPortNumber(connector, PortType.DIO));
-
     }
 
+    public NormallyOpenSwitch createNormallyOpenSwitch(DeviceConnector connector) {
+        occupyPort(connector);
+        return new NormallyOpenSwitch(getPortNumber(connector, PortType.DIO));
+    }
 
+    public NormallyClosedSwitch createNormallyClosedSwitch(DeviceConnector connector) {
+        occupyPort(connector);
+        return new NormallyClosedSwitch(getPortNumber(connector, PortType.DIO));
+    }
 
     public PowerDistributionPanel getPDP() {
         // Special handling for the PDP. Only ever create a single instance and always return that instance.

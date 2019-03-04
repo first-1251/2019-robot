@@ -1,13 +1,13 @@
 package org.team1251.frc.robot.commands.ElevatorShifters;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.team1251.frc.robot.subsystems.ClimbElevator;
+import org.team1251.frc.robot.subsystems.Climber;
 
 public class EnableRearClimbElevator extends Command {
 
-    private final ClimbElevator climbElevator;
+    private final Climber climbElevator;
 
-    public EnableRearClimbElevator(ClimbElevator climbElevator){
+    public EnableRearClimbElevator(Climber climbElevator){
         this.climbElevator = climbElevator;
         requires(climbElevator);
     }

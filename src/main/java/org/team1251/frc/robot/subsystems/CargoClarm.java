@@ -13,8 +13,8 @@ public class CargoClarm extends Subsystem {
     private final static double COLLECTOR_MOTOR_SPEED = 0.75;
     private final static double ARM_SPEED = .75;
 
-    private final static int ARM_MOTOR_POLARITY = 1;
-    private final static int COLLECTOR_MOTOR_POLARITY = 1;
+    private final static boolean ARM_MOTOR_INVERTED = false;
+    private final static boolean COLLECTOR_MOTOR_INVERTED = false;
 
     private final static boolean ARM_LIMIT_SWITCH_UPPER_ON_STATE = true;
     private final static boolean COLLECTOR_SWITCH_UPPER_ON_STATE = true;
@@ -32,9 +32,14 @@ public class CargoClarm extends Subsystem {
     public CargoClarm(){
         armMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_CARGO_ARM);
         armMotorController.setNeutralMode(NeutralMode.Brake);
+        armMotorController.setInverted(ARM_MOTOR_INVERTED);
+
         armUpperLimitSwitch = deviceManager.createDigitalInput(DeviceConnector.LS_CARGO_ARM_TOP);
 
         collectorMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_CARGO_COLLECTOR);
+        collectorMotorController.setNeutralMode(NeutralMode.Coast);
+        collectorMotorController.setInverted(COLLECTOR_MOTOR_INVERTED);
+
         upperCollectionSwitch = deviceManager.createDigitalInput(DeviceConnector.LS_CARGO_COLLECT_UPPER);
         lowerCollectionSwitch = deviceManager.createDigitalInput(DeviceConnector.LS_CARGO_COLLECT_LOWER);
     }
@@ -43,19 +48,19 @@ public class CargoClarm extends Subsystem {
         if (isArmUp()) {
             armMotorController.set(0);
         } else {
-            armMotorController.set(-ARM_SPEED * ARM_MOTOR_POLARITY);
+            armMotorController.set(-ARM_SPEED);
         }
     }
 
     public void moveCargoArmDown() {
-        armMotorController.set(ARM_SPEED * ARM_MOTOR_POLARITY);
+        armMotorController.set(ARM_SPEED);
     }
 
     public void collect(boolean isEnabled) {
         if (!isEnabled || isCargoCollected()) {
             collectorMotorController.set(0);
         } else {
-            collectorMotorController.set(COLLECTOR_MOTOR_SPEED * COLLECTOR_MOTOR_POLARITY);
+            collectorMotorController.set(COLLECTOR_MOTOR_SPEED);
         }
     }
 
@@ -63,7 +68,7 @@ public class CargoClarm extends Subsystem {
         if (!isEnabled) {
             collectorMotorController.set(0);
         } else {
-            collectorMotorController.set(-COLLECTOR_MOTOR_SPEED * COLLECTOR_MOTOR_POLARITY);
+            collectorMotorController.set(-COLLECTOR_MOTOR_SPEED);
         }
     }
 

@@ -51,11 +51,11 @@ public enum DeviceConnector implements DeviceConnectorInterface {
     DSOL_CLIMB_ELEV_REAR_SHIFTER_REV(PortType.PCM, 7), // Double Solenoid
 
     //Limit Switch
-    LS_CLIMB_ELEV_FRONT_TOP(PortType.DIO, 0), // Lever Switch
-    LS_CLIMB_ELEV_FRONT_BOTTOM(PortType.DIO, 1), // Lever Switch
+    LS_CLIMB_ELEV_FRONT_UPPER(PortType.DIO, 0), // Lever Switch
+    LS_CLIMB_ELEV_FRONT_LOWER(PortType.DIO, 1), // Lever Switch
 
-    LS_CLIMB_ELEV_REAR_TOP(PortType.DIO, 6), // Lever Switch
-    LS_CLIMB_ELEV_REAR_BOTTOM(PortType.DIO, 7), // Lever Switch
+    LS_CLIMB_ELEV_REAR_UPPER(PortType.DIO, 6), // Lever Switch
+    LS_CLIMB_ELEV_REAR_LOWER(PortType.DIO, 7), // Lever Switch
 
     LS_MANIPULATER_ELEVATOR_TOP(PortType.DIO, 2), // Lever Switch
     LS_MANIPULATER_ELEVATOR_BOTTOM(PortType.DIO, 3), // Lever Switch
