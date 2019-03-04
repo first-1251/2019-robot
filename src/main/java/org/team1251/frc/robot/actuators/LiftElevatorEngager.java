@@ -1,4 +1,4 @@
-package org.team1251.frc.robot.mechanism;
+package org.team1251.frc.robot.actuators;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
