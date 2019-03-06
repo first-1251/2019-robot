@@ -26,9 +26,9 @@ import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
 public class Robot extends TigerTimedRobot {
 
     /**
-     * How fast to iterate.
+     * How many milliseconds in each robot tick.
      */
-    private static final double TICK_PERIOD = .01;
+    public static final int TICK_PERIOD_MS = 20;
 
     //Elevator Enable Flags
     public static boolean isClimbElevatorEnabled = false;
@@ -123,18 +123,6 @@ public class Robot extends TigerTimedRobot {
 
     private IntakeCargo intakeCargo;
 
-    /**
-     * A command used to move the Manipulator Elevator Up.
-     */
-
-    private MoveManipulatorElevatorUp moveManipulatorElevatorUp;
-
-    /**
-     * A command used to move the Manipulator Elevator Down.
-     */
-
-    private MoveManipulatorElevatorDown moveManipulatorElevatorDown;
-
 
     //// TEST RELATED fields start here
 
@@ -155,7 +143,7 @@ public class Robot extends TigerTimedRobot {
      * Creates the robot!
      */
     public Robot() {
-        super(TICK_PERIOD);
+        super(TICK_PERIOD_MS / 1000.0);
     }
 
     /**
@@ -240,8 +228,8 @@ public class Robot extends TigerTimedRobot {
 //        driveClimbElevatorGearboxReverse = new DriveClimbElevatorGearboxReverse(climbElevator);
 //        moveClimbElevatorUp = new MoveClimbElevatorUp(climbElevator);
 //        moveClimbElevatorDown = new MoveClimbElevatorDown(climbElevator);
-//        moveManipulatorElevatorUp = new MoveManipulatorElevatorUp(manipulatorElevator);
-//        moveManipulatorElevatorDown = new MoveManipulatorElevatorDown(manipulatorElevator)     ;
+//        moveManipulatorElevatorUp = new elevatorUp(manipulatorElevator);
+//        moveManipulatorElevatorDown = new elevatorDown(manipulatorElevator)     ;
 //
 //        //Elevator Shifter Commands
 //        enableManipulatorElevator = new EnableManipulatorElevator(manipulatorElevator);

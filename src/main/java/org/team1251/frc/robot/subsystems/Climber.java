@@ -1,6 +1,7 @@
 package org.team1251.frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import org.team1251.frc.robot.Robot;
@@ -145,15 +146,30 @@ public class Climber extends Subsystem {
         liftMotorControllerFront = deviceManager.createTalonSRX(DeviceConnector.MC_CLIMB_ELEVATOR_FRONT);
         liftMotorControllerRear = deviceManager.createTalonSRX(DeviceConnector.MC_CLIMB_ELEVATOR_REAR);
 
+        // Reset to defaults to avoid unexpected behavior from previous runs.
+        liftMotorControllerFront.configFactoryDefault(20);
+        liftMotorControllerRear.configFactoryDefault(20);
+
         liftMotorControllerFront.setInverted(LIFT_MOTOR_FRONT_INVERTED);
         liftMotorControllerFront.setNeutralMode(NeutralMode.Coast);
 
         liftMotorControllerRear.setInverted(LIFT_MOTOR_REAR_INVERTED);
-        liftMotorControllerFront.setNeutralMode(NeutralMode.Coast);
+        liftMotorControllerRear.setNeutralMode(NeutralMode.Coast);
 
         // Make the motor controller for the front lift motor the lead.
         liftControllerLead = liftMotorControllerFront;
         liftMotorControllerRear.follow(liftControllerLead);
+
+        // Adjust the update rates of important things. Use half the robot period to maximize chances of getting an
+        // update on every robot tick.
+        liftMotorControllerFront.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Robot.TICK_PERIOD_MS / 2 ); // default 20
+        liftMotorControllerRear.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Robot.TICK_PERIOD_MS / 2); // default 20
+
+        // Decrease some things on the follower that aren't important in that context. This helps offset the bandwidth
+        // cost of increasing important things.
+        liftMotorControllerRear.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 100); // default 10
+        liftMotorControllerRear.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 100); // default 20
+
 
         driveMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_FRONT);
 

@@ -1,11 +1,7 @@
 package org.team1251.frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.IMotorController;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.ctre.phoenix.motorcontrol.*;
+import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.SpeedController;
 import org.team1251.frc.robot.DrivePower;
 import org.team1251.frc.robot.Robot;
@@ -184,10 +180,23 @@ public class DriveBase extends Subsystem {
      * @param controller The phoenix motor controller to configure.
      * @param isInverted Set to `true` to adjust for reversed polarity on the corresponding motor.
      */
-    private void configurePhoenixController(IMotorController controller, boolean isInverted) {
+    private void configurePhoenixController(BaseMotorController controller, boolean isInverted) {
+        controller.configFactoryDefault(20);
         controller.setInverted(isInverted);
         controller.setNeutralMode(NeutralMode.Coast);
         // TODO: set dead-band -- at what power is it just a waste of energy to even try?
+    }
+
+    private void configureVictor(VictorSPX controller, boolean isInverted) {
+        // Apply common configuration
+        this.configurePhoenixController(controller, isInverted);
+
+        // Our victors are used as a follower (except when testing), we can slow down the update frames for a few
+        // things to conserve CAN bandwidth and help offset areas were we increase update rate. Increasing these rates
+        // for followers is given as a tip in the docs:
+        //     https://phoenix-documentation.readthedocs.io/en/latest/ch18_CommonAPI.html?highlight=setStatusFramePeriod
+        controller.setStatusFramePeriod(StatusFrame.Status_1_General, 100);
+        controller.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 100);
     }
 
     /**
