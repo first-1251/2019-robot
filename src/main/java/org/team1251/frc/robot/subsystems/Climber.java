@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import org.team1251.frc.robot.Robot;
+import org.team1251.frc.robot.feedback.GroundDetector;
 import org.team1251.frc.robot.feedback.MagEncoder;
 import org.team1251.frc.robot.actuators.LiftElevatorEngager;
 import org.team1251.frc.robot.feedback.NormallyOpenSwitch;
@@ -58,6 +59,8 @@ public class Climber extends Subsystem {
     private NormallyOpenSwitch elevatorRearLowerLimitSwitch; // on when fully extended
 
     private MagEncoder elevatorRearEncoder;
+    private GroundDetector groundDetectorRear;
+    private GroundDetector groundDetectorFront;
 
     public MagEncoder getElevatorRearEncoder() {
         return elevatorRearEncoder;
@@ -84,11 +87,17 @@ public class Climber extends Subsystem {
         establishElevatorEngagers();
         establishLiftLimitSwitches();
         establishElevatorEncoders();
-        establishFloorSensor();
+        establishGroundDetectors();
     }
 
-    private void establishFloorSensor() {
-        // TODO: this
+    private void establishGroundDetectors() {
+        // Duplicate call protection.
+        if (groundDetectorFront != null) {
+            return;
+        }
+
+        groundDetectorFront = deviceManager.createGroundDetector(DeviceConnector.IR_CLIMB_GROUND_SENSOR_FRONT);
+        groundDetectorRear = deviceManager.createGroundDetector(DeviceConnector.IR_CLIMB_GROUND_SENSOR_REAR);
     }
 
     private void establishElevatorEncoders() {
@@ -209,11 +218,11 @@ public class Climber extends Subsystem {
     }
 
     public boolean isFrontOnSolidGround() {
-        return false;
+        return groundDetectorFront.isGroundDetected();
     }
 
     public boolean isRearOnSolidGround() {
-        return false;
+        return groundDetectorRear.isGroundDetected();
     }
 
     public void sustain() {

@@ -3,6 +3,7 @@ package org.team1251.frc.robot.robotMap;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.*;
+import org.team1251.frc.robot.feedback.GroundDetector;
 import org.team1251.frc.robot.feedback.NormallyClosedSwitch;
 import org.team1251.frc.robot.feedback.NormallyOpenSwitch;
 import org.team1251.frc.robotCore.robotMap.AbstractDeviceManager;
@@ -59,15 +60,9 @@ public class DeviceManager extends AbstractDeviceManager<DeviceConnector> {
         return new Solenoid(getPortNumber(connector, PortType.PCM));
     }
 
-    public Encoder createEncoder(DeviceConnector connectorA, DeviceConnector connectorB){
-        occupyPort(connectorA);
-        occupyPort(connectorB);
-        return new Encoder(getPortNumber(connectorA, PortType.DIO), getPortNumber (connectorB, PortType.DIO));
-    }
-
-    public AnalogInput createClimbingFloorSensor(DeviceConnector connector){
+    public GroundDetector createGroundDetector(DeviceConnector connector){
         occupyPort(connector);
-        return new AnalogInput(getPortNumber(connector, PortType.ANALOG));
+        return new GroundDetector(new AnalogInput(getPortNumber(connector, PortType.ANALOG)));
     }
 
     public DigitalInput createDigitalInput(DeviceConnector connector) { //Limit Switches

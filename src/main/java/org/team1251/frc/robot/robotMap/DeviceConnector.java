@@ -67,8 +67,8 @@ public enum DeviceConnector implements DeviceConnectorInterface {
 
     LS_PANEL_COLLECT(PortType.DIO, 9), // Lever Switch
 
-    IR_CLIMB_FLOOR_SENSOR_FRONT(PortType.ANALOG, 1), // Sharp IR
-    IR_CLIMB_FLOOR_SENSOR_REAR(PortType.ANALOG, 0); //Sharp IR
+    IR_CLIMB_GROUND_SENSOR_FRONT(PortType.ANALOG, 1), // Sharp IR
+    IR_CLIMB_GROUND_SENSOR_REAR(PortType.ANALOG, 0); //Sharp IR
 
 
     /**
