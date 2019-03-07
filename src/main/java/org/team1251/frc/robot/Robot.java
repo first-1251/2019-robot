@@ -63,7 +63,7 @@ public class Robot extends TigerTimedRobot {
      * The subsystem that controls the Claw and Arm for Panel.
      */
 
-    private PanelClarm panelClarm;
+    private Grappler panelClarm;
 
     /**
      * The subsystem that controls all of the ManipulatorElevator.
@@ -80,24 +80,6 @@ public class Robot extends TigerTimedRobot {
      * The command that gives the human players the ability to move the robot around the field.
      */
     private TeleopDrive teleopDrive;
-
-    /**
-     * A command used to extend the panel arm.
-     */
-
-    private ExtendPanelArm extendPanelArm;
-
-    /**
-     * A command used to retract the panel arm.
-     */
-
-    private RetractPanelArm retractPanelArm;
-
-    /**
-     * A command used to extend the panel arm.
-     */
-
-    private OpenPanelClaw openPanelClaw;
 
     /**
      * A command used to move Cargo Arm Up.

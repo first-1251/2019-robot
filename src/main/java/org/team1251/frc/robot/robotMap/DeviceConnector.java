@@ -41,8 +41,8 @@ public enum DeviceConnector implements DeviceConnectorInterface {
     DSOL_PANEL_ARM_FWD(PortType.PCM, 0), // Double Solenoid
     DSOL_PANEL_ARM_REV(PortType.PCM, 1), // Double Solenoid
 
-    DSOL_PANEL_CLAW_FWD(PortType.PCM, 2), // Double Solenoid
-    DSOL_PANEL_CLAW_REV(PortType.PCM, 3), // Double Solenoid
+    DSOL_PANEL_GRAPPLER_FWD(PortType.PCM, 2), // Double Solenoid
+    DSOL_PANEL_GRAPPLER_REV(PortType.PCM, 3), // Double Solenoid
 
     DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD(PortType.PCM, 4), // Double Solenoid
     DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV(PortType.PCM, 5), // Double Solenoid
