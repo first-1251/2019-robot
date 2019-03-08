@@ -1,22 +1,27 @@
 package org.team1251.frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import org.team1251.frc.robot.subsystems.CargoClarm;
+import org.team1251.frc.robot.subsystems.CargoCollector;
 
 public class OuttakeCargo extends Command {
 
-    private final CargoClarm cargoClarm;
+    private final CargoCollector collector;
 
-    public OuttakeCargo(CargoClarm cargoClarm){
+    public OuttakeCargo(CargoCollector collector){
 
-        this.cargoClarm = cargoClarm;
-        requires(cargoClarm);
+        this.collector = collector;
+        requires(collector);
 
     }
 
     @Override
+    protected void end() {
+        this.collector.stopCollector();
+    }
+
+    @Override
     protected void execute() {
-        this.cargoClarm.collect(true);
+        this.collector.eject();
     }
 
     @Override

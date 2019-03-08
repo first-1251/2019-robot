@@ -11,7 +11,7 @@ import org.team1251.frc.robot.robotMap.DeviceConnector;
 import org.team1251.frc.robot.robotMap.DeviceManager;
 import org.team1251.frc.robotCore.subsystems.Subsystem;
 
-public class ManipulatorElevator extends Subsystem {
+public class ManipulatorElevator extends Subsystem implements ManipulatorElevatorState {
     /**
      * PRE MESSAGE TO ALL THOSE READING
      * 1996 NISSAN 240SX. The car for the guy that says. My BMW is too reliable.
@@ -129,6 +129,11 @@ public class ManipulatorElevator extends Subsystem {
             // Let the controller do the work.
             motorController.set(ControlMode.MotionMagic, setPoint.position);
         }
+    }
+
+    @Override
+    public boolean isAtBottom() {
+        return limitSwitchLower.isActive() || encoder.getDistance() < 1;
     }
 
     /**

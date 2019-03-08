@@ -57,7 +57,7 @@ public class Robot extends TigerTimedRobot {
      * The subsystem that controls the Claw and Arm for Cargo.
      */
 
-    private CargoClarm cargoClarm;
+    private CargoCollector cargoClarm;
 
     /**
      * The subsystem that controls the Claw and Arm for Panel.
@@ -85,13 +85,7 @@ public class Robot extends TigerTimedRobot {
      * A command used to move Cargo Arm Up.
      */
 
-    private MoveCargoArmUp moveCargoArmUp;
-
-    /**
-     * A command used to move Cargo Arm Down.
-     */
-
-    private MoveCargoArmDown moveCargoArmDown;
+    private MoveArmUp moveCargoArmUp;
 
     /**
      * A command used to outtake Cargo.

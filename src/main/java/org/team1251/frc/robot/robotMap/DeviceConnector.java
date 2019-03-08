@@ -61,10 +61,9 @@ public enum DeviceConnector implements DeviceConnectorInterface {
     LS_MANIPULATER_ELEVATOR_BOTTOM(PortType.DIO, 3), // Lever Switch
 
     LS_CARGO_ARM_TOP(PortType.DIO, 4), // Lever Switch
-    
-    LS_CARGO_COLLECT_UPPER(PortType.DIO, 5), // Lever Switch
-    LS_CARGO_COLLECT_LOWER(PortType.DIO, 8), // Lever Switch
+    LS_CARGO_ARM_BOTTOM(PortType.DIO, 5), // Lever Switch
 
+    LS_CARGO_COLLECT(PortType.DIO, 8), // Lever Switch
     LS_PANEL_COLLECT(PortType.DIO, 9), // Lever Switch
 
     IR_CLIMB_GROUND_SENSOR_FRONT(PortType.ANALOG, 1), // Sharp IR
