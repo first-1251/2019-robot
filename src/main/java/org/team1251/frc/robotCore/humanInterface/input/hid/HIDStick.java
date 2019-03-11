@@ -46,7 +46,7 @@ public class HIDStick implements Stick {
      *     as the stick is moved upwards and approaches -1 as it is moved downward.
      */
     public double getRawVertical() {
-        return rawDevice.getRawAxis(verticalAxisID);
+        return rawDevice.getRawAxis(verticalAxisID) * -1;
     }
 
     /**

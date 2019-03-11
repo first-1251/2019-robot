@@ -153,22 +153,22 @@ public class DriveBase extends Subsystem {
     public DriveBase() {
 
         leftTrain = leftTopMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_LEFT_TOP);
-        configureTalon(leftTopMotorController, true);
+        configureTalon(leftTopMotorController, false);
 
         leftBottomFrontMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_BOTTOM_FRONT);
-        configurePhoenixController(leftBottomFrontMotorController, true);
+        configurePhoenixController(leftBottomFrontMotorController, false);
 
         leftBottomRearMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_BOTTOM_REAR);
-        configurePhoenixController(leftBottomRearMotorController, true);
+        configurePhoenixController(leftBottomRearMotorController, false);
 
         rightTrain = rightTopMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_RIGHT_TOP);
-        configureTalon(rightTopMotorController, false);
+        configureTalon(rightTopMotorController, true);
 
         rightBottomFrontMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_RIGHT_BOTTOM_FRONT);
-        configurePhoenixController(rightBottomFrontMotorController, false);
+        configurePhoenixController(rightBottomFrontMotorController, true);
 
         rightBottomRearMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_RIGHT_BOTTOM_REAR);
-        configurePhoenixController(rightBottomRearMotorController, false);
+        configurePhoenixController(rightBottomRearMotorController, true);
 
         // Turn on following by default.
         setControllerFollowMode(true);

@@ -2,8 +2,6 @@ package org.team1251.frc.robot.humanInterface.input;
 
 import edu.wpi.first.wpilibj.Joystick;
 import org.team1251.frc.robot.DrivePower;
-import org.team1251.frc.robotCore.humanInterface.input.SimpleAnalogButtonConfig;
-import org.team1251.frc.robotCore.humanInterface.input.SimpleStickConfig;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
 
@@ -23,6 +21,7 @@ public class HumanInput {
      */
     private final HumanDriveInput humanDriveInput;
 
+
     /**
      * Indicates that command triggers have already been attached.
      */
@@ -37,13 +36,7 @@ public class HumanInput {
      * Creates a new instance
      */
     public HumanInput() {
-        driverPad = new ModernGamePad(
-                new Joystick(0),
-                new SimpleStickConfig(.05, false, false),
-                new SimpleStickConfig(.05, false, false),
-                new SimpleAnalogButtonConfig(.05, .50),
-                new SimpleAnalogButtonConfig(.05, .50)
-        );
+        driverPad = new ModernGamePad(new Joystick(0));
 
         humanDriveInput = new TigerDriveInput();
     }

@@ -38,7 +38,7 @@ public class Climber extends Subsystem {
 
     // Motor Speeds
     public static final double LIFT_SPEED = 1;
-    public static final double LIFT_SUSTAIN_SPEED = .50; // TODO: Tweak this.
+    public static final double LIFT_SUSTAIN_SPEED = .25; // TODO: Tweak this.
 
     private final DeviceManager deviceManager = Robot.deviceManager;
 
@@ -125,15 +125,15 @@ public class Climber extends Subsystem {
             return;
         }
 
-        elevatorFrontEngager = new LiftElevatorEngager(
-                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV),
-                LIFT_ENGAGER_FRONT_INVERTED
-        );
-
-        elevatorRearEngager = new LiftElevatorEngager(
-                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_REV),
-                LIFT_ENGAGER_REAR_INVERTED
-        );
+//        elevatorFrontEngager = new LiftElevatorEngager(
+//                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV),
+//                LIFT_ENGAGER_FRONT_INVERTED
+//        );
+//
+//        elevatorRearEngager = new LiftElevatorEngager(
+//                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_REV),
+//                LIFT_ENGAGER_REAR_INVERTED
+//        );
     }
 
     private void establishLiftMotorControllers() {
@@ -151,10 +151,10 @@ public class Climber extends Subsystem {
         liftMotorControllerRear.configFactoryDefault(20);
 
         liftMotorControllerFront.setInverted(LIFT_MOTOR_FRONT_INVERTED);
-        liftMotorControllerFront.setNeutralMode(NeutralMode.Coast);
+        liftMotorControllerFront.setNeutralMode(NeutralMode.Brake);
 
         liftMotorControllerRear.setInverted(LIFT_MOTOR_REAR_INVERTED);
-        liftMotorControllerRear.setNeutralMode(NeutralMode.Coast);
+        liftMotorControllerRear.setNeutralMode(NeutralMode.Brake);
 
         // Make the motor controller for the front lift motor the lead.
         liftControllerLead = liftMotorControllerFront;
@@ -171,7 +171,7 @@ public class Climber extends Subsystem {
         liftMotorControllerRear.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 100); // default 20
 
 
-        driveMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_ELEVATOR_FRONT);
+        driveMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_CLIMB_DRIVE);
 
         driveMotorController.setInverted(DRIVE_MOTOR_INVERTED);
         liftMotorControllerFront.setNeutralMode(NeutralMode.Coast);
@@ -208,8 +208,8 @@ public class Climber extends Subsystem {
      */
     public boolean lift() {
         // Make sure both elevators are engaged before lifting.
-        elevatorFrontEngager.setState(true);
-        elevatorRearEngager.setState(true);
+//        elevatorFrontEngager.setState(true);
+//        elevatorRearEngager.setState(true);
 
         // Stop lifting as soon as either elevator reaches its upper limit. They do not move independently, so first
         // one there wins.
@@ -218,7 +218,8 @@ public class Climber extends Subsystem {
             sustain();
             return true;
         } else {
-            liftControllerLead.set(LIFT_SPEED);
+            liftMotorControllerFront.set(LIFT_SPEED);
+            liftMotorControllerRear.set(LIFT_SPEED);
             return false;
         }
     }
@@ -246,6 +247,11 @@ public class Climber extends Subsystem {
         liftControllerLead.set(LIFT_SUSTAIN_SPEED);
     }
 
+    public void kill() {
+        liftMotorControllerFront.set(0);
+        liftMotorControllerRear.set(0);
+    }
+
     public boolean isFrontElevatorRetracted() {
         return elevatorFrontUpperLimitSwitch.isActive() ||
                 elevatorFrontEncoder.getDistance() <= RETRACTED_DISTANCE_THRESHOLD;
@@ -266,5 +272,9 @@ public class Climber extends Subsystem {
 
     public boolean isLifted() {
         return isFrontLifted() || isRearLifted();
+    }
+
+    public void printDiagnostics() {
+        System.out.println("Front: " + elevatorFrontEncoder.getDistance() + "/" + elevatorFrontEncoder.getVelocity() + " | Rear:" + elevatorRearEncoder.getDistance() + "/" + elevatorRearEncoder.getVelocity());
     }
 }

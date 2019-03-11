@@ -27,6 +27,11 @@ import org.team1251.frc.robotCore.humanInterface.input.hid.HIDStick;
  *
  */
 abstract public class GamePad {
+
+    enum POV_ {
+
+    }
+
     Button a;
     Button b;
     Button x;

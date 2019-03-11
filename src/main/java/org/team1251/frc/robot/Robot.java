@@ -30,11 +30,6 @@ public class Robot extends TigerTimedRobot {
      */
     public static final int TICK_PERIOD_MS = 20;
 
-    //Elevator Enable Flags
-    public static boolean isClimbElevatorEnabled = false;
-    public static boolean isCargoElevatorEnabled = false;
-    public static boolean isPanelElevatorEnabled = false;
-
     /**
      * The device manager which is used to create various devices.
      *
@@ -56,13 +51,11 @@ public class Robot extends TigerTimedRobot {
     /**
      * The subsystem that controls the Claw and Arm for Cargo.
      */
-
     private CargoCollector cargoClarm;
 
     /**
      * The subsystem that controls the Claw and Arm for Panel.
      */
-
     private Grappler panelClarm;
 
     /**
@@ -73,7 +66,6 @@ public class Robot extends TigerTimedRobot {
     /**
      * The subsystem that controls the climb Elevators
      */
-
     private Climber climbElevator;
 
     /**
@@ -84,21 +76,24 @@ public class Robot extends TigerTimedRobot {
     /**
      * A command used to move Cargo Arm Up.
      */
-
     private MoveArmUp moveCargoArmUp;
 
     /**
      * A command used to outtake Cargo.
      */
-
     private OuttakeCargo outtakeCargo;
 
     /**
      * A command used to move Intake Cargo.
      */
-
     private IntakeCargo intakeCargo;
 
+    private Gyro gyro;
+
+    private LimeLight cvLimelight;
+    private LimeLight driverAssistLimelight;
+
+    private PathUtils pathUtils;
 
     //// TEST RELATED fields start here
 
@@ -111,9 +106,8 @@ public class Robot extends TigerTimedRobot {
      * A command used to individually test motors.
      */
     private MotorTest motorTestCmd;
-    private Gyro gyro;
-    private LimeLight limelight;
-    private PathUtils pathUtils;
+
+    private Climber climber;
 
     /**
      * Creates the robot!
@@ -148,8 +142,16 @@ public class Robot extends TigerTimedRobot {
     @Override
     protected void robotInitCreateFeedbackSystems() {
         gyro = new Gyro();
-        limelight = new LimeLight();
-        pathUtils = new PathUtils(gyro, limelight);
+
+        cvLimelight = new LimeLight(LimeLight.CameraId.CV);
+        cvLimelight.setCameraMode(LimeLight.CameraMode.CV);
+        cvLimelight.setLedMode(LimeLight.LedMode.ON);
+
+        driverAssistLimelight = new LimeLight(LimeLight.CameraId.DRIVER_ASSIST);
+        driverAssistLimelight.setCameraMode(LimeLight.CameraMode.DRIVER);
+        driverAssistLimelight.setLedMode(LimeLight.LedMode.OFF); // TODO: Blink on game piece collection.
+
+        pathUtils = new PathUtils(gyro, cvLimelight);
     }
 
     /**
@@ -177,6 +179,7 @@ public class Robot extends TigerTimedRobot {
     @Override
     protected void robotInitCreateSubsystems() {
         driveBase = new DriveBase();
+        climber = new Climber();
         // TODO: Uncomment as they become available -- robot dies if we try to initialize devices that don't exist.
 //        cargoClarm = new CargoClarm();
 //        panelClarm = new PanelClarm();
@@ -345,6 +348,20 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     public void testPeriodic() {
+
+        if (testerGamePad.a().isPressed()) {
+            climber.lift();
+            climber.printDiagnostics();
+        } else {
+            climber.kill();
+        }
+
+        if (testerGamePad.x().isPressed()) {
+            motorTestCmd.start();
+        } else {
+            motorTestCmd.cancel();
+        }
+
         if (testerGamePad.b().isPressed()) {
             if (gyro.isReady()) {
                 System.out.println(gyro.getHeading());

@@ -18,7 +18,7 @@ public class ModernGamePad extends GamePad {
      */
     public ModernGamePad(GenericHID rawDevice) {
         this(rawDevice,
-                new SimpleStickConfig(.05, false, false),
+                new SimpleStickConfig(.05, true, false),
                 new SimpleStickConfig(.05, false, false),
                 new SimpleAnalogButtonConfig(.05, .50),
                 new SimpleAnalogButtonConfig(.05, .50)

@@ -31,9 +31,19 @@ public class LimeLight {
         CV, DRIVER
     }
 
+    public enum CameraId {
+        CV("limelight-cv"), DRIVER_ASSIST("limelight-assist");
 
-    public LimeLight() {
-        NetworkTable netTable = NetworkTableInstance.getDefault().getTable("limelight-cargo");
+        public final String ntName;
+
+        CameraId(String ntName) {
+            this.ntName = ntName;
+        }
+    }
+
+
+    public LimeLight(CameraId id) {
+        NetworkTable netTable = NetworkTableInstance.getDefault().getTable(id.ntName);
 
         tx = netTable.getEntry("tx");
         ty = netTable.getEntry("ty");

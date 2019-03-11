@@ -87,9 +87,10 @@ public class TigerDriveInput implements HumanDriveInput{
 
         // Get the direct throttle/turn inputs.
         double throttle = humanInput.getDriverPad().ls().getVertical();
+        System.out.println("throttle: " + throttle);
 
         // Net trigger value for quick turn power. If it is high enough, trigger a quick turn.
-        double quickTurnPower = humanInput.getDriverPad().rt().getValue() - humanInput.getDriverPad().lt().getValue();
+        double quickTurnPower = humanInput.getDriverPad().lt().getValue() - humanInput.getDriverPad().rt().getValue();
         if (Math.abs(quickTurnPower) > quickTurnThreshold) {
             return new InputValues(throttle, quickTurnPower, true);
         }
