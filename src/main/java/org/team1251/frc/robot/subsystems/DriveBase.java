@@ -2,9 +2,12 @@ package org.team1251.frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.*;
 import com.ctre.phoenix.motorcontrol.can.*;
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.SpeedController;
 import org.team1251.frc.robot.DrivePower;
 import org.team1251.frc.robot.Robot;
+import org.team1251.frc.robot.feedback.Gyro;
+import org.team1251.frc.robot.feedback.MagEncoder;
 import org.team1251.frc.robot.robotMap.DeviceConnector;
 import org.team1251.frc.robot.robotMap.DeviceManager;
 import org.team1251.frc.robotCore.subsystems.Subsystem;
@@ -119,6 +122,10 @@ public class DriveBase extends Subsystem {
      */
     private final WPI_VictorSPX rightBottomRearMotorController;
 
+    private final MagEncoder leftEncoder;
+    private final MagEncoder rightEncoder;
+    private final Gyro gyro;
+
 
     /**
      * The motor which is currently in testing or `null` if no motor is in testing.
@@ -137,6 +144,19 @@ public class DriveBase extends Subsystem {
      */
     private boolean controllerFollowMode = false;
 
+    @Override
+    public void sendTelemetryData() {
+        NetworkTable sensorTable = getSensorTable();
+        sensorTable.getEntry("leftEncoderVelocity").setDouble(leftEncoder.getVelocity());
+        sensorTable.getEntry("rightEncoderVelocity").setDouble(rightEncoder.getVelocity());
+        sensorTable.getEntry("gyroHeading").setDouble(gyro.getHeading());
+        sensorTable.getEntry("gyroIsReady").setBoolean(gyro.isReady());
+
+        NetworkTable stateTable = getStateTable();
+        stateTable.getEntry("heading").setDouble(gyro.getHeading());
+        stateTable.getEntry("probableTarget").setString("TBD"); // TODO: Find most probable target based on angle.
+    }
+
     /**
      * An enumeration of all motors within the drive train.
      *
@@ -150,25 +170,29 @@ public class DriveBase extends Subsystem {
     /**
      * Create a new drive base instance.
      */
-    public DriveBase() {
+    public DriveBase(Gyro gyro) {
+        this.gyro = gyro;
 
         leftTrain = leftTopMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_LEFT_TOP);
         configureTalon(leftTopMotorController, false);
 
         leftBottomFrontMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_BOTTOM_FRONT);
-        configurePhoenixController(leftBottomFrontMotorController, false);
+        configureVictor(leftBottomFrontMotorController, false);
 
         leftBottomRearMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_LEFT_BOTTOM_REAR);
-        configurePhoenixController(leftBottomRearMotorController, false);
+        configureVictor(leftBottomRearMotorController, false);
 
         rightTrain = rightTopMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_DRIVE_RIGHT_TOP);
         configureTalon(rightTopMotorController, true);
 
         rightBottomFrontMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_RIGHT_BOTTOM_FRONT);
-        configurePhoenixController(rightBottomFrontMotorController, true);
+        configureVictor(rightBottomFrontMotorController, true);
 
         rightBottomRearMotorController = deviceManager.createVictorSPX(DeviceConnector.MC_DRIVE_RIGHT_BOTTOM_REAR);
-        configurePhoenixController(rightBottomRearMotorController, true);
+        configureVictor(rightBottomRearMotorController, true);
+
+        leftEncoder = new MagEncoder(leftTopMotorController, 1);
+        rightEncoder = new MagEncoder(rightTopMotorController, 1);
 
         // Turn on following by default.
         setControllerFollowMode(true);
@@ -213,6 +237,7 @@ public class DriveBase extends Subsystem {
 
         // Apply talon-specific configuration.
         // TODO: Set Current limiting and other cool talon-only things.
+        controller.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Robot.TICK_PERIOD_MS / 2 ); // default 20
     }
 
     /**
@@ -355,5 +380,13 @@ public class DriveBase extends Subsystem {
         setControllerFollowMode(true); // Force following mode.
         leftTrain.set(power.getLeft());
         rightTrain.set(power.getRight());
+    }
+
+    public double getLeftVelocity() {
+        return leftEncoder.getVelocity();
+    }
+
+    public double getRightVelocity() {
+        return rightEncoder.getVelocity();
     }
 }

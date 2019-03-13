@@ -1,5 +1,6 @@
 package org.team1251.frc.robot.subsystems;
 
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.feedback.NormallyOpenSwitch;
@@ -19,29 +20,29 @@ public class Grappler extends Subsystem {
     private static final DoubleSolenoid.Value UNCLAMP_VALUE = DoubleSolenoid.Value.kReverse;
 
 
-    private final DoubleSolenoid armSolenoid;
+    private final DoubleSolenoid extenderSolenoid;
 
     //Solenoid
     private final DoubleSolenoid fingerSolenoid;
 
     private final NormallyOpenSwitch collectionSwitch;
 
-
     public Grappler(){
         collectionSwitch = deviceManager.createNormallyOpenSwitch(DeviceConnector.LS_PANEL_COLLECT);
-        armSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_PANEL_ARM_FWD, DeviceConnector.DSOL_PANEL_ARM_REV);
+        extenderSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_PANEL_ARM_FWD, DeviceConnector.DSOL_PANEL_ARM_REV);
         fingerSolenoid = deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_PANEL_GRAPPLER_FWD, DeviceConnector.DSOL_PANEL_GRAPPLER_REV);
     }
 
     public void extend() {
-        armSolenoid.set(EXTEND_VALUE);
+        extenderSolenoid.set(EXTEND_VALUE);
     }
 
     public void retract() {
-        armSolenoid.set(RETRACT_VALUE);
+        extenderSolenoid.set(RETRACT_VALUE);
     }
 
     public void clamp() {
+
         fingerSolenoid.set(CLAMP_VALUE);
     }
 
@@ -51,5 +52,17 @@ public class Grappler extends Subsystem {
 
     public boolean hasPanel() {
         return collectionSwitch.isActive();
+    }
+
+    @Override
+    public void sendTelemetryData() {
+
+        NetworkTable sensorTable = getSensorTable();
+        sensorTable.getEntry("collectionSwitch").setBoolean(collectionSwitch.isActive());
+
+        NetworkTable stateTable = getStateTable();
+        stateTable.getEntry("isFingerClamped").setBoolean(fingerSolenoid.get() == CLAMP_VALUE);
+        stateTable.getEntry("isExtended").setBoolean(extenderSolenoid.get() == EXTEND_VALUE);
+        stateTable.getEntry("hasPanel").setBoolean(hasPanel());
     }
 }

@@ -27,6 +27,10 @@ public class MagEncoder {
         return talon.getSensorCollection().getQuadraturePosition();
     }
 
+    public int getAbsolutePosition() {
+        return talon.getSensorCollection().getPulseWidthPosition();
+    }
+
     public double getDistance() {
         return getPosition() * distancePerCount;
     }

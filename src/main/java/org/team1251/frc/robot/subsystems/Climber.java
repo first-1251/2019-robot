@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import edu.wpi.first.networktables.NetworkTable;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.feedback.GroundDetector;
 import org.team1251.frc.robot.feedback.MagEncoder;
@@ -276,5 +277,38 @@ public class Climber extends Subsystem {
 
     public void printDiagnostics() {
         System.out.println("Front: " + elevatorFrontEncoder.getDistance() + "/" + elevatorFrontEncoder.getVelocity() + " | Rear:" + elevatorRearEncoder.getDistance() + "/" + elevatorRearEncoder.getVelocity());
+    }
+
+    @Override
+    public void sendTelemetryData() {
+
+        NetworkTable sensorTable = getSensorTable();
+        sensorTable.getEntry("frontEncoderDistance").setDouble(elevatorFrontEncoder.getDistance());
+        sensorTable.getEntry("frontEncoderVelocity").setDouble(elevatorFrontEncoder.getVelocity());
+        sensorTable.getEntry("frontEncoderPosition").setDouble(elevatorFrontEncoder.getPosition());
+
+        sensorTable.getEntry("rearEncoderDistance").setDouble(elevatorRearEncoder.getDistance());
+        sensorTable.getEntry("rearEncoderVelocity").setDouble(elevatorRearEncoder.getVelocity());
+        sensorTable.getEntry("rearEncoderPosition").setDouble(elevatorRearEncoder.getPosition());
+
+        sensorTable.getEntry("frontLowerLimitSwitch").setBoolean(elevatorFrontLowerLimitSwitch.isActive());
+        sensorTable.getEntry("frontLowerLimitSwitch").setBoolean(elevatorFrontLowerLimitSwitch.isActive());
+
+        sensorTable.getEntry("rearUpperLimitSwitch").setBoolean(elevatorRearUpperLimitSwitch.isActive());
+        sensorTable.getEntry("rearLowerLimitSwitch").setBoolean(elevatorRearLowerLimitSwitch.isActive());
+
+        sensorTable.getEntry("frontGroundDetect").setBoolean(groundDetectorFront.isGroundDetected());
+        sensorTable.getEntry("frontGroundDetectVoltage").setNumber(groundDetectorFront.getVoltage());
+
+        sensorTable.getEntry("rearGroundDetect").setBoolean(groundDetectorRear.isGroundDetected());
+        sensorTable.getEntry("rearGroundDetectVoltage").setNumber(groundDetectorRear.getVoltage());
+
+        NetworkTable stateTable = getStateTable();
+        stateTable.getEntry("isLifted").setBoolean(isLifted());
+        stateTable.getEntry("height").setDouble(Math.max(elevatorFrontEncoder.getDistance(), elevatorRearEncoder.getDistance()));
+        stateTable.getEntry("isFrontRetracted").setBoolean(isFrontElevatorRetracted());
+        stateTable.getEntry("isRearRetracted").setBoolean(isFrontElevatorRetracted());
+        stateTable.getEntry("isFrontOnSolidGround").setBoolean(isFrontOnSolidGround());
+        stateTable.getEntry("isRearOnSolidGround").setBoolean(isFrontOnSolidGround());
     }
 }

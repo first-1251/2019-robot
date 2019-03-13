@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import edu.wpi.first.networktables.NetworkTable;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.feedback.MagEncoder;
 import org.team1251.frc.robot.feedback.NormallyOpenSwitch;
@@ -12,6 +13,10 @@ import org.team1251.frc.robot.robotMap.DeviceManager;
 import org.team1251.frc.robotCore.subsystems.Subsystem;
 
 public class ManipulatorElevator extends Subsystem implements ManipulatorElevatorState {
+
+    private boolean isAtTarget = true;
+    private SetPoint targetSetPoint = SetPoint.HOME;
+
     /**
      * PRE MESSAGE TO ALL THOSE READING
      * 1996 NISSAN 240SX. The car for the guy that says. My BMW is too reliable.
@@ -112,22 +117,29 @@ public class ManipulatorElevator extends Subsystem implements ManipulatorElevato
 
     public void moveTo(SetPoint setPoint) {
 
-        int currentPosition = encoder.getPosition();
+        targetSetPoint = setPoint;
+
+        int currentEncoderPosition = encoder.getPosition();
         if (motorController.getClosedLoopError() <= POSITION_TOLERANCE) {
             // Apply holding power so long as we are within tolerance. If the holding power allows us to shift
             // out of tolerance, we'll go back to closed-loop operation.
             motorController.set(HOLDING_POWER);
-        } else if (currentPosition < encoder.getPosition() && limitSwitchLower.isActive()) {
-            // Prevent moving down when the lower limit switch is active.
-            // Just kill the motor for mechanical safety.
-            motorController.set(0);
-        } else if (currentPosition > encoder.getPosition() && limitSwitchLower.isActive()) {
-            // Prevent moving up when the upper limit switch is active.
-            // Kill the motor for mechanical safety.
-            motorController.set(0);
+            isAtTarget = true;
         } else {
-            // Let the controller do the work.
-            motorController.set(ControlMode.MotionMagic, setPoint.position);
+
+            isAtTarget = false;
+            if (currentEncoderPosition < encoder.getPosition() && limitSwitchLower.isActive()) {
+                // Prevent moving down when the lower limit switch is active.
+                // Just kill the motor for mechanical safety.
+                motorController.set(0);
+            } else if (currentEncoderPosition > encoder.getPosition() && limitSwitchLower.isActive()) {
+                // Prevent moving up when the upper limit switch is active.
+                // Kill the motor for mechanical safety.
+                motorController.set(0);
+            } else {
+                // Let the controller do the work.
+                motorController.set(ControlMode.MotionMagic, setPoint.position);
+            }
         }
     }
 
@@ -144,6 +156,21 @@ public class ManipulatorElevator extends Subsystem implements ManipulatorElevato
         if (limitSwitchLower.isActive()) {
             encoder.reset();
         }
+    }
+
+    @Override
+    public void sendTelemetryData() {
+
+        NetworkTable sensorTable = getSensorTable();
+        sensorTable.getEntry("lowerLimitSwitch").setBoolean(limitSwitchLower.isActive());
+        sensorTable.getEntry("upperLimitSwitch").setBoolean(limitSwitchUpper.isActive());
+        sensorTable.getEntry("encoderPosition").setNumber(encoder.getPosition());
+        sensorTable.getEntry("encoderDistance").setDouble(encoder.getDistance());
+
+        NetworkTable stateTable = getStateTable();
+        stateTable.getEntry("targetSetPoint").setString(targetSetPoint.name());
+        stateTable.getEntry("isAtTarget").setBoolean(isAtTarget);
+        stateTable.getEntry("height").setDouble(encoder.getDistance());
     }
 }
 

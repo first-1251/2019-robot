@@ -1,13 +1,19 @@
 package org.team1251.frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.team1251.frc.robot.commands.*;
+import org.team1251.frc.robot.commands.IntakeCargo;
+import org.team1251.frc.robot.commands.MoveArmUp;
+import org.team1251.frc.robot.commands.OuttakeCargo;
+import org.team1251.frc.robot.commands.TeleopDrive;
 import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.feedback.Gyro;
 import org.team1251.frc.robot.feedback.LimeLight;
 import org.team1251.frc.robot.feedback.PathUtils;
+import org.team1251.frc.robot.humanInterface.feedback.ITelemetryProvider;
+import org.team1251.frc.robot.humanInterface.feedback.TelemetryTables;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.robotMap.DeviceManager;
 import org.team1251.frc.robot.subsystems.*;
@@ -15,6 +21,8 @@ import org.team1251.frc.robotCore.TigerTimedRobot;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
+
+import java.util.ArrayList;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -24,6 +32,11 @@ import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
  * the `build.gradle` file.
  */
 public class Robot extends TigerTimedRobot {
+
+    /**
+     * Grab the PDP so that it shows up in NetworkTables
+     */
+    private final PowerDistributionPanel pdp = deviceManager.getPDP();
 
     /**
      * How many milliseconds in each robot tick.
@@ -37,6 +50,16 @@ public class Robot extends TigerTimedRobot {
      * not-so-useful ones thrown by default.
      */
     public static DeviceManager deviceManager = new DeviceManager();
+
+    /**
+     * A way for telemetry providers to easily get a handle to the appropriate high-level telemetry network tables.
+     */
+    public static TelemetryTables telemetryTables = new TelemetryTables();
+
+    /**
+     * A list of telemetry providers. Each will be asked to send their values every period.
+     */
+    private final ArrayList<ITelemetryProvider> telemetryProviders = new ArrayList<>();
 
     /**
      * The source of all input that comes from the human players.
@@ -178,7 +201,7 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void robotInitCreateSubsystems() {
-        driveBase = new DriveBase();
+        driveBase = new DriveBase(gyro);
         climber = new Climber();
         // TODO: Uncomment as they become available -- robot dies if we try to initialize devices that don't exist.
 //        cargoClarm = new CargoClarm();
@@ -376,5 +399,12 @@ public class Robot extends TigerTimedRobot {
             }
         }
         Scheduler.getInstance().run();
+    }
+
+    @Override
+    public void robotPeriodic() {
+        for (ITelemetryProvider provider:telemetryProviders) {
+            provider.sendTelemetryData();
+        }
     }
 }

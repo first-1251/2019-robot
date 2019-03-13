@@ -43,5 +43,4 @@ public class Gyro {
 
         return heading;
     }
-
 }

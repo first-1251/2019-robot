@@ -20,4 +20,8 @@ public class GroundDetector {
     public boolean isGroundDetected() {
         return distanceSensor.getAverageVoltage() >= GROUND_DETECTION_THRESHOLD;
     }
+
+    public double getVoltage() {
+        return distanceSensor.getAverageVoltage();
+    }
 }
