@@ -8,5 +8,5 @@ import org.team1251.frc.robot.DrivePower;
  * This interface makes it easier to swap out control schemes if we decide to.
  */
 interface HumanDriveInput {
-    DrivePower getDrivePower(HumanInput humanInput);
+    DrivePower getDrivePower(HumanInput humanInput, double leftVelocity, double rightVelocity);
 }

@@ -74,9 +74,12 @@ public class HumanInput {
     /**
      * Provides the amount of power to apply to each of the drive trains according to the human input.
      *
+     * @param leftVelocity The current velocity of the left drive train
+     * @param rightVelocity the current velocity of the right drive train
+     *
      * @return A `DrivePower` instance representing the power to be applied ot the left and right drive trains.
      */
-    public DrivePower getDrivePower() {
-        return humanDriveInput.getDrivePower(this);
+    public DrivePower getDrivePower(double leftVelocity, double rightVelocity) {
+        return humanDriveInput.getDrivePower(this, leftVelocity, rightVelocity);
     }
 }

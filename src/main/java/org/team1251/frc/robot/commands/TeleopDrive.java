@@ -25,7 +25,7 @@ public class TeleopDrive extends Command {
 
     @Override
     protected void execute() {
-        driveBase.drive(humanInput.getDrivePower());
+        driveBase.drive(humanInput.getDrivePower(driveBase.getLeftVelocity(), driveBase.getRightVelocity()));
     }
 
     @Override

@@ -21,6 +21,11 @@ public class TigerDriveInput implements HumanDriveInput{
     private double turnSensitivity = .85;
 
     /**
+     * Scale factor for quick turns.
+     */
+    private static double QUICK_TURN_SENSITIVITY = .5;
+
+    /**
      * The minimum reverse throttle input value required to invert the quick-turn direction. Quick-turn is inverted when
      * going backwards to make the motion consistent with regular turning while moving backwards.
      *
@@ -47,9 +52,9 @@ public class TigerDriveInput implements HumanDriveInput{
     private double quickTurnThreshold = .15;
 
     /**
-     * The smallest amount of throttle necessary for turning.
+     * The amount of implicit throttle to apply for turning when no other throttle value is available.
      */
-    private static double MINIMUM_THROTTLE_FOR_TURNING = .10;
+    private static double IMPLICIT_THROTTLE_FOR_TURNING = .3;
 
     /**
      * A hysteresis (in the form of a 10 sample average) used to ramp down throttle when the driver continues to apply
@@ -61,23 +66,23 @@ public class TigerDriveInput implements HumanDriveInput{
     private ValueSmoother throttleHysteresis = new ValueSmoother(10, .10, true);
 
     /**
-     * The most recently applied implicit throttle value. Used to avoid abrupt changes in throttle signs when applying
-     * continuous implicit throttle.
+     * The most recently applied throttle value. Used to avoid abrupt changes in throttle signs when applying
+     * implicit throttle.
      */
-    private Double lastImplicitThrottle = null;
+    private Double previousThrottleValue = null;
 
     /**
-     * A timer which is reset every time an implicit throttle is applied. This is used to make sure implicit
-     * throttles are not reapplied after they have become stale.
+     * A timer which is reset every time an throttle is calculated. This is used to make stale values are not used
+     * to influence implicit throttle values.
      *
-     * @see #LAST_IMPLICIT_THROTTLE_TIMEOUT
+     * @see #PREVIOUS_THROTTLE_VALUE_TIMEOUT
      */
-    private final Timer lastImplicitThrottleTimer = new Timer();
+    private final Timer previousThrottleExpiryTimer = new Timer();
 
     /**
      * The amount of time (seconds) before the lastImplicitThrottle is considered "stale" and discarded.
      */
-    private static double LAST_IMPLICIT_THROTTLE_TIMEOUT = .1;
+    private static double PREVIOUS_THROTTLE_VALUE_TIMEOUT = .1;
 
     /**
      * Local representation of interpreted input values.
@@ -118,7 +123,7 @@ public class TigerDriveInput implements HumanDriveInput{
      * Default constructor
      */
     TigerDriveInput() {
-        lastImplicitThrottleTimer.start();
+        previousThrottleExpiryTimer.start();
     }
 
     /**
@@ -126,7 +131,7 @@ public class TigerDriveInput implements HumanDriveInput{
      *
      * @param humanInput The source of the input values.
      */
-    private InputValues getInputValues(HumanInput humanInput) {
+    private InputValues getInputValues(HumanInput humanInput, double leftVelocity, double rightVelocity) {
 
         // Get the direct throttle/turn inputs.
         double throttle = humanInput.getDriverPad().ls().getVertical();
@@ -135,7 +140,7 @@ public class TigerDriveInput implements HumanDriveInput{
         // Net trigger value for quick turn power. If it is high enough, trigger a quick turn.
         double quickTurnPower = humanInput.getDriverPad().lt().getValue() - humanInput.getDriverPad().rt().getValue();
         if (Math.abs(quickTurnPower) > quickTurnThreshold) {
-            return new InputValues(throttle, quickTurnPower, true);
+            return new InputValues(throttle, quickTurnPower * QUICK_TURN_SENSITIVITY, true);
         }
 
         // Not a quick turn. Look at the stick for turn power.
@@ -147,38 +152,32 @@ public class TigerDriveInput implements HumanDriveInput{
             // Okay... the driver clearly wants to turn. Let's give them some power to do it.
 
             // Look at the hysteresis to see if they let go of the throttle recently enough to give them more power
-            // than the minimum required to turn.
-            if (Math.abs(hysteresisThrottle) > MINIMUM_THROTTLE_FOR_TURNING) {
+            // than the static implicit throttle value.
+            if (Math.abs(hysteresisThrottle) > IMPLICIT_THROTTLE_FOR_TURNING) {
                 // The driver just recently let go of the throttle, but they are still trying to turn -- in other
                 // words they are coasting into a turn. Use the Hysteresis to ramp the turn motion down.
                 throttle = hysteresisThrottle;
             } else {
                 // They let go of the throttle a while ago, but they clearly still want to turn. Give them
-                // a little juice. Either used the most recent forced throttle (to avoid abrupt changes) or apply the
-                // minimum throttle for turning.
-
-                if (lastImplicitThrottle == null && lastImplicitThrottleTimer.get() < LAST_IMPLICIT_THROTTLE_TIMEOUT) {
-                    // Keep the sign of the last implicit throttle so that the robot does not abruptly change direction.
-                    throttle = lastImplicitThrottle < 0 ? -MINIMUM_THROTTLE_FOR_TURNING : MINIMUM_THROTTLE_FOR_TURNING;
+                // a little juice. See if there is a valid, previous throttle value that needs to be considered.
+                if (previousThrottleValue != null && previousThrottleExpiryTimer.get() < PREVIOUS_THROTTLE_VALUE_TIMEOUT) {
+                    // Keep the sign of the last throttle value so that the robot does not abruptly change direction.
+                    throttle = previousThrottleValue < 0 ? -IMPLICIT_THROTTLE_FOR_TURNING : IMPLICIT_THROTTLE_FOR_TURNING;
                 } else {
                     // No previous throttle that we need to inspect, so just apply the minimum.
-                    throttle = MINIMUM_THROTTLE_FOR_TURNING;
+                    throttle = IMPLICIT_THROTTLE_FOR_TURNING;
                 }
             }
-
-            lastImplicitThrottle = throttle;
-            lastImplicitThrottleTimer.reset();
-        } else {
-            // We will not be forcing a throttle.
-            lastImplicitThrottle = null;
         }
 
+        previousThrottleValue = throttle;
+        previousThrottleExpiryTimer.reset();
         return new InputValues(throttle, turn, false);
     }
 
     @Override
-    public DrivePower getDrivePower(HumanInput humanInput) {
-        InputValues input = getInputValues(humanInput);
+    public DrivePower getDrivePower(HumanInput humanInput, double leftVelocity, double rightVelocity) {
+        InputValues input = getInputValues(humanInput, leftVelocity, rightVelocity);
 
         // Calculate the maximum power adjustment to be made to the right and left drive trains based on driver inputs.
         // Less throttle (in either direction) or less turn will result in a smaller value. This adjustment is added to
