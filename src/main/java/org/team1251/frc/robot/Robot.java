@@ -137,6 +137,7 @@ public class Robot extends TigerTimedRobot {
     private MoveElevatorToSetPoint moveElevatorToShipAndHumanCargo;
     private MoveElevatorToSetPoint moveElevatorToRocketLevel2;
     private MoveElevatorToSetPoint moveElevatorToRocketLevel3;
+    private boolean wasTestModeActivated = false;
 
     /**
      * Creates the robot!
@@ -269,7 +270,13 @@ public class Robot extends TigerTimedRobot {
      * methods.
      */
     @Override
-    protected void autonomousEveryInit() { }
+    protected void autonomousEveryInit() {
+        if (wasTestModeActivated) {
+            throw new RuntimeException("Can not run autonomous after test mode - restart robot code from driver station!");
+        }
+
+        driveBase.setDefaultCommand(teleopDrive);
+    }
 
 
     /**
@@ -280,7 +287,10 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void teleopEveryInit() {
-        // TODO: Do we want to turn teleop drive on for every game mode since it is allowed during sandstorm?
+        if (wasTestModeActivated) {
+            throw new RuntimeException("Can not run teleop after test mode - restart robot code from driver station!");
+        }
+
         driveBase.setDefaultCommand(teleopDrive);
     }
 
@@ -302,6 +312,7 @@ public class Robot extends TigerTimedRobot {
         // while in test mode.
         LiveWindow.setEnabled(false);
         motorTestCmd.reset(null);
+        wasTestModeActivated = true;
     }
 
     /**
@@ -359,6 +370,8 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     public void testPeriodic() {
+
+
 
         if (testerGamePad.a().isPressed()) {
             climber.lift();
