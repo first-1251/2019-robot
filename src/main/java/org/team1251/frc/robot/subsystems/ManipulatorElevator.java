@@ -24,18 +24,26 @@ public class ManipulatorElevator extends Subsystem implements ManipulatorElevato
      **/
 
     public enum SetPoint {
-        
-        HOME(0), // elevator full down
-        HUMAN_STATION_PANEL(0),
-        HUMAN_STATION_CARGO(0),
-        SHIP_CARGO(0),
-        SHIP_PANEL(0),
-        ROCKET_LVL1_CARGO(0),
-        ROCKET_LVL2_CARGO(0),
-        ROCKET_LVL3_CARGO(0),
-        ROCKET_LVL1_PANEL(0),
-        ROCKET_LVL2_PANEL(0),
-        ROCKET_LVL3_PANEL(0);
+
+        /**
+         * Elevator full down... covers rocket lvl 1, ship panel, and human station panel.
+         */
+        HOME(0),
+
+        /**
+         * Position that is suitable for cargo pickup from human station and placing cargo in the ship.
+         */
+        SHIP_AND_HUMAN_CARGO(0),
+
+        /**
+         * Position which is suitable for rocket level 2 panel and cargo
+         */
+        ROCKET_LEVEL_2(0),
+
+        /**
+         * Position which is suitable for rocket level 3 panel and cargo
+         */
+        ROCKET_LEVEL_3(0);
 
         final double height;
         final int position;
