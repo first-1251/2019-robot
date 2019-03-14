@@ -98,8 +98,14 @@ public class MotorTest extends Command {
     }
 
     private void stopAllTests() {
-        // TODO: Stop all motor tests.
         driveBase.testMotor(null);
+        arm.stopArmMotor();
+        collector.stopCargoMotor();
+        climber.stopMotorControllerRear();
+        climber.stopMotorControllerFront();
+        climber.stopDriveMotorController();
+        elevator.stopMotorController();
+
     }
 
     @Override
@@ -145,22 +151,22 @@ public class MotorTest extends Command {
                 driveBase.testMotor(DriveBase.Motor.RIGHT_BOTTOM_REAR);
                 break;
             case LIFT_FRONT:
-                // TODO: Run front motor test.
+                climber.testMotorControllerFront();
                 break;
             case LIFT_REAR:
-                // TODO: Run rear motor test.
+                climber.testMotorControllerRear();
                 break;
             case LIFT_DRIVE:
-                // TODO: Run lift drive motor test.
+                climber.testDriveMotorController();
                 break;
             case ARM:
-                // TODO: Run arm motor test
+                arm.testArmMotor();
                 break;
             case CARGO_COLLECTOR:
-                // TODO: Run collector motor test
+                collector.testCargoMotor();
                 break;
             case ELEVATOR:
-                // TODO: Run elevator motor test.
+                elevator.testMotorController();
                 break;
         }
     }
