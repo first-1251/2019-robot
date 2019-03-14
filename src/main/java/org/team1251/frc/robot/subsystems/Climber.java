@@ -253,6 +253,31 @@ public class Climber extends Subsystem {
         liftMotorControllerRear.set(0);
     }
 
+    public void testMotorControllerFront() {
+        liftMotorControllerFront.set(0.25);
+    }
+
+    public void testMotorControllerRear() {
+        liftMotorControllerRear.set(0.25);
+    }
+
+    public void testDriveMotorController(){
+        driveMotorController.set(0.25);
+    }
+
+    public void stopMotorControllerFront() {
+        liftMotorControllerFront.set(0);
+    }
+
+    public void stopMotorControllerRear() {
+        liftMotorControllerRear.set(0);
+    }
+
+    public void stopDriveMotorController(){
+        driveMotorController.set(0);
+    }
+
+
     public boolean isFrontElevatorRetracted() {
         return elevatorFrontUpperLimitSwitch.isActive() ||
                 elevatorFrontEncoder.getDistance() <= RETRACTED_DISTANCE_THRESHOLD;

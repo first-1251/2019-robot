@@ -143,6 +143,14 @@ public class ManipulatorElevator extends Subsystem implements ManipulatorElevato
         }
     }
 
+    public void testMotorController() {
+        motorController.set(0.25);
+    }
+
+    public void stopMotorController() {
+        motorController.set(0);
+    }
+
     @Override
     public boolean isAtBottom() {
         return limitSwitchLower.isActive() || encoder.getDistance() < 1;

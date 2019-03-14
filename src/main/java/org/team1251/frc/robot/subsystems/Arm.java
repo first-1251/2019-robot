@@ -39,9 +39,6 @@ public class Arm extends Subsystem {
         encoder = new MagEncoder(armMotorController, 1);
     }
 
-    public void stopArmMotor() {
-        armMotorController.set(0);
-    }
 
     public void moveCargoArmUp() {
         if (isArmUp()) {
@@ -58,6 +55,16 @@ public class Arm extends Subsystem {
             armMotorController.set(ARM_SPEED);
         }
     }
+
+    public void testArmMotor (){
+        armMotorController.set(0.25);
+    }
+
+    public void stopArmMotor () {
+        armMotorController.set(0);
+    }
+
+
 
     public boolean isArmUp() {
         return armUpperLimitSwitch.isActive();
