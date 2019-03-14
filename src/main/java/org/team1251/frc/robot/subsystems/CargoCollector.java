@@ -42,6 +42,14 @@ public class CargoCollector extends Subsystem {
         collectorMotorController.set(-COLLECTOR_MOTOR_SPEED);
     }
 
+    public void testCargoMotor() {
+        collectorMotorController.set(0.25);
+    }
+
+    public void stopCargoMotor () {
+        collectorMotorController.set(0);
+    }
+
     public boolean isCargoCollected() {
         return collectionSwitch.isActive();
     }
