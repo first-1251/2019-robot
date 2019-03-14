@@ -2,8 +2,10 @@ package org.team1251.frc.robot.humanInterface.input;
 
 import edu.wpi.first.wpilibj.Joystick;
 import org.team1251.frc.robot.DrivePower;
+import org.team1251.frc.robot.commands.*;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
+import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
 
 /**
  * The HumanInput encapsulates everything related to human input and provides a clean interface for all commands and
@@ -20,6 +22,20 @@ public class HumanInput {
      * Helper to get drive power from the human input.
      */
     private final HumanDriveInput humanDriveInput;
+    private final ModernGamePad operatorPad;
+    private final ButtonTrigger placePanelTrigger;
+    private final ButtonTrigger collectPanelTrigger;
+    private final ButtonTrigger ejectCargo;
+    private final ButtonTrigger collectCargoTrigger;
+    private final DualButtonTrigger climbTrigger;
+    private final ButtonTrigger elevatorLvl3Trigger;
+    private final ButtonTrigger elevatorLvl2Trigger;
+    private final ButtonTrigger elevatorHomeTrigger;
+    private final ButtonTrigger elevatorShipAndHumanCargoTrigger;
+    private final ButtonTrigger autoDockHumanStation;
+    private final ButtonTrigger autoDockShip;
+    private final ButtonTrigger autoDockRocket;
+    private final ButtonTrigger cycleCameraMode;
 
 
     /**
@@ -37,8 +53,29 @@ public class HumanInput {
      */
     public HumanInput() {
         driverPad = new ModernGamePad(new Joystick(0));
+        operatorPad = new ModernGamePad(new Joystick(1));
 
         humanDriveInput = new TigerDriveInput();
+
+        collectPanelTrigger = new ButtonTrigger(operatorPad.rt());
+        placePanelTrigger = new ButtonTrigger(operatorPad.lb());
+
+        collectCargoTrigger = new ButtonTrigger(operatorPad.rt());
+        ejectCargo = new ButtonTrigger(operatorPad.lb());
+
+        elevatorHomeTrigger = new ButtonTrigger(operatorPad.a());
+        elevatorLvl2Trigger = new ButtonTrigger(operatorPad.b());
+        elevatorLvl3Trigger = new ButtonTrigger(operatorPad.y());
+        elevatorShipAndHumanCargoTrigger = new ButtonTrigger(operatorPad.x());
+
+        cycleCameraMode = new ButtonTrigger(driverPad.y());
+        autoDockRocket = new ButtonTrigger(driverPad.b());
+        autoDockShip = new ButtonTrigger(driverPad.a());
+        autoDockHumanStation = new ButtonTrigger(driverPad.x());
+
+
+        climbTrigger = new DualButtonTrigger(operatorPad.start(), driverPad.start());
+
     }
 
     /**
@@ -59,7 +96,16 @@ public class HumanInput {
      *
      * NOTE: All commands should be added as parameters to this method.
      */
-    public void attachCommandTriggers() {
+    public void attachCommandTriggers(
+            Climb climb,
+            MoveElevatorToSetPoint moveElevatorToHome,
+            MoveElevatorToSetPoint moveElevatorToShipAndHumanCargo,
+            MoveElevatorToSetPoint moveElevatorToRocketLevel2,
+            MoveElevatorToSetPoint moveElevatorToRocketLevel3,
+            PlacePanel placePanel,
+            GrabPanel grabPanel,
+            IntakeCargo intakeCargo,
+            OuttakeCargo outtakeCargo) {
 
         // This is the typical way to prevent duplicate bindings.
         if (commandTriggersAttached) {
@@ -69,6 +115,17 @@ public class HumanInput {
 
         // By Default, there is no reason to "remember" the commands or the triggers as class properties. But now
         // would be a reasonable time to do it, if you have a reason to.
+        climbTrigger.whenPressed(climb);
+        elevatorHomeTrigger.whenPressed(moveElevatorToHome);
+        elevatorLvl2Trigger.whenPressed(moveElevatorToRocketLevel2);
+        elevatorLvl3Trigger.whenPressed(moveElevatorToRocketLevel3);
+        elevatorShipAndHumanCargoTrigger.whenPressed(moveElevatorToShipAndHumanCargo);
+
+        collectPanelTrigger.whenPressed(grabPanel);
+        placePanelTrigger.whenPressed(placePanel);
+
+        collectCargoTrigger.whileHeld(intakeCargo);
+        ejectCargo.whileHeld(outtakeCargo);
     }
 
     /**
