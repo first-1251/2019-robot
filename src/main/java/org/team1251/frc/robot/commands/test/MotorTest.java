@@ -2,10 +2,7 @@ package org.team1251.frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import org.team1251.frc.robot.subsystems.Arm;
-import org.team1251.frc.robot.subsystems.CargoCollector;
-import org.team1251.frc.robot.subsystems.Climber;
-import org.team1251.frc.robot.subsystems.DriveBase;
+import org.team1251.frc.robot.subsystems.*;
 
 /**
  * A command used to test each motor, one at a time.
@@ -28,6 +25,10 @@ public class MotorTest extends Command {
      * The driveBase is the subsystem which provides access to the motors.
      */
     private final DriveBase driveBase;
+    private final Arm arm;
+    private final CargoCollector collector;
+    private final Climber climber;
+    private final ManipulatorElevator elevator;
 
     /**
      * The motor which is currently being tested.
@@ -67,10 +68,19 @@ public class MotorTest extends Command {
      *
      * @param driveBase The subsystem that provides access to the motors.
      */
-    public MotorTest(DriveBase driveBase, Arm arm, CargoCollector collector, Climber climber) {
+    public MotorTest(DriveBase driveBase, Arm arm, CargoCollector collector, Climber climber, ManipulatorElevator elevator) {
         // The drive base is a required subsystem.
+
         this.driveBase = driveBase;
+        this.arm = arm;
+        this.collector = collector;
+        this.climber = climber;
+        this.elevator = elevator;
+
         requires(driveBase);
+        requires(arm);
+        requires(collector);
+        requires(climber);
     }
 
     /**
@@ -108,7 +118,51 @@ public class MotorTest extends Command {
         // derive a time-based measure of how much testing time has passed.
         selectMotor();
 
-        // TODO: Test appropriate motor.
+        // Stop all of the motor tests, then start the right one back up.
+        // TODO: Is this off/on cycle fast enough to not be noticed?
+        stopAllTests();
+
+        switch(currentMotor) {
+
+            case NONE:
+                break;
+            case DRIVE_LEFT_TOP:
+                driveBase.testMotor(DriveBase.Motor.LEFT_TOP);
+                break;
+            case DRIVE_LEFT_BOTTOM_FRONT:
+                driveBase.testMotor(DriveBase.Motor.LEFT_BOTTOM_FRONT);
+                break;
+            case DRIVE_LEFT_BOTTOM_REAR:
+                driveBase.testMotor(DriveBase.Motor.LEFT_BOTTOM_REAR);
+                break;
+            case DRIVE_RIGHT_TOP:
+                driveBase.testMotor(DriveBase.Motor.RIGHT_TOP);
+                break;
+            case DRIVE_RIGHT_BOTTOM_FRONT:
+                driveBase.testMotor(DriveBase.Motor.RIGHT_BOTTOM_FRONT);
+                break;
+            case DRIVE_RIGHT_BOTTOM_REAR:
+                driveBase.testMotor(DriveBase.Motor.RIGHT_BOTTOM_REAR);
+                break;
+            case LIFT_FRONT:
+                // TODO: Run front motor test.
+                break;
+            case LIFT_REAR:
+                // TODO: Run rear motor test.
+                break;
+            case LIFT_DRIVE:
+                // TODO: Run lift drive motor test.
+                break;
+            case ARM:
+                // TODO: Run arm motor test
+                break;
+            case CARGO_COLLECTOR:
+                // TODO: Run collector motor test
+                break;
+            case ELEVATOR:
+                // TODO: Run elevator motor test.
+                break;
+        }
     }
 
     @Override

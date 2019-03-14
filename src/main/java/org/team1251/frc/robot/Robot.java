@@ -303,7 +303,7 @@ public class Robot extends TigerTimedRobot {
     protected void testFirstInit() {
         // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
         testerGamePad = new ModernGamePad(new Joystick(4));
-        motorTestCmd = new MotorTest(driveBase, arm, collector, climber);
+        motorTestCmd = new MotorTest(driveBase, arm, collector, climber, manipulatorElevator);
         (new ButtonTrigger(testerGamePad.x())).whileHeld(motorTestCmd);
     }
 
