@@ -323,6 +323,8 @@ public class Robot extends TigerTimedRobot {
         // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
         testerGamePad = new ModernGamePad(new Joystick(4));
         motorTestCmd = new MotorTest(driveBase, arm, collector, climber, manipulatorElevator);
+
+
         (new ButtonTrigger(testerGamePad.x())).whileHeld(motorTestCmd);
     }
 
@@ -370,35 +372,6 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     public void testPeriodic() {
-
-
-
-        if (testerGamePad.a().isPressed()) {
-            climber.lift();
-            climber.printDiagnostics();
-        } else {
-            climber.kill();
-        }
-
-        if (testerGamePad.x().isPressed()) {
-            motorTestCmd.start();
-        } else {
-            motorTestCmd.cancel();
-        }
-
-        if (testerGamePad.b().isPressed()) {
-            if (gyro.isReady()) {
-                System.out.println(gyro.getHeading());
-            } else {
-                System.out.println("Gyro calibrating");
-            }
-        } else if (testerGamePad.y().isPressed()) {
-            try {
-                System.out.println(pathUtils.calculateDistance2D(PathUtils.Target.SHIP));
-            } catch (Exception e) {
-                System.out.println("Unable to acquire target! " + e.getMessage());
-            }
-        }
         Scheduler.getInstance().run();
     }
 
