@@ -4,10 +4,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.team1251.frc.robot.commands.IntakeCargo;
-import org.team1251.frc.robot.commands.MoveArmUp;
-import org.team1251.frc.robot.commands.OuttakeCargo;
-import org.team1251.frc.robot.commands.TeleopDrive;
+import org.team1251.frc.robot.commands.*;
 import org.team1251.frc.robot.commands.test.MotorTest;
 import org.team1251.frc.robot.feedback.Gyro;
 import org.team1251.frc.robot.feedback.LimeLight;
@@ -119,7 +116,6 @@ public class Robot extends TigerTimedRobot {
     private Gyro gyro;
 
     private LimeLight cvLimelight;
-//    private LimeLight driverAssistLimelight;
 
     private PathUtils pathUtils;
 
@@ -134,6 +130,9 @@ public class Robot extends TigerTimedRobot {
      * A command used to individually test motors.
      */
     private MotorTest motorTestCmd;
+    private GrabPanel grabPanel;
+    private PlacePanel placePanel;
+    private Climb climb;
 
     /**
      * Creates the robot!
@@ -218,31 +217,12 @@ public class Robot extends TigerTimedRobot {
     @Override
     protected void robotInitCreateCommands() {
         teleopDrive = new TeleopDrive(driveBase, humanInput);
-        // TODO: Uncomment once related subsystems are available.
-//        extendPanelArm = new ExtendPanelArm(panelClarm);
-//        retractPanelArm = new RetractPanelArm(panelClarm);
-//        openPanelClaw = new OpenPanelClaw(panelClarm);
-//        moveCargoArmUp = new MoveCargoArmUp(cargoClarm);
-//        moveCargoArmDown = new MoveCargoArmDown(cargoClarm);
-//        outtakeCargo = new OuttakeCargo(cargoClarm);
-//        intakeCargo = new IntakeCargo(cargoClarm);
-//        driveClimbElevatorGearboxForward = new DriveClimbElevatorGearboxForward(climbElevator);
-//        driveClimbElevatorGearboxReverse = new DriveClimbElevatorGearboxReverse(climbElevator);
-//        moveClimbElevatorUp = new MoveClimbElevatorUp(climbElevator);
-//        moveClimbElevatorDown = new MoveClimbElevatorDown(climbElevator);
-//        moveManipulatorElevatorUp = new elevatorUp(manipulatorElevator);
-//        moveManipulatorElevatorDown = new elevatorDown(manipulatorElevator)     ;
-//
-//        //Elevator Shifter Commands
-//        enableManipulatorElevator = new EnableManipulatorElevator(manipulatorElevator);
-//        disableManipulatorElevator = new DisableManipulatorElevator(manipulatorElevator);
-//        enableFrontClimbElevator  = new EnableFrontClimbElevator(climbElevator);
-//        disableFrontClimbElevator  = new DisableFrontClimbElevator(climbElevator);
-//        enableRearClimbElevator  = new EnableRearClimbElevator(climbElevator);
-//        disableRearClimbElevator  = new DisableRearClimbElevator(climbElevator);
-//
-//
-//
+        grabPanel = new GrabPanel(grappler);
+        placePanel = new PlacePanel(grappler);
+        intakeCargo = new IntakeCargo(manipulatorElevator, collector, arm);
+        outtakeCargo = new OuttakeCargo(collector);
+        moveCargoArmUp = new MoveArmUp(arm);
+        climb = new Climb(driveBase, climber);
     }
 
     /**
