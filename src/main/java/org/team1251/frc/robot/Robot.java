@@ -74,12 +74,17 @@ public class Robot extends TigerTimedRobot {
     /**
      * The subsystem that controls the Claw and Arm for Cargo.
      */
-    private CargoCollector cargoClarm;
+    private CargoCollector collector;
+
+    /**
+     * The arm that holds the manipulators
+     */
+    private Arm arm;
 
     /**
      * The subsystem that controls the Claw and Arm for Panel.
      */
-    private Grappler panelClarm;
+    private Grappler grappler;
 
     /**
      * The subsystem that controls all of the ManipulatorElevator.
@@ -89,7 +94,7 @@ public class Robot extends TigerTimedRobot {
     /**
      * The subsystem that controls the climb Elevators
      */
-    private Climber climbElevator;
+    private Climber climber;
 
     /**
      * The command that gives the human players the ability to move the robot around the field.
@@ -114,7 +119,7 @@ public class Robot extends TigerTimedRobot {
     private Gyro gyro;
 
     private LimeLight cvLimelight;
-    private LimeLight driverAssistLimelight;
+//    private LimeLight driverAssistLimelight;
 
     private PathUtils pathUtils;
 
@@ -129,8 +134,6 @@ public class Robot extends TigerTimedRobot {
      * A command used to individually test motors.
      */
     private MotorTest motorTestCmd;
-
-    private Climber climber;
 
     /**
      * Creates the robot!
@@ -170,10 +173,6 @@ public class Robot extends TigerTimedRobot {
         cvLimelight.setCameraMode(LimeLight.CameraMode.CV);
         cvLimelight.setLedMode(LimeLight.LedMode.ON);
 
-        driverAssistLimelight = new LimeLight(LimeLight.CameraId.DRIVER_ASSIST);
-        driverAssistLimelight.setCameraMode(LimeLight.CameraMode.DRIVER);
-        driverAssistLimelight.setLedMode(LimeLight.LedMode.OFF); // TODO: Blink on game piece collection.
-
         pathUtils = new PathUtils(gyro, cvLimelight);
     }
 
@@ -203,9 +202,10 @@ public class Robot extends TigerTimedRobot {
     protected void robotInitCreateSubsystems() {
         driveBase = new DriveBase(gyro);
         climber = new Climber();
-        // TODO: Uncomment as they become available -- robot dies if we try to initialize devices that don't exist.
-//        cargoClarm = new CargoClarm();
-//        panelClarm = new PanelClarm();
+        arm = new Arm();
+        collector = new CargoCollector();
+        manipulatorElevator = new ManipulatorElevator();
+        grappler = new Grappler();
     }
 
     /**
@@ -313,7 +313,7 @@ public class Robot extends TigerTimedRobot {
         // Turn off live window, we don't use it. This will re-enable our ability to use the command-based system
         // while in test mode.
         LiveWindow.setEnabled(false);
-        motorTestCmd.reset();
+        motorTestCmd.reset(null);
     }
 
     /**
@@ -323,7 +323,7 @@ public class Robot extends TigerTimedRobot {
     protected void testFirstInit() {
         // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
         testerGamePad = new ModernGamePad(new Joystick(4));
-        motorTestCmd = new MotorTest(driveBase);
+        motorTestCmd = new MotorTest(driveBase, arm, collector, climber);
         (new ButtonTrigger(testerGamePad.x())).whileHeld(motorTestCmd);
     }
 
