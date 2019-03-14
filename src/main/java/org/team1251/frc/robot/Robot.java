@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.team1251.frc.robot.commands.*;
 import org.team1251.frc.robot.commands.test.MotorTest;
+import org.team1251.frc.robot.commands.test.PneumaticTest;
 import org.team1251.frc.robot.feedback.Gyro;
 import org.team1251.frc.robot.feedback.LimeLight;
 import org.team1251.frc.robot.feedback.PathUtils;
@@ -138,6 +139,7 @@ public class Robot extends TigerTimedRobot {
     private MoveElevatorToSetPoint moveElevatorToRocketLevel2;
     private MoveElevatorToSetPoint moveElevatorToRocketLevel3;
     private boolean wasTestModeActivated = false;
+    private PneumaticTest pneumaticsTestCmd;
 
     /**
      * Creates the robot!
@@ -323,9 +325,10 @@ public class Robot extends TigerTimedRobot {
         // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
         testerGamePad = new ModernGamePad(new Joystick(4));
         motorTestCmd = new MotorTest(driveBase, arm, collector, climber, manipulatorElevator);
+        pneumaticsTestCmd = new PneumaticTest(testerGamePad, climber, grappler);
 
-
-        (new ButtonTrigger(testerGamePad.x())).whileHeld(motorTestCmd);
+        (new ButtonTrigger(testerGamePad.lt())).whileHeld(motorTestCmd);
+        (new ButtonTrigger(testerGamePad.rt())).whileHeld(pneumaticsTestCmd);
     }
 
     /**
