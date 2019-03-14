@@ -133,6 +133,10 @@ public class Robot extends TigerTimedRobot {
     private GrabPanel grabPanel;
     private PlacePanel placePanel;
     private Climb climb;
+    private MoveElevatorToSetPoint moveElevatorToHome;
+    private MoveElevatorToSetPoint moveElevatorToShipAndHumanCargo;
+    private MoveElevatorToSetPoint moveElevatorToRocketLevel2;
+    private MoveElevatorToSetPoint moveElevatorToRocketLevel3;
 
     /**
      * Creates the robot!
@@ -223,6 +227,10 @@ public class Robot extends TigerTimedRobot {
         outtakeCargo = new OuttakeCargo(collector);
         moveCargoArmUp = new MoveArmUp(arm);
         climb = new Climb(driveBase, climber);
+        moveElevatorToHome = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.HOME);
+        moveElevatorToShipAndHumanCargo = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.SHIP_AND_HUMAN_CARGO);
+        moveElevatorToRocketLevel2 = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.ROCKET_LEVEL_2);
+        moveElevatorToRocketLevel3 = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.ROCKET_LEVEL_3);
     }
 
     /**
