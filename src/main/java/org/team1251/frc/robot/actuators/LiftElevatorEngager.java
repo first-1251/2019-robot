@@ -21,4 +21,8 @@ public class LiftElevatorEngager {
         }
 
     }
+
+    public boolean isEngaged() {
+        return (solenoid.get() == DoubleSolenoid.Value.kForward || isInverted);
+    }
 }

@@ -1,6 +1,5 @@
 package org.team1251.frc.robot;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.team1251.frc.robot.commands.*;
@@ -32,7 +31,7 @@ public class Robot extends TigerTimedRobot {
     /**
      * Grab the PDP so that it shows up in NetworkTables
      */
-    private final PowerDistributionPanel pdp = deviceManager.getPDP();
+//    private final PowerDistributionPanel pdp = deviceManager.getPDP();
 
     /**
      * How many milliseconds in each robot tick.
@@ -292,6 +291,8 @@ public class Robot extends TigerTimedRobot {
         }
 
         driveBase.setDefaultCommand(teleopDrive);
+        climber.getElevatorFrontEngager().setState(true);
+        climber.getElevatorRearEngager().setState(true);
     }
 
     /**

@@ -151,13 +151,13 @@ public class MotorTest extends Command {
                 driveBase.testMotor(DriveBase.Motor.RIGHT_BOTTOM_REAR);
                 break;
             case LIFT_FRONT:
-                // climber.testMotorControllerFront();
+                 climber.testMotorControllerFront();
                 break;
             case LIFT_REAR:
-                // climber.testMotorControllerRear();
+                 climber.testMotorControllerRear();
                 break;
             case LIFT_DRIVE:
-                // climber.testDriveMotorController();
+                 climber.testDriveMotorController();
                 break;
             case ARM:
                 // arm.testArmMotor();

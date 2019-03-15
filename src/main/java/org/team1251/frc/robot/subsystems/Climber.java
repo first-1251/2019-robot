@@ -126,15 +126,15 @@ public class Climber extends Subsystem {
             return;
         }
 
-//        elevatorFrontEngager = new LiftElevatorEngager(
-//                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV),
-//                LIFT_ENGAGER_FRONT_INVERTED
-//        );
-//
-//        elevatorRearEngager = new LiftElevatorEngager(
-//                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_REV),
-//                LIFT_ENGAGER_REAR_INVERTED
-//        );
+        elevatorFrontEngager = new LiftElevatorEngager(
+                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV),
+                LIFT_ENGAGER_FRONT_INVERTED
+        );
+
+        elevatorRearEngager = new LiftElevatorEngager(
+                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_REV),
+                LIFT_ENGAGER_REAR_INVERTED
+        );
     }
 
     private void establishLiftMotorControllers() {
@@ -209,8 +209,8 @@ public class Climber extends Subsystem {
      */
     public boolean lift() {
         // Make sure both elevators are engaged before lifting.
-//        elevatorFrontEngager.setState(true);
-//        elevatorRearEngager.setState(true);
+        elevatorFrontEngager.setState(true);
+        elevatorRearEngager.setState(true);
 
         // Stop lifting as soon as either elevator reaches its upper limit. They do not move independently, so first
         // one there wins.

@@ -23,8 +23,8 @@ public class PneumaticTest extends Command {
 
     @Override
     protected void end() {
-        climber.getElevatorFrontEngager().setState(true);
-        climber.getElevatorRearEngager().setState(true);
+        climber.getElevatorFrontEngager().setState(false);
+        climber.getElevatorRearEngager().setState(false);
         grappler.retract();
         grappler.unclamp();
     }
@@ -32,15 +32,15 @@ public class PneumaticTest extends Command {
     @Override
     protected void execute() {
         if (testerGamePad.a().isPressed()) {
-            climber.getElevatorFrontEngager().setState(false);
-        } else {
             climber.getElevatorFrontEngager().setState(true);
+        } else {
+            climber.getElevatorFrontEngager().setState(false);
         }
 
         if (testerGamePad.b().isPressed()) {
-            climber.getElevatorRearEngager().setState(false);
-        } else {
             climber.getElevatorRearEngager().setState(true);
+        } else {
+            climber.getElevatorRearEngager().setState(false);
         }
 
         if (testerGamePad.x().isPressed()) {
