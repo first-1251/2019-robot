@@ -1,6 +1,5 @@
 package org.team1251.frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -17,7 +16,6 @@ import org.team1251.frc.robot.robotMap.DeviceManager;
 import org.team1251.frc.robot.subsystems.*;
 import org.team1251.frc.robotCore.TigerTimedRobot;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
-import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
 
 import java.util.ArrayList;
@@ -173,13 +171,13 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void robotInitCreateFeedbackSystems() {
-        gyro = new Gyro();
-
-        cvLimelight = new LimeLight(LimeLight.CameraId.CV);
-        cvLimelight.setCameraMode(LimeLight.CameraMode.CV);
-        cvLimelight.setLedMode(LimeLight.LedMode.ON);
-
-        pathUtils = new PathUtils(gyro, cvLimelight);
+//        gyro = new Gyro();
+//
+//        cvLimelight = new LimeLight(LimeLight.CameraId.CV);
+//        cvLimelight.setCameraMode(LimeLight.CameraMode.CV);
+//        cvLimelight.setLedMode(LimeLight.LedMode.ON);
+//
+//        pathUtils = new PathUtils(gyro, cvLimelight);
     }
 
     /**
@@ -323,7 +321,7 @@ public class Robot extends TigerTimedRobot {
     @Override
     protected void testFirstInit() {
         // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
-        testerGamePad = new ModernGamePad(new Joystick(4));
+        testerGamePad = humanInput.getDriverPad();
         motorTestCmd = new MotorTest(driveBase, arm, collector, climber, manipulatorElevator);
         pneumaticsTestCmd = new PneumaticTest(testerGamePad, climber, grappler);
 

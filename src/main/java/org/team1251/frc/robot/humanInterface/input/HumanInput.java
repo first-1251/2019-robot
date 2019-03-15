@@ -86,7 +86,7 @@ public class HumanInput {
      *
      * @return The GamePad which the human uses to control the robot.
      */
-    GamePad getDriverPad() {
+    public GamePad getDriverPad() {
         return driverPad;
     }
 

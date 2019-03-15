@@ -151,22 +151,22 @@ public class MotorTest extends Command {
                 driveBase.testMotor(DriveBase.Motor.RIGHT_BOTTOM_REAR);
                 break;
             case LIFT_FRONT:
-                climber.testMotorControllerFront();
+                // climber.testMotorControllerFront();
                 break;
             case LIFT_REAR:
-                climber.testMotorControllerRear();
+                // climber.testMotorControllerRear();
                 break;
             case LIFT_DRIVE:
-                climber.testDriveMotorController();
+                // climber.testDriveMotorController();
                 break;
             case ARM:
-                arm.testArmMotor();
+                // arm.testArmMotor();
                 break;
             case CARGO_COLLECTOR:
-                collector.testCargoMotor();
+                // collector.testCargoMotor();
                 break;
             case ELEVATOR:
-                elevator.testMotorController();
+                //  elevator.testMotorController();
                 break;
         }
     }
@@ -186,10 +186,13 @@ public class MotorTest extends Command {
 
         // See if we are resting
         if (isResting) {
+            System.out.println("Motor Test resting");
             if (!timer.hasPeriodPassed(REST_PERIOD)) {
+                System.out.println("Still Resting");
                 return;
             }
 
+            System.out.println("Last moment of resting.");
             // rest time is over!
             isResting = false;
             timer.reset();
@@ -198,11 +201,12 @@ public class MotorTest extends Command {
 
         // If there is no motor selected or the test duration has elapsed for the selected motor, move to the next one.
         if (currentMotor == null || timer.hasPeriodPassed(currentMotor.testDuration)) {
-            nextMotor();
+            String nextMotorName = nextMotor().name();
+            System.out.println("Moving to next motor: " + nextMotorName);
         }
     }
 
-    private void nextMotor() {
+    private Motor nextMotor() {
 
         // We always activate the rest period when advancing motors.
         isResting = true;
@@ -256,5 +260,6 @@ public class MotorTest extends Command {
                 break;
         }
 
+        return currentMotor;
     }
 }

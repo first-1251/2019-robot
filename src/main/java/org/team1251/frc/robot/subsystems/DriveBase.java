@@ -149,12 +149,17 @@ public class DriveBase extends Subsystem {
         NetworkTable sensorTable = getSensorTable();
         sensorTable.getEntry("leftEncoderVelocity").setDouble(leftEncoder.getVelocity());
         sensorTable.getEntry("rightEncoderVelocity").setDouble(rightEncoder.getVelocity());
-        sensorTable.getEntry("gyroHeading").setDouble(gyro.getHeading());
-        sensorTable.getEntry("gyroIsReady").setBoolean(gyro.isReady());
+
+        if (gyro != null) {
+            sensorTable.getEntry("gyroHeading").setDouble(gyro.getHeading());
+            sensorTable.getEntry("gyroIsReady").setBoolean(gyro.isReady());
+        }
 
         NetworkTable stateTable = getStateTable();
-        stateTable.getEntry("heading").setDouble(gyro.getHeading());
-        stateTable.getEntry("probableTarget").setString("TBD"); // TODO: Find most probable target based on angle.
+        if (gyro != null) {
+            stateTable.getEntry("heading").setDouble(gyro.getHeading());
+            stateTable.getEntry("probableTarget").setString("TBD"); // TODO: Find most probable target based on angle.
+        }
     }
 
     /**
