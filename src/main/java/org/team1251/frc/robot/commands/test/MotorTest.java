@@ -88,6 +88,9 @@ public class MotorTest extends Command {
      */
     public void reset(Motor startingMotor) {
         isResting = true;
+        if (startingMotor == null) {
+            startingMotor = Motor.NONE;
+        }
         currentMotor = startingMotor;
         timer.reset();
     }
