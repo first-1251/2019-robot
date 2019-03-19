@@ -27,7 +27,7 @@ public class HumanInput {
     private final ButtonTrigger collectPanelTrigger;
     private final ButtonTrigger ejectCargo;
     private final ButtonTrigger collectCargoTrigger;
-    private final DualButtonTrigger climbTrigger;
+    private final ButtonTrigger climbTrigger;
     private final ButtonTrigger elevatorLvl3Trigger;
     private final ButtonTrigger elevatorLvl2Trigger;
     private final ButtonTrigger elevatorHomeTrigger;
@@ -73,8 +73,7 @@ public class HumanInput {
         autoDockShip = new ButtonTrigger(driverPad.a());
         autoDockHumanStation = new ButtonTrigger(driverPad.x());
 
-
-        climbTrigger = new DualButtonTrigger(operatorPad.start(), driverPad.start());
+        climbTrigger = new ButtonTrigger(operatorPad.start());
 
     }
 
@@ -97,15 +96,7 @@ public class HumanInput {
      * NOTE: All commands should be added as parameters to this method.
      */
     public void attachCommandTriggers(
-            Climb climb,
-            MoveElevatorToSetPoint moveElevatorToHome,
-            MoveElevatorToSetPoint moveElevatorToShipAndHumanCargo,
-            MoveElevatorToSetPoint moveElevatorToRocketLevel2,
-            MoveElevatorToSetPoint moveElevatorToRocketLevel3,
-            PlacePanel placePanel,
-            GrabPanel grabPanel,
-            IntakeCargo intakeCargo,
-            OuttakeCargo outtakeCargo) {
+            Climb climb) {
 
         // This is the typical way to prevent duplicate bindings.
         if (commandTriggersAttached) {
@@ -116,16 +107,16 @@ public class HumanInput {
         // By Default, there is no reason to "remember" the commands or the triggers as class properties. But now
         // would be a reasonable time to do it, if you have a reason to.
         climbTrigger.whenPressed(climb);
-        elevatorHomeTrigger.whenPressed(moveElevatorToHome);
-        elevatorLvl2Trigger.whenPressed(moveElevatorToRocketLevel2);
-        elevatorLvl3Trigger.whenPressed(moveElevatorToRocketLevel3);
-        elevatorShipAndHumanCargoTrigger.whenPressed(moveElevatorToShipAndHumanCargo);
-
-        collectPanelTrigger.whenPressed(grabPanel);
-        placePanelTrigger.whenPressed(placePanel);
-
-        collectCargoTrigger.whileHeld(intakeCargo);
-        ejectCargo.whileHeld(outtakeCargo);
+//        elevatorHomeTrigger.whenPressed(moveElevatorToHome);
+//        elevatorLvl2Trigger.whenPressed(moveElevatorToRocketLevel2);
+//        elevatorLvl3Trigger.whenPressed(moveElevatorToRocketLevel3);
+//        elevatorShipAndHumanCargoTrigger.whenPressed(moveElevatorToShipAndHumanCargo);
+//
+//        collectPanelTrigger.whenPressed(grabPanel);
+//        placePanelTrigger.whenPressed(placePanel);
+//
+//        collectCargoTrigger.whileHeld(intakeCargo);
+//        ejectCargo.whileHeld(outtakeCargo);
     }
 
     /**

@@ -34,7 +34,8 @@ public class Climb extends Command {
     public Climb(DriveBase driveBase, Climber climber) {
         this.driveBase = driveBase;
         this.climber = climber;
-        this.setInterruptible(false);
+        requires(driveBase);
+        requires(climber);
     }
 
     /**
@@ -42,6 +43,7 @@ public class Climb extends Command {
      */
     @Override
     protected void initialize() {
+
         currentPhase = ClimbPhase.INITIALIZING;
     }
 
@@ -58,16 +60,20 @@ public class Climb extends Command {
                 climber.lift();
                 break;
             case GAINING_FOOTHOLD:
+                climber.lift();
                 climber.drive(1);
                 break;
             case RETRACTING_FRONT:
                 climber.drive(0);
                 climber.retractFront();
+                climber.relieveFrontPressure();
                 break;
             case GAINING_BALANCE:
                 driveBase.drive(.25);
                 break;
             case RETRACTING_BACK:
+                driveBase.drive(0);
+                climber.kill();
                 climber.retractRear();
                 break;
             case FINISHING:
@@ -77,7 +83,7 @@ public class Climb extends Command {
                     finishingTimer.start();
                 }
 
-                driveBase.drive(.20);
+//                driveBase.drive(.20);
                 break;
             case ALL_THE_POINTS:
                 driveBase.drive(0);

@@ -30,12 +30,13 @@ public enum DeviceConnector implements DeviceConnectorInterface {
 
     MC_MANIPULATOR_ELEVATOR(PortType.CAN, 11), //Talon
     MC_CARGO_ARM(PortType.CAN, 12), // Talon
-    MC_CARGO_COLLECTOR(PortType.CAN, 13), // Talon
+    MC_CARGO_COLLECTOR(PortType.CAN, 23), // Talon
 
     MC_CLIMB_ELEVATOR_FRONT(PortType.CAN, 21), // Talon
     MC_CLIMB_ELEVATOR_REAR(PortType.CAN, 22), // Talon
 
-    MC_CLIMB_DRIVE(PortType.CAN, 23), // Victor
+    // TODO-sofl: Swap 13 and 23, rewire motor to correct speed controller.
+    MC_CLIMB_DRIVE(PortType.CAN, 13), // Victor
 
     //Solenoids
     DSOL_PANEL_ARM_FWD(PortType.PCM, 0), // Double Solenoid
@@ -44,11 +45,11 @@ public enum DeviceConnector implements DeviceConnectorInterface {
     DSOL_PANEL_GRAPPLER_FWD(PortType.PCM, 2), // Double Solenoid
     DSOL_PANEL_GRAPPLER_REV(PortType.PCM, 3), // Double Solenoid
 
-    DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD(PortType.PCM, 4), // Double Solenoid
-    DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV(PortType.PCM, 5), // Double Solenoid
+    DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD(PortType.PCM, 6), // Double Solenoid
+    DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV(PortType.PCM, 7), // Double Solenoid
 
-    DSOL_CLIMB_ELEV_REAR_SHIFTER_FWD(PortType.PCM, 6), // Double Solenoid
-    DSOL_CLIMB_ELEV_REAR_SHIFTER_REV(PortType.PCM, 7), // Double Solenoid
+    DSOL_CLIMB_ELEV_REAR_SHIFTER_FWD(PortType.PCM, 4), // Double Solenoid
+    DSOL_CLIMB_ELEV_REAR_SHIFTER_REV(PortType.PCM, 5), // Double Solenoid
 
     //Limit Switch
     LS_CLIMB_ELEV_FRONT_UPPER(PortType.DIO, 0), // Lever Switch

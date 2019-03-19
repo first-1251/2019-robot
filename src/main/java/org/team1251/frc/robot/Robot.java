@@ -252,7 +252,9 @@ public class Robot extends TigerTimedRobot {
      * This is always invoked immediately after {@link #robotInitCreateCommands()}. By default, this method does nothing.
      */
     @Override
-    protected void robotInitFinalize() { }
+    protected void robotInitFinalize() {
+        telemetryProviders.add(climber);
+    }
 
     /**
      * Called every time the autonomous game mode is activated.
@@ -304,7 +306,9 @@ public class Robot extends TigerTimedRobot {
      * methods.
      */
     @Override
-    protected void teleopFirstInit() { }
+    protected void teleopFirstInit() {
+        humanInput.attachCommandTriggers(climb);
+    }
 
     /**
      * Called the first time the test game mode is activated.
