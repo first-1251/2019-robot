@@ -251,6 +251,9 @@ public class MotorTest extends Command {
                 break;
             case LIFT_DRIVE:
                 currentMotor = Motor.ELEVATOR;
+
+                // TODO: Remove this short-circuit logic
+                currentMotor = Motor.DRIVE_LEFT_TOP; // jump back to beginning sooner.
                 break;
             case ELEVATOR:
                 currentMotor = Motor.ARM;
