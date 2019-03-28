@@ -36,18 +36,6 @@ public class PneumaticTest extends Command {
         } else {
             climber.getElevatorRearEngager().setState(false);
         }
-
-        if (testerGamePad.x().isPressed()) {
-            //grappler.extend();
-        } else {
-            //grappler.retract();
-        }
-
-        if (testerGamePad.y().isPressed()) {
-            //grappler.clamp();
-        } else {
-            //grappler.unclamp();
-        }
     }
 
     @Override

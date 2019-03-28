@@ -78,10 +78,6 @@ public class Robot extends TigerTimedRobot {
     private Arm arm;
 
     /**
-     * The subsystem that controls the Claw and Arm for Panel.
-     */
-
-    /**
      * The subsystem that controls all of the ManipulatorElevator.
      */
     private ManipulatorElevator manipulatorElevator;
