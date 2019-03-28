@@ -2,6 +2,7 @@ package org.team1251.frc.robot.humanInterface.input;
 
 import edu.wpi.first.wpilibj.Joystick;
 import org.team1251.frc.robot.DrivePower;
+import org.team1251.frc.robot.commands.AbandonClimb;
 import org.team1251.frc.robot.commands.Climb;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
@@ -37,6 +38,7 @@ public class HumanInput {
     private final ButtonTrigger autoDockShip;
     private final ButtonTrigger autoDockRocket;
     private final ButtonTrigger cycleCameraMode;
+    private final DualButtonTrigger abandonClimbTrigger;
 
 
     /**
@@ -77,6 +79,8 @@ public class HumanInput {
         climbLvl3Trigger = new ButtonTrigger(operatorPad.start());
         climbLvl2Trigger = new ButtonTrigger(operatorPad.select());
 
+        abandonClimbTrigger = new DualButtonTrigger(operatorPad.rb(), operatorPad.rb());
+
     }
 
     /**
@@ -99,7 +103,8 @@ public class HumanInput {
      */
     public void attachCommandTriggers(
             Climb climbLvl3,
-            Climb climbLvl2) {
+            Climb climbLvl2,
+            AbandonClimb abandonClimb) {
 
         // This is the typical way to prevent duplicate bindings.
         if (commandTriggersAttached) {
@@ -111,6 +116,9 @@ public class HumanInput {
         // would be a reasonable time to do it, if you have a reason to.
         climbLvl3Trigger.whenPressed(climbLvl3);
         climbLvl2Trigger.whenPressed(climbLvl2);
+        abandonClimbTrigger.whenPressed(abandonClimb);
+
+
 //        elevatorHomeTrigger.whenPressed(moveElevatorToHome);
 //        elevatorLvl2Trigger.whenPressed(moveElevatorToRocketLevel2);
 //        elevatorLvl3Trigger.whenPressed(moveElevatorToRocketLevel3);

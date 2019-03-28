@@ -140,6 +140,7 @@ public class Robot extends TigerTimedRobot {
     private boolean wasTestModeActivated = false;
     private PneumaticTest pneumaticsTestCmd;
     private LiftTest liftTestCmd;
+    private AbandonClimb abandonClimb;
 
     /**
      * Creates the robot!
@@ -229,8 +230,12 @@ public class Robot extends TigerTimedRobot {
         intakeCargo = new IntakeCargo(manipulatorElevator, collector, arm);
         outtakeCargo = new OuttakeCargo(collector);
         moveCargoArmUp = new MoveArmUp(arm);
+
+
         climbLvl3 = new Climb(driveBase, climber, Climber.Target.HAB_LVL_3);
         climbLvl2 = new Climb(driveBase, climber, Climber.Target.HAB_LVL_2);
+        abandonClimb = new AbandonClimb(climbLvl2, climbLvl3);
+
         moveElevatorToHome = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.HOME);
         moveElevatorToShipAndHumanCargo = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.SHIP_AND_HUMAN_CARGO);
         moveElevatorToRocketLevel2 = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.ROCKET_LEVEL_2);
@@ -309,7 +314,7 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void teleopFirstInit() {
-        humanInput.attachCommandTriggers(climbLvl3, climbLvl2);
+        humanInput.attachCommandTriggers(climbLvl3, climbLvl2, abandonClimb);
     }
 
     /**

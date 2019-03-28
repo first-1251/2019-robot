@@ -15,7 +15,8 @@ public class Climb extends Command {
         GAINING_BALANCE, // Driving forward (drive base) until robot no longer needs legs
         RETRACTING_BACK, // Retracting rear elevator
         FINISHING, // Driving forward (drive base) until completely on platform.
-        ALL_THE_POINTS
+        ALL_THE_POINTS,
+        ABANDON
     }
 
     /**
@@ -38,6 +39,8 @@ public class Climb extends Command {
         this.target = target;
         requires(driveBase);
         requires(climber);
+
+        this.setInterruptible(false);
     }
 
     /**
@@ -45,8 +48,18 @@ public class Climb extends Command {
      */
     @Override
     protected void initialize() {
-
         currentPhase = ClimbPhase.INITIALIZING;
+        this.finishingTimer = null;
+    }
+
+    public void abandon() {
+        // Can not abandon once lift has completed.
+        if (currentPhase.ordinal() > ClimbPhase.LIFTING.ordinal()) {
+            return;
+        }
+
+        // Immediately advance phase to "abandon".
+        currentPhase = ClimbPhase.ABANDON;
     }
 
     /**
@@ -56,6 +69,22 @@ public class Climb extends Command {
     protected void execute() {
         advancePhase();
         switch (currentPhase) {
+            case ABANDON:
+                // Kill the climb motors and the drive motor
+                climber.drive(0);
+                climber.kill();
+
+                // Once a climb elevator is within 2.5 inches of retracted (.5 inch off ground), disengage it.
+                if (climber.getElevatorRearEncoder().getDistance() < 2.5) {
+                    climber.getElevatorRearEngager().setState(false);
+                }
+
+                if (climber.getElevatorFrontEncoder().getDistance() < 2.5) {
+                    climber.getElevatorFrontEngager().setState(false);
+                }
+
+                break;
+
             case INITIALIZING:
                 break;
             case LIFTING:
@@ -85,7 +114,7 @@ public class Climb extends Command {
                     finishingTimer.start();
                 }
 
-//                driveBase.drive(.20);
+                driveBase.drive(.25);
                 break;
             case ALL_THE_POINTS:
                 driveBase.drive(0);
@@ -96,7 +125,16 @@ public class Climb extends Command {
     }
 
     private void advancePhase() {
+
         switch(currentPhase) {
+            case ABANDON:
+                // See if both elevators are fully retracted.
+                if (climber.isFrontElevatorRetracted() && climber.isRearElevatorRetracted()) {
+                    // Done. We'll call this ALL_THE_POINTS even though we did not get all the points.
+                    currentPhase = ClimbPhase.ALL_THE_POINTS;
+                }
+
+                break;
             case INITIALIZING:
                 currentPhase = ClimbPhase.LIFTING;
                 break;
