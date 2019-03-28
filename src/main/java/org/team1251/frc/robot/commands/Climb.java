@@ -28,12 +28,14 @@ public class Climb extends Command {
 
     private final DriveBase driveBase;
     private final Climber climber;
+    private final Climber.Target target;
 
     private ClimbPhase currentPhase;
 
-    public Climb(DriveBase driveBase, Climber climber) {
+    public Climb(DriveBase driveBase, Climber climber, Climber.Target target) {
         this.driveBase = driveBase;
         this.climber = climber;
+        this.target = target;
         requires(driveBase);
         requires(climber);
     }
@@ -57,10 +59,10 @@ public class Climb extends Command {
             case INITIALIZING:
                 break;
             case LIFTING:
-                climber.lift();
+                climber.lift(target);
                 break;
             case GAINING_FOOTHOLD:
-                climber.lift();
+                climber.lift(target);
                 climber.drive(1);
                 break;
             case RETRACTING_FRONT:

@@ -2,7 +2,7 @@ package org.team1251.frc.robot.humanInterface.input;
 
 import edu.wpi.first.wpilibj.Joystick;
 import org.team1251.frc.robot.DrivePower;
-import org.team1251.frc.robot.commands.*;
+import org.team1251.frc.robot.commands.Climb;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
@@ -27,7 +27,8 @@ public class HumanInput {
     private final ButtonTrigger collectPanelTrigger;
     private final ButtonTrigger ejectCargo;
     private final ButtonTrigger collectCargoTrigger;
-    private final ButtonTrigger climbTrigger;
+    private final ButtonTrigger climbLvl3Trigger;
+    private final ButtonTrigger climbLvl2Trigger;
     private final ButtonTrigger elevatorLvl3Trigger;
     private final ButtonTrigger elevatorLvl2Trigger;
     private final ButtonTrigger elevatorHomeTrigger;
@@ -73,7 +74,8 @@ public class HumanInput {
         autoDockShip = new ButtonTrigger(driverPad.a());
         autoDockHumanStation = new ButtonTrigger(driverPad.x());
 
-        climbTrigger = new ButtonTrigger(operatorPad.start());
+        climbLvl3Trigger = new ButtonTrigger(operatorPad.start());
+        climbLvl2Trigger = new ButtonTrigger(operatorPad.select());
 
     }
 
@@ -96,7 +98,8 @@ public class HumanInput {
      * NOTE: All commands should be added as parameters to this method.
      */
     public void attachCommandTriggers(
-            Climb climb) {
+            Climb climbLvl3,
+            Climb climbLvl2) {
 
         // This is the typical way to prevent duplicate bindings.
         if (commandTriggersAttached) {
@@ -106,7 +109,8 @@ public class HumanInput {
 
         // By Default, there is no reason to "remember" the commands or the triggers as class properties. But now
         // would be a reasonable time to do it, if you have a reason to.
-        climbTrigger.whenPressed(climb);
+        climbLvl3Trigger.whenPressed(climbLvl3);
+        climbLvl2Trigger.whenPressed(climbLvl2);
 //        elevatorHomeTrigger.whenPressed(moveElevatorToHome);
 //        elevatorLvl2Trigger.whenPressed(moveElevatorToRocketLevel2);
 //        elevatorLvl3Trigger.whenPressed(moveElevatorToRocketLevel3);

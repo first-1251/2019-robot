@@ -35,7 +35,6 @@ public class Climber extends Subsystem {
 
     private static final double DISTANCE_PER_ENCODER_REVOLUTION = 1.185; // 1 inch per revolution.
     private static final double RETRACTED_DISTANCE_THRESHOLD = .10; // Maximum travel distance to consider the elevator retracted.
-    private static final double LIFTED_DISTANCE_THRESHOLD = 21; // Minimum travel distance to consider elevator lifted.
 
     // Motor Speeds
     public static final double LIFT_SPEED = 1;
@@ -78,6 +77,17 @@ public class Climber extends Subsystem {
 
     public LiftElevatorEngager getElevatorRearEngager() {
         return elevatorRearEngager;
+    }
+
+    public enum Target {
+        HAB_LVL_2(8),
+        HAB_LVL_3(21);
+
+        public final double targetHeight;
+
+        Target(double targetHeight) {
+            this.targetHeight = targetHeight;
+        }
     }
 
 
@@ -200,13 +210,12 @@ public class Climber extends Subsystem {
         driveMotorController.set(speed);
     }
 
-    public boolean lift() {
-        System.out.println("lifting");
-        return lift(false, LIFTED_DISTANCE_THRESHOLD);
+    public boolean lift(Target target) {
+        return lift(false, target.targetHeight);
     }
 
     public void relieveFrontPressure() {
-        if (elevatorFrontEncoder.getDistance() > LIFTED_DISTANCE_THRESHOLD - 1) {
+        if (elevatorFrontEncoder.getDistance() > targetDistance - 1) {
             liftMotorControllerFront.set(-.25);
         }
     }
