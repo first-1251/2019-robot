@@ -2,7 +2,6 @@ package org.team1251.frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.team1251.frc.robot.subsystems.Climber;
-import org.team1251.frc.robot.subsystems.Grappler;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 
 public class PneumaticTest extends Command {
@@ -10,23 +9,18 @@ public class PneumaticTest extends Command {
 
     private final GamePad testerGamePad;
     private final Climber climber;
-    private final Grappler grappler;
 
-    public PneumaticTest(GamePad testerGamePad, Climber climber, Grappler grappler) {
+    public PneumaticTest(GamePad testerGamePad, Climber climber) {
 
         this.testerGamePad = testerGamePad;
         this.climber = climber;
-        this.grappler = grappler;
         requires(climber);
-        requires(grappler);
     }
 
     @Override
     protected void end() {
         climber.getElevatorFrontEngager().setState(false);
         climber.getElevatorRearEngager().setState(false);
-        grappler.retract();
-        grappler.unclamp();
     }
 
     @Override
@@ -44,15 +38,15 @@ public class PneumaticTest extends Command {
         }
 
         if (testerGamePad.x().isPressed()) {
-            grappler.extend();
+            //grappler.extend();
         } else {
-            grappler.retract();
+            //grappler.retract();
         }
 
         if (testerGamePad.y().isPressed()) {
-            grappler.clamp();
+            //grappler.clamp();
         } else {
-            grappler.unclamp();
+            //grappler.unclamp();
         }
     }
 

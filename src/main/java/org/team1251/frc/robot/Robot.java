@@ -80,7 +80,6 @@ public class Robot extends TigerTimedRobot {
     /**
      * The subsystem that controls the Claw and Arm for Panel.
      */
-    private Grappler grappler;
 
     /**
      * The subsystem that controls all of the ManipulatorElevator.
@@ -129,8 +128,6 @@ public class Robot extends TigerTimedRobot {
      * A command used to individually test motors.
      */
     private MotorTest motorTestCmd;
-    private GrabPanel grabPanel;
-    private PlacePanel placePanel;
     private Climb climbLvl3;
     private Climb climbLvl2;
     private MoveElevatorToSetPoint moveElevatorToHome;
@@ -216,7 +213,6 @@ public class Robot extends TigerTimedRobot {
         arm = new Arm();
         collector = new CargoCollector();
         manipulatorElevator = new ManipulatorElevator();
-        grappler = new Grappler();
     }
 
     /**
@@ -229,8 +225,6 @@ public class Robot extends TigerTimedRobot {
     @Override
     protected void robotInitCreateCommands() {
         teleopDrive = new TeleopDrive(driveBase, humanInput);
-        grabPanel = new GrabPanel(grappler);
-        placePanel = new PlacePanel(grappler);
         intakeCargo = new IntakeCargo(manipulatorElevator, collector, arm);
         outtakeCargo = new OuttakeCargo(collector);
         moveCargoArmUp = new MoveArmUp(arm);
@@ -341,7 +335,7 @@ public class Robot extends TigerTimedRobot {
         // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
         testerGamePad = humanInput.getDriverPad();
         motorTestCmd = new MotorTest(driveBase, arm, collector, climber, manipulatorElevator);
-        pneumaticsTestCmd = new PneumaticTest(testerGamePad, climber, grappler);
+        pneumaticsTestCmd = new PneumaticTest(testerGamePad, climber);
         liftTestCmd = new LiftTest(climber);
 
         (new ButtonTrigger(testerGamePad.lt())).whileHeld(motorTestCmd);
