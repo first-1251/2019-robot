@@ -114,7 +114,7 @@ public class Robot extends TigerTimedRobot {
 
     private Gyro gyro;
 
-    private LimeLight cvLimelight;
+    private LimeLight limelight;
 
     private PathUtils pathUtils;
 
@@ -174,6 +174,10 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void robotInitCreateFeedbackSystems() {
+
+        limelight = new LimeLight(LimeLight.CameraId.CV);
+        limelight.setCameraMode(LimeLight.CameraMode.DRIVER);
+
 //        gyro = new Gyro();
 //
 //        cvLimelight = new LimeLight(LimeLight.CameraId.CV);

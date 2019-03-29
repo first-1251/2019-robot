@@ -32,7 +32,7 @@ public class LimeLight {
     }
 
     public enum CameraId {
-        CV("limelight-cv"), DRIVER_ASSIST("limelight-assist");
+        CV("limelight"), DRIVER_ASSIST("limelight-assist");
 
         public final String ntName;
 
