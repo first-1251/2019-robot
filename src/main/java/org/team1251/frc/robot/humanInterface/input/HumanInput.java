@@ -79,7 +79,7 @@ public class HumanInput {
         climbLvl3Trigger = new ButtonTrigger(operatorPad.start());
         climbLvl2Trigger = new ButtonTrigger(operatorPad.select());
 
-        abandonClimbTrigger = new DualButtonTrigger(operatorPad.rb(), operatorPad.rb());
+        abandonClimbTrigger = new DualButtonTrigger(driverPad.select(), driverPad.start());
 
     }
 
@@ -116,7 +116,7 @@ public class HumanInput {
         // would be a reasonable time to do it, if you have a reason to.
         climbLvl3Trigger.whenPressed(climbLvl3);
         climbLvl2Trigger.whenPressed(climbLvl2);
-        abandonClimbTrigger.whenPressed(abandonClimb);
+        //abandonClimbTrigger.whenPressed(abandonClimb);
 
 
 //        elevatorHomeTrigger.whenPressed(moveElevatorToHome);

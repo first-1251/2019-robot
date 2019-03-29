@@ -59,7 +59,7 @@ public class Climb extends Command {
         }
 
         // Immediately advance phase to "abandon".
-        currentPhase = ClimbPhase.ABANDON;
+//        currentPhase = ClimbPhase.ABANDON;
     }
 
     /**
@@ -67,23 +67,25 @@ public class Climb extends Command {
      */
     @Override
     protected void execute() {
+        System.out.println("Previous Phase:" + currentPhase.name());
         advancePhase();
+        System.out.println("next phase" + currentPhase.name());
         switch (currentPhase) {
-            case ABANDON:
-                // Kill the climb motors and the drive motor
-                climber.drive(0);
-                climber.kill();
-
-                // Once a climb elevator is within 2.5 inches of retracted (.5 inch off ground), disengage it.
-                if (climber.getElevatorRearEncoder().getDistance() < 2.5) {
-                    climber.getElevatorRearEngager().setState(false);
-                }
-
-                if (climber.getElevatorFrontEncoder().getDistance() < 2.5) {
-                    climber.getElevatorFrontEngager().setState(false);
-                }
-
-                break;
+//            case ABANDON:
+//                // Kill the climb motors and the drive motor
+//                climber.drive(0);
+//                climber.kill();
+//
+//                // Once a climb elevator is within 2.5 inches of retracted (.5 inch off ground), disengage it.
+//                if (climber.getElevatorRearEncoder().getDistance() < 2.5) {
+//                    climber.getElevatorRearEngager().setState(false);
+//                }
+//
+//                if (climber.getElevatorFrontEncoder().getDistance() < 2.5) {
+//                    climber.getElevatorFrontEngager().setState(false);
+//                }
+//
+//                break;
 
             case INITIALIZING:
                 break;
@@ -100,6 +102,7 @@ public class Climb extends Command {
                 climber.relieveFrontPressure();
                 break;
             case GAINING_BALANCE:
+                climber.sustain();
                 driveBase.drive(.25);
                 break;
             case RETRACTING_BACK:
@@ -127,14 +130,14 @@ public class Climb extends Command {
     private void advancePhase() {
 
         switch(currentPhase) {
-            case ABANDON:
-                // See if both elevators are fully retracted.
-                if (climber.isFrontElevatorRetracted() && climber.isRearElevatorRetracted()) {
-                    // Done. We'll call this ALL_THE_POINTS even though we did not get all the points.
-                    currentPhase = ClimbPhase.ALL_THE_POINTS;
-                }
-
-                break;
+//            case ABANDON:
+//                // See if both elevators are fully retracted.
+//                if (climber.isFrontElevatorRetracted() && climber.isRearElevatorRetracted()) {
+//                    // Done. We'll call this ALL_THE_POINTS even though we did not get all the points.
+//                    currentPhase = ClimbPhase.ALL_THE_POINTS;
+//                }
+//
+//                break;
             case INITIALIZING:
                 currentPhase = ClimbPhase.LIFTING;
                 break;
