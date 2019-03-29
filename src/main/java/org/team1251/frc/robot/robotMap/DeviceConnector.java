@@ -28,15 +28,14 @@ public enum DeviceConnector implements DeviceConnectorInterface {
     MC_DRIVE_RIGHT_BOTTOM_FRONT(PortType.CAN, 5), // Victor
     MC_DRIVE_RIGHT_BOTTOM_REAR(PortType.CAN, 6), // Victor
 
-    MC_MANIPULATOR_ELEVATOR(PortType.CAN, 11), //Talon
+    MC_MANIPULATOR_ELEVATOR(PortType.CAN, 13), //Talon
     MC_CARGO_ARM(PortType.CAN, 12), // Talon
-    MC_CARGO_COLLECTOR(PortType.CAN, 23), // Talon
+    MC_CARGO_COLLECTOR(PortType.CAN, 11), // Talon
 
     MC_CLIMB_ELEVATOR_FRONT(PortType.CAN, 21), // Talon
     MC_CLIMB_ELEVATOR_REAR(PortType.CAN, 22), // Talon
 
-    // TODO-sofl: Swap 13 and 23, rewire motor to correct speed controller.
-    MC_CLIMB_DRIVE(PortType.CAN, 13), // Victor
+    MC_CLIMB_DRIVE(PortType.CAN, 23), // Victor
 
     //Solenoids
     DSOL_PANEL_ARM_FWD(PortType.PCM, 0), // Double Solenoid
