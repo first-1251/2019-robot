@@ -244,8 +244,8 @@ public class DriveBase extends Subsystem {
         // TODO: Set Current limiting and other cool talon-only things.
         controller.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Robot.TICK_PERIOD_MS / 2 ); // default 20
 
-        controller.configPeakCurrentLimit(45, 20);
-        controller.configPeakCurrentDuration(250, 20);
+        controller.configPeakCurrentLimit(30, 20);
+        controller.configPeakCurrentDuration(150, 20);
         controller.configContinuousCurrentLimit(30, 20);
         controller.enableCurrentLimit(true);
         
