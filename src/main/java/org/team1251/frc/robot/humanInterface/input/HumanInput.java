@@ -23,22 +23,22 @@ public class HumanInput {
      * Helper to get drive power from the human input.
      */
     private final HumanDriveInput humanDriveInput;
-    private final ModernGamePad operatorPad;
-    private final ButtonTrigger placePanelTrigger;
-    private final ButtonTrigger collectPanelTrigger;
-    private final ButtonTrigger ejectCargo;
-    private final ButtonTrigger collectCargoTrigger;
+//    private final ModernGamePad operatorPad;
+//    private final ButtonTrigger placePanelTrigger;
+//    private final ButtonTrigger collectPanelTrigger;
+//    private final ButtonTrigger ejectCargo;
+//    private final ButtonTrigger collectCargoTrigger;
     private final ButtonTrigger climbLvl3Trigger;
     private final ButtonTrigger climbLvl2Trigger;
-    private final ButtonTrigger elevatorLvl3Trigger;
-    private final ButtonTrigger elevatorLvl2Trigger;
-    private final ButtonTrigger elevatorHomeTrigger;
-    private final ButtonTrigger elevatorShipAndHumanCargoTrigger;
-    private final ButtonTrigger autoDockHumanStation;
-    private final ButtonTrigger autoDockShip;
-    private final ButtonTrigger autoDockRocket;
-    private final ButtonTrigger cycleCameraMode;
-    private final DualButtonTrigger abandonClimbTrigger;
+//    private final ButtonTrigger elevatorLvl3Trigger;
+//    private final ButtonTrigger elevatorLvl2Trigger;
+//    private final ButtonTrigger elevatorHomeTrigger;
+//    private final ButtonTrigger elevatorShipAndHumanCargoTrigger;
+//    private final ButtonTrigger autoDockHumanStation;
+//    private final ButtonTrigger autoDockShip;
+//    private final ButtonTrigger autoDockRocket;
+//    private final ButtonTrigger cycleCameraMode;
+//    private final DualButtonTrigger abandonClimbTrigger;
 
 
     /**
@@ -49,37 +49,37 @@ public class HumanInput {
     /**
      * The primary input device
      */
-    private GamePad driverPad;
+    private ModernGamePad driverPad;
 
     /**
      * Creates a new instance
      */
     public HumanInput() {
         driverPad = new ModernGamePad(new Joystick(0));
-        operatorPad = new ModernGamePad(new Joystick(1));
+//        operatorPad = new ModernGamePad(new Joystick(1));
 
         humanDriveInput = new TigerDriveInput();
 
-        collectPanelTrigger = new ButtonTrigger(operatorPad.rt());
-        placePanelTrigger = new ButtonTrigger(operatorPad.lb());
+//        collectPanelTrigger = new ButtonTrigger(operatorPad.rt());
+//        placePanelTrigger = new ButtonTrigger(operatorPad.lb());
 
-        collectCargoTrigger = new ButtonTrigger(operatorPad.rt());
-        ejectCargo = new ButtonTrigger(operatorPad.lb());
+//        collectCargoTrigger = new ButtonTrigger(operatorPad.rt());
+//        ejectCargo = new ButtonTrigger(operatorPad.lb());
+//
+//        elevatorHomeTrigger = new ButtonTrigger(operatorPad.a());
+//        elevatorLvl2Trigger = new ButtonTrigger(operatorPad.b());
+//        elevatorLvl3Trigger = new ButtonTrigger(operatorPad.y());
+//        elevatorShipAndHumanCargoTrigger = new ButtonTrigger(operatorPad.x());
+//
+//        cycleCameraMode = new ButtonTrigger(driverPad.y());
+//        autoDockRocket = new ButtonTrigger(driverPad.b());
+//        autoDockShip = new ButtonTrigger(driverPad.a());
+//        autoDockHumanStation = new ButtonTrigger(driverPad.x());
 
-        elevatorHomeTrigger = new ButtonTrigger(operatorPad.a());
-        elevatorLvl2Trigger = new ButtonTrigger(operatorPad.b());
-        elevatorLvl3Trigger = new ButtonTrigger(operatorPad.y());
-        elevatorShipAndHumanCargoTrigger = new ButtonTrigger(operatorPad.x());
+        climbLvl3Trigger = new ButtonTrigger(driverPad.start());
+        climbLvl2Trigger = new ButtonTrigger(driverPad.select());
 
-        cycleCameraMode = new ButtonTrigger(driverPad.y());
-        autoDockRocket = new ButtonTrigger(driverPad.b());
-        autoDockShip = new ButtonTrigger(driverPad.a());
-        autoDockHumanStation = new ButtonTrigger(driverPad.x());
-
-        climbLvl3Trigger = new ButtonTrigger(operatorPad.start());
-        climbLvl2Trigger = new ButtonTrigger(operatorPad.select());
-
-        abandonClimbTrigger = new DualButtonTrigger(driverPad.select(), driverPad.start());
+//        abandonClimbTrigger = new DualButtonTrigger(driverPad.select(), driverPad.start());
 
     }
 
