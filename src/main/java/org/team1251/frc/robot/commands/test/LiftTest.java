@@ -20,7 +20,7 @@ public class LiftTest extends Command {
 
     @Override
     protected void execute() {
-        climber.lift(true, 5); // 5 inch lift for testing.
+        climber.lift(true, 4); // 5 inch lift for testing.
     }
 
     @Override

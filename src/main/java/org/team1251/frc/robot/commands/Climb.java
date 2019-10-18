@@ -53,13 +53,18 @@ public class Climb extends Command {
     }
 
     public void abandon() {
-        // Can not abandon once lift has completed.
-        if (currentPhase.ordinal() > ClimbPhase.LIFTING.ordinal()) {
+        if (currentPhase == null) {
+            // Never initialized -- nothing to abandon.
+            return;
+        }
+
+        // Can not abandon once we've starting leg retractions.
+        if (currentPhase.ordinal() >= ClimbPhase.RETRACTING_FRONT.ordinal()) {
             return;
         }
 
         // Immediately advance phase to "abandon".
-//        currentPhase = ClimbPhase.ABANDON;
+        currentPhase = ClimbPhase.ABANDON;
     }
 
     /**
@@ -71,21 +76,25 @@ public class Climb extends Command {
         advancePhase();
         System.out.println("next phase" + currentPhase.name());
         switch (currentPhase) {
-//            case ABANDON:
-//                // Kill the climb motors and the drive motor
-//                climber.drive(0);
-//                climber.kill();
-//
-//                // Once a climb elevator is within 2.5 inches of retracted (.5 inch off ground), disengage it.
-//                if (climber.getElevatorRearEncoder().getDistance() < 2.5) {
-//                    climber.getElevatorRearEngager().setState(false);
-//                }
-//
-//                if (climber.getElevatorFrontEncoder().getDistance() < 2.5) {
-//                    climber.getElevatorFrontEngager().setState(false);
-//                }
-//
-//                break;
+            case ABANDON:
+                // Kill the climb motors and the drive motor
+                climber.drive(0);
+                climber.kill();
+
+                // Once a climb elevator is within 2.5 inches of retracted (.5 inch off ground), disengage it.
+                if (climber.getElevatorRearEncoder().getDistance() < 2.5 ||
+                        climber.isRearOnSolidGround() ||
+                        climber.isRearElevatorRetracted()) {
+                    climber.retractRear();
+                }
+
+                if (climber.getElevatorFrontEncoder().getDistance() < 2.5 ||
+                        climber.isFrontOnSolidGround() ||
+                        climber.isFrontElevatorRetracted()) {
+                    climber.retractFront();
+                }
+
+                break;
 
             case INITIALIZING:
                 break;
@@ -121,8 +130,10 @@ public class Climb extends Command {
                 break;
             case ALL_THE_POINTS:
                 driveBase.drive(0);
-                finishingTimer.stop();
-                finishingTimer = null;
+                if (finishingTimer != null) {
+                    finishingTimer.stop();
+                    finishingTimer = null;
+                }
                 break;
         }
     }
@@ -130,14 +141,15 @@ public class Climb extends Command {
     private void advancePhase() {
 
         switch(currentPhase) {
-//            case ABANDON:
-//                // See if both elevators are fully retracted.
-//                if (climber.isFrontElevatorRetracted() && climber.isRearElevatorRetracted()) {
-//                    // Done. We'll call this ALL_THE_POINTS even though we did not get all the points.
-//                    currentPhase = ClimbPhase.ALL_THE_POINTS;
-//                }
-//
-//                break;
+            case ABANDON:
+                // See if both elevators are fully retracted.
+                if (climber.isFrontElevatorRetracted() && climber.isRearElevatorRetracted()) {
+                    // Done. We'll advance to ALL_THE_POINTS (even though we did not get all the points)
+                    // so that the command will identify itself as being "finished".
+                    currentPhase = ClimbPhase.ALL_THE_POINTS;
+                }
+
+                break;
             case INITIALIZING:
                 currentPhase = ClimbPhase.LIFTING;
                 break;

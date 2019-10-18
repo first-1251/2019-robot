@@ -1,6 +1,7 @@
 package org.team1251.frc.robot.humanInterface.input;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.Button;
 import org.team1251.frc.robot.DrivePower;
 import org.team1251.frc.robot.commands.AbandonClimb;
 import org.team1251.frc.robot.commands.Climb;
@@ -28,8 +29,8 @@ public class HumanInput {
 //    private final ButtonTrigger collectPanelTrigger;
 //    private final ButtonTrigger ejectCargo;
 //    private final ButtonTrigger collectCargoTrigger;
-    private final ButtonTrigger climbLvl3Trigger;
-    private final ButtonTrigger climbLvl2Trigger;
+    private final Button climbLvl3Trigger;
+    private final Button climbLvl2Trigger;
 //    private final ButtonTrigger elevatorLvl3Trigger;
 //    private final ButtonTrigger elevatorLvl2Trigger;
 //    private final ButtonTrigger elevatorHomeTrigger;
@@ -38,7 +39,7 @@ public class HumanInput {
 //    private final ButtonTrigger autoDockShip;
 //    private final ButtonTrigger autoDockRocket;
 //    private final ButtonTrigger cycleCameraMode;
-//    private final DualButtonTrigger abandonClimbTrigger;
+    private final DualButtonTrigger abandonClimbTrigger;
 
 
     /**
@@ -76,10 +77,10 @@ public class HumanInput {
 //        autoDockShip = new ButtonTrigger(driverPad.a());
 //        autoDockHumanStation = new ButtonTrigger(driverPad.x());
 
-        climbLvl3Trigger = new ButtonTrigger(driverPad.start());
-        climbLvl2Trigger = new ButtonTrigger(driverPad.select());
+        climbLvl3Trigger = new LongPressTrigger(new ButtonTrigger(driverPad.start()), .25);
+        climbLvl2Trigger = new LongPressTrigger(new ButtonTrigger(driverPad.select()), .25);
 
-//        abandonClimbTrigger = new DualButtonTrigger(driverPad.select(), driverPad.start());
+        abandonClimbTrigger = new DualButtonTrigger(driverPad.rb(), driverPad.lb());
 
     }
 
@@ -116,7 +117,7 @@ public class HumanInput {
         // would be a reasonable time to do it, if you have a reason to.
         climbLvl3Trigger.whenPressed(climbLvl3);
         climbLvl2Trigger.whenPressed(climbLvl2);
-        //abandonClimbTrigger.whenPressed(abandonClimb);
+        abandonClimbTrigger.whenPressed(abandonClimb);
 
 
 //        elevatorHomeTrigger.whenPressed(moveElevatorToHome);
