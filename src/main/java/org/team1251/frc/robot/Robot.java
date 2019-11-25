@@ -4,15 +4,22 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.team1251.frc.robot.commands.AbandonClimb;
 import org.team1251.frc.robot.commands.Climb;
 import org.team1251.frc.robot.commands.TeleopDrive;
+import org.team1251.frc.robot.commands.football.LiftFront;
+import org.team1251.frc.robot.commands.football.Load;
+import org.team1251.frc.robot.commands.football.RetractLoader;
+import org.team1251.frc.robot.commands.football.RunEjector;
 import org.team1251.frc.robot.commands.test.DriveBaseMotorTest;
 import org.team1251.frc.robot.commands.test.LiftTest;
 import org.team1251.frc.robot.commands.test.PneumaticTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
+import org.team1251.frc.robot.humanInterface.input.LongPressTrigger;
 import org.team1251.frc.robot.parts.controllers.ControllerFactory;
 import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
 import org.team1251.frc.robot.parts.sensors.SensorFactory;
 import org.team1251.frc.robot.subsystems.Climber;
 import org.team1251.frc.robot.subsystems.DriveBase;
+import org.team1251.frc.robot.subsystems.football.Ejector;
+import org.team1251.frc.robot.subsystems.football.Loader;
 import org.team1251.frc.robotCore.TigerTimedRobot;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.XBoxController;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
@@ -75,6 +82,13 @@ public class Robot extends TigerTimedRobot {
     private PneumaticTest pneumaticsTestCmd;
     private LiftTest liftTestCmd;
     private AbandonClimb abandonClimb;
+
+    private Ejector footballEjector;
+    private Loader footballLoader;
+    private LiftFront liftFrontCmd;
+    private Load loadFootballCmd;
+    private RetractLoader retractFootballLoaderCmd;
+    private RunEjector runFootballEjector;
 
     /**
      * Creates the robot!
@@ -247,13 +261,28 @@ public class Robot extends TigerTimedRobot {
     protected void onFirstTestActivation() {
         // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
         testerGamePad = humanInput.getDriverPad();
+
+        footballEjector = new Ejector();
+        footballLoader = new Loader();
+
+        liftFrontCmd = new LiftFront(climber);
+        loadFootballCmd = new Load(footballLoader);
+        retractFootballLoaderCmd = new RetractLoader(footballLoader);
+        runFootballEjector = new RunEjector(footballEjector);
+
+        footballLoader.setDefaultCommand(retractFootballLoaderCmd);
+        (new ButtonTrigger(testerGamePad.start())).toggleWhenPressed(liftFrontCmd);
+        (new ButtonTrigger(testerGamePad.start())).toggleWhenPressed(runFootballEjector);
+        (new LongPressTrigger(new ButtonTrigger(testerGamePad.a()), .5)).toggleWhenPressed(loadFootballCmd);
+
+        // Also wire in the actual test commands.
         motorTestCmd = new DriveBaseMotorTest(driveBase);
-        pneumaticsTestCmd = new PneumaticTest(testerGamePad, climber);
+        pneumaticsTestCmd = new PneumaticTest(testerGamePad.y(), testerGamePad.x(), climber);
         liftTestCmd = new LiftTest(climber);
 
         (new ButtonTrigger(testerGamePad.lt())).whileHeld(motorTestCmd);
         (new ButtonTrigger(testerGamePad.rt())).whileHeld(pneumaticsTestCmd);
-        (new ButtonTrigger(testerGamePad.start())).whileHeld(liftTestCmd);
+        (new ButtonTrigger(testerGamePad.select())).whileHeld(liftTestCmd);
     }
 
     /**

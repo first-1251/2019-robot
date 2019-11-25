@@ -232,4 +232,23 @@ public class ControllerFactory {
         );
     }
 
+    public DoubleSolenoid createFootballLoaderSolenoid() {
+        return  new DoubleSolenoid(
+                PcmDevice.DSOL_FOOTBALL_LOADER_FWD.module,
+                PcmDevice.DSOL_FOOTBALL_LOADER_FWD.channel,
+                PcmDevice.DSOL_FOOTBALL_LOADER_REV.channel
+        );
+    }
+
+    public WPI_TalonSRX createFootballEjectorLaunchController() {
+        WPI_TalonSRX controller = new WPI_TalonSRX(CanDevice.MC_FOOTBALL_EJECTOR_LAUNCH.deviceNum);
+        controller.configFactoryDefault(20);
+        return controller;
+    }
+
+    public WPI_TalonSRX createFootballEjectorSpinController() {
+        WPI_TalonSRX controller = new WPI_TalonSRX(CanDevice.MC_FOOTBALL_EJECTOR_LAUNCH.deviceNum);
+        controller.configFactoryDefault(20);
+        return controller;
+    }
 }

@@ -8,6 +8,9 @@ public class LiftTest extends Command {
     private final Climber climber;
 
     public LiftTest(Climber climber) {
+        // Once this command is running, it is king until it is finished or has been cancelled. Other climber commands
+        // are unsafe once this is running because they expect the climber to be in its starting configuration.
+        setInterruptible(false);
 
         this.climber = climber;
         requires(climber);

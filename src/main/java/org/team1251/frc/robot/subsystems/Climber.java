@@ -266,6 +266,28 @@ public class Climber extends TigerSubsystem implements ITelemetryProvider {
         rearLiftController.set(ControlMode.PercentOutput, power);
     }
 
+    public void liftFront(double distance) {
+        frontLeg.engage();
+        rearLeg.disengage();
+
+        double error = distance - frontLeg.liftDistance();
+        if (Math.abs(error) <= .10) {
+            setLiftPower(.10);
+        } else {
+            if (error > 0) {
+                // Too low. Run forward if safe to do so.
+                if (!frontLeg.isAtMechanicalMax()) {
+                    setLiftPower(.5);
+                }
+            } else {
+                // Too high. Run backward if safe to do so.
+                if (frontLeg.liftDistance() > .5) {
+                    setLiftPower(-.25);
+                }
+            }
+        }
+    }
+
 
     @Override
     public void sendTelemetryData(TelemetryTables telemetryTables) {
