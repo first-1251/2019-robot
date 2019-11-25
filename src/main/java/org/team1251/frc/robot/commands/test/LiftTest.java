@@ -15,12 +15,12 @@ public class LiftTest extends Command {
 
     @Override
     protected void end() {
-        climber.kill();
+        climber.killLiftMotors();
     }
 
     @Override
     protected void execute() {
-        climber.lift(true, 4); // 5 inch lift for testing.
+        climber.liftTo(Climber.LiftTarget.TEST);
     }
 
     @Override

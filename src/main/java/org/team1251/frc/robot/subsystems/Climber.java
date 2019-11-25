@@ -1,365 +1,288 @@
 package org.team1251.frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.networktables.NetworkTable;
 import org.team1251.frc.robot.Robot;
-import org.team1251.frc.robot.actuators.LiftElevatorEngager;
-import org.team1251.frc.robot.feedback.GroundDetector;
-import org.team1251.frc.robot.feedback.MagEncoder;
-import org.team1251.frc.robot.feedback.NormallyOpenSwitch;
-import org.team1251.frc.robot.robotMap.DeviceConnector;
-import org.team1251.frc.robot.robotMap.DeviceManager;
+import org.team1251.frc.robot.parts.controllers.ControllerFactory;
+import org.team1251.frc.robot.parts.mechanisms.LiftLeg;
+import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
+import org.team1251.frc.robot.parts.sensors.GroundDetector;
+import org.team1251.frc.robot.parts.sensors.SensorFactory;
 import org.team1251.frc.robotCore.subsystems.Subsystem;
 
+/**
+ * The subsystem that is responsible for making the Robot climb.
+ */
 public class Climber extends Subsystem {
 
     /**
-     * PRE MESSAGE TO ALL THOSE READING
-     * THANK YOU FOR CHANGING THE STUPID DESIGN. 3 ELEVATORS AND 2 GEARBOXES
-     * PRAISE Nobuaki Katayama || JTHBD192620052807
-     **/
+     * All possible lift targets.
+     */
+    public enum LiftTarget {
+        HAB_LVL_2(8, false),
+        HAB_LVL_3(21, false),
+        TEST(4, true);
 
-    //Just In case Motors are Inverted
-    private static final boolean LIFT_MOTOR_FRONT_INVERTED = false;
-    private static final boolean LIFT_MOTOR_REAR_INVERTED = false;
-    private static final boolean DRIVE_MOTOR_INVERTED = false;
+        public final double height;
 
-    private static final boolean LIFT_ENGAGER_FRONT_INVERTED = true;
-    private static final boolean LIFT_ENGAGER_REAR_INVERTED = true;
+        public final boolean isSlow;
+        LiftTarget(double height, boolean isSlow) {
+            this.height = height;
 
-    private static final boolean ELEVATOR_ENCODER_FRONT_PHASE_INVERSION = false;
-    private static final boolean ELEVATOR_ENCODER_REAR_PHASE_INVERSION = false;
-
-    private static final double DISTANCE_PER_ENCODER_REVOLUTION = 1.185; // 1 inch per revolution.
-    private static final double RETRACTED_DISTANCE_THRESHOLD = .10; // Maximum travel distance to consider the elevator retracted.
-
-    // Motor Speeds
-    public static final double LIFT_SPEED = 1;
-    public static final double LIFT_SUSTAIN_SPEED = .10; // .10 is a good at ~123 lbs
-    public static final double SLOW_LIFT_SPEED = .5;
-
-    private final DeviceManager deviceManager = Robot.deviceManager;
-
-    private LiftElevatorEngager elevatorFrontEngager;
-    private LiftElevatorEngager elevatorRearEngager;
-
-    private WPI_TalonSRX driveMotorController;
-    private WPI_TalonSRX liftMotorControllerFront;
-    private WPI_TalonSRX liftMotorControllerRear;
-
-    private NormallyOpenSwitch elevatorFrontUpperLimitSwitch; // on when fully retracted
-    private NormallyOpenSwitch elevatorFrontLowerLimitSwitch; // on when fully extended
-
-    private NormallyOpenSwitch elevatorRearUpperLimitSwitch; // on when fully retracted
-    private NormallyOpenSwitch elevatorRearLowerLimitSwitch; // on when fully extended
-
-    private MagEncoder elevatorRearEncoder;
-    private GroundDetector groundDetectorRear;
-    private GroundDetector groundDetectorFront;
-    private double targetDistance = 1; // Safe default in case of bugs that don't set it properly.
-
-    public MagEncoder getElevatorRearEncoder() {
-        return elevatorRearEncoder;
-    }
-
-    public MagEncoder getElevatorFrontEncoder() {
-        return elevatorFrontEncoder;
-    }
-
-    private MagEncoder elevatorFrontEncoder;
-
-    public LiftElevatorEngager getElevatorFrontEngager() {
-        return elevatorFrontEngager;
-    }
-
-    public LiftElevatorEngager getElevatorRearEngager() {
-        return elevatorRearEngager;
-    }
-
-    public enum Target {
-        HAB_LVL_2(8),
-        HAB_LVL_3(21);
-
-        public final double targetHeight;
-
-        Target(double targetHeight) {
-            this.targetHeight = targetHeight;
-        }
-    }
-
-
-    public Climber(){
-
-        establishLiftMotorControllers();
-        establishElevatorEngagers();
-        establishLiftLimitSwitches();
-        establishElevatorEncoders();
-        establishGroundDetectors();
-    }
-
-    private void establishGroundDetectors() {
-        // Duplicate call protection.
-        if (groundDetectorFront != null) {
-            return;
+            this.isSlow = isSlow;
         }
 
-        groundDetectorFront = deviceManager.createGroundDetector(DeviceConnector.IR_CLIMB_GROUND_SENSOR_FRONT);
-        groundDetectorRear = deviceManager.createGroundDetector(DeviceConnector.IR_CLIMB_GROUND_SENSOR_REAR);
     }
 
-    private void establishElevatorEncoders() {
-        // Duplicate call protection.
-        if (elevatorFrontEncoder != null) {
-            return;
-        }
+    /**
+     * The motor power to use for a slow lift
+     */
+    private static final double SLOW_LIFT_POWER = .5;
 
-        elevatorFrontEncoder =
-                new MagEncoder(liftMotorControllerFront, DISTANCE_PER_ENCODER_REVOLUTION, ELEVATOR_ENCODER_FRONT_PHASE_INVERSION);
-        elevatorRearEncoder =
-                new MagEncoder(liftMotorControllerRear, DISTANCE_PER_ENCODER_REVOLUTION, ELEVATOR_ENCODER_REAR_PHASE_INVERSION);
+    /**
+     * The motor power to use for a normal lift
+     */
+    private static final double NORMAL_LIFT_POWER = 1;
 
-        // Assume both are at their zero position. (Fairly safe assumption, unless we started the robot
-        // with the elevators extended!
-        elevatorFrontEncoder.reset();
-        elevatorRearEncoder.reset();
+
+    /**
+     * The motor power to use for holding the current height.
+     */
+    private static final double SUSTAIN_POWER = .10;
+
+    /**
+     * The current height limit. Set by changing the lift target.
+     */
+    private double maxHeight = 0;
+
+    private final LiftLeg frontLeg;
+    private final LiftLeg rearLeg;
+
+    private final GroundDetector frontGroundDetector;
+    private final GroundDetector rearGroundDetector;
+
+    private final TalonSRX frontLiftController;
+    private final TalonSRX rearLiftController;
+
+    private final TalonSRX driveController;
+
+    /**
+     * Creates a Climber instance.
+     */
+    public Climber() {
+        ControllerFactory controllerFactory = Robot.controllerFactory;
+        MechanismFactory mechanismFactory = Robot.mechanismFactory;
+        SensorFactory sensorFactory = Robot.sensorFactory;
+
+        driveController = controllerFactory.createLifterDriveMotorController();
+
+        frontLiftController = controllerFactory.createFrontLifterMotorController();
+        rearLiftController = controllerFactory.createRearLifterMotorController();
+
+        frontLeg = mechanismFactory.createFrontLiftLeg(frontLiftController);
+        rearLeg = mechanismFactory.createRearLiftLeg(rearLiftController);
+
+        frontGroundDetector = sensorFactory.createFrontGroundDetector();
+        rearGroundDetector = sensorFactory.createRearGroundDetector();
     }
 
-    private void establishElevatorEngagers() {
-
-        // Duplicate call protection.
-        if (elevatorFrontEngager != null) {
-            return;
-        }
-
-        elevatorFrontEngager = new LiftElevatorEngager(
-                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_FRONT_SHIFTER_REV),
-                LIFT_ENGAGER_FRONT_INVERTED
-        );
-
-        elevatorRearEngager = new LiftElevatorEngager(
-                deviceManager.createDoubleSolenoid(DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_FWD, DeviceConnector.DSOL_CLIMB_ELEV_REAR_SHIFTER_REV),
-                LIFT_ENGAGER_REAR_INVERTED
-        );
+    /**
+     * Lifts to a specific height and holds there.
+     *
+     * @param target Which target to lift to.
+     */
+    public void liftTo(LiftTarget target) {
+        this.maxHeight = target.height;
+        this.lift(target.isSlow);
     }
 
-    private void establishLiftMotorControllers() {
+    /**
+     * Runs lift motors until fully lifted and then reduces motor power to sustain position.
+     *
+     * @param isSlowLift Whether or not to lift slowly (true = slow, false = normal)
+     */
+    private void lift(boolean isSlowLift) {
+        // Engage both legs
+        frontLeg.engage();
+        rearLeg.engage();
 
-        // Duplicate call protection.
-        if (liftMotorControllerFront != null) {
-            return;
-        }
-
-        liftMotorControllerFront = deviceManager.createTalonSRX(DeviceConnector.MC_CLIMB_ELEVATOR_FRONT);
-        liftMotorControllerRear = deviceManager.createTalonSRX(DeviceConnector.MC_CLIMB_ELEVATOR_REAR);
-
-        // Reset to defaults to avoid unexpected behavior from previous runs.
-        liftMotorControllerFront.configFactoryDefault(20);
-        liftMotorControllerRear.configFactoryDefault(20);
-
-        liftMotorControllerFront.setInverted(LIFT_MOTOR_FRONT_INVERTED);
-        liftMotorControllerFront.setNeutralMode(NeutralMode.Brake);
-
-        liftMotorControllerRear.setInverted(LIFT_MOTOR_REAR_INVERTED);
-        liftMotorControllerRear.setNeutralMode(NeutralMode.Brake);
-
-        // Adjust the update rates of important things. Use half the robot period to maximize chances of getting an
-        // update on every robot tick.
-        liftMotorControllerFront.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Robot.TICK_PERIOD_MS / 2 ); // default 20
-        liftMotorControllerRear.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, Robot.TICK_PERIOD_MS / 2); // default 20
-
-        // Decrease some things on the follower that aren't important in that context. This helps offset the bandwidth
-        // cost of increasing important things.
-        liftMotorControllerRear.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 100); // default 10
-        liftMotorControllerRear.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 100); // default 20
-
-        // Explicitly set both motors to 0, as an attempted workaround to follower mode not working.
-        liftMotorControllerFront.set(ControlMode.PercentOutput, 0);
-        liftMotorControllerRear.set(ControlMode.PercentOutput, 0);
-
-        driveMotorController = deviceManager.createTalonSRX(DeviceConnector.MC_CLIMB_DRIVE);
-        liftMotorControllerFront.configFactoryDefault(20);
-        driveMotorController.setInverted(DRIVE_MOTOR_INVERTED);
-        driveMotorController.setNeutralMode(NeutralMode.Coast);
-    }
-
-    private void establishLiftLimitSwitches() {
-        // Duplicate call protection.
-        if (elevatorFrontLowerLimitSwitch != null) {
-            return;
-        }
-
-        elevatorFrontLowerLimitSwitch =
-                deviceManager.createNormallyOpenSwitch(DeviceConnector.LS_CLIMB_ELEV_FRONT_LOWER);
-
-        elevatorRearLowerLimitSwitch =
-                deviceManager.createNormallyOpenSwitch(DeviceConnector.LS_CLIMB_ELEV_REAR_LOWER);
-
-        elevatorFrontUpperLimitSwitch =
-                deviceManager.createNormallyOpenSwitch(DeviceConnector.LS_CLIMB_ELEV_FRONT_UPPER);
-
-        elevatorRearUpperLimitSwitch =
-                deviceManager.createNormallyOpenSwitch(DeviceConnector.LS_CLIMB_ELEV_REAR_UPPER);
-
-    }
-
-    //Elevator Drive
-    public void drive(double speed){
-        driveMotorController.set(speed);
-    }
-
-    public boolean lift(Target target) {
-        return lift(false, target.targetHeight);
-    }
-
-    public void relieveFrontPressure() {
-        if (elevatorFrontEncoder.getDistance() > targetDistance - 1) {
-            liftMotorControllerFront.set(-.25);
+        // Stop when we have reached the current lift target or when one of the legs reach its mechanical max.
+        if (hasReachedLiftTarget() || frontLeg.isAtMechanicalMax() || rearLeg.isAtMechanicalMax()) {
+            sustain();
+        } else {
+            setLiftPower(isSlowLift ? SLOW_LIFT_POWER : NORMAL_LIFT_POWER);
         }
     }
 
     /**
-     *
-     * @return true if fully lifted.
+     * Runs lift motors enough to sustain the current lift position.
      */
-    public boolean lift(boolean isSlow, double distance) {
+    public void sustain() {
+        setLiftPower(SUSTAIN_POWER);
+    }
 
-        this.targetDistance = distance;
-
-        // Make sure both elevators are engaged before lifting.
-        elevatorFrontEngager.setState(true);
-        elevatorRearEngager.setState(true);
-
-        // Stop lifting as soon as either elevator reaches its upper limit. They do not move independently, so first
-        // one there wins.
-        if (isLifted()) {
-            // Switch to sustain.
-            sustain();
-            return true;
-        } else {
-            liftMotorControllerFront.set(isSlow ? SLOW_LIFT_SPEED : LIFT_SPEED);
-            liftMotorControllerRear.set(isSlow ? SLOW_LIFT_SPEED : LIFT_SPEED);
-            return false;
+    /**
+     * Relieves pressure on the engager for the front leg by slowly running lift motors backwards.
+     */
+    public void relieveFrontPressure() {
+        // Only willing to drop 1 inch from the max height
+        if (frontLeg.liftDistance() > (maxHeight - 1)) {
+            /* NOTE: This isn't what was originally intended, but it works! Because this is only ever called after
+             *   the lift height has been obtained, both motors are running at sustain power (+.10) before this
+             *   logic runs. ONE of the motors is set to -.25 power creating competition between the two motors.
+             */
+            frontLiftController.set(ControlMode.PercentOutput, -.25);
         }
     }
 
-    public boolean retractFront() {
-        elevatorFrontEngager.setState(false); // Disengage and let the constant spring do its thing.
-        return isFrontElevatorRetracted();
+    /**
+     * Starts the climber's drive motor.
+     */
+    public void startDrive() {
+        driveController.set(ControlMode.PercentOutput, 1);
     }
 
-    public boolean retractRear() {
-        elevatorRearEngager.setState(false); // Disengage and let the constant spring do its thing.
-        return isRearElevatorRetracted();
+    /**
+     * Stops the climber's driver motor.
+     */
+    public void stopDrive() {
+        driveController.set(ControlMode.PercentOutput, 0);
     }
 
-    public boolean isFrontOnSolidGround() {
-        return groundDetectorFront.isGroundDetected();
+    /**
+     * Retracts the front lift leg if it is safe to do so without causing a large impact with the ground.
+     */
+    public void retractFrontLeg() {
+        // Only retract if the front of the robot is on or near solid ground. Use redundant sensors to detect this
+        // state: lift distance and ground sensor
+        if (frontGroundDetector.isGroundDetected() || frontLeg.liftDistance() < 2.5) {
+            frontLeg.disengage();
+        }
     }
 
+    /**
+     * Retracts the rear lift leg if it is safe to do so without causing a large impact with the ground.
+     */
+    public void retractRear() {
+        // Only retract if the rear of the robot is on or near solid ground. Use redundant sensors to detect this
+        // state: lift distance and ground sensor
+        if (rearGroundDetector.isGroundDetected() || rearLeg.liftDistance() < 2.5) {
+            rearLeg.disengage();
+        }
+    }
+
+    /**
+     * Indicates whether or not the front leg is fully retracted (within a reasonable margin of error).
+     *
+     * @return Whether or not the front leg is fully retracted within a reasonable margin of error (true = retracted)
+     */
+    public boolean isFrontLegRetracted() {
+        return frontLeg.isRetracted();
+    }
+
+    /**
+     * Indicates whether or not the rear leg is fully retracted (within a reasonable margin of error).
+     *
+     * @return Whether or not the rear leg is fully retracted within a reasonable margin of error (true = retracted)
+     */
+    public boolean isRearLegRetracted() {
+        return rearLeg.isRetracted();
+    }
+
+    /**
+     * Kills the lift motors.
+     */
+    public void killLiftMotors() {
+        setLiftPower(0);
+    }
+
+    /**
+     * Indicates whether or not the climber has reached the lift target.
+     *
+     * @return Whether or not the climber has reached the lift target.
+     */
+    public boolean hasReachedLiftTarget() {
+        // if either front or rear is at the maximum height, consider the whole bot as lifted. If legs were to become
+        // unsynchronized (one higher than the other), this makes sure that there isn't an accidental overrun.
+        return frontLeg.liftDistance() >= maxHeight || frontLeg.liftDistance() >= maxHeight;
+    }
+
+    /**
+     * Indicates whether the rear of the robot is on solid ground.
+     *
+     * @return Whether the rear of the robot is on solid ground. (true = yes)
+     */
     public boolean isRearOnSolidGround() {
-        return groundDetectorRear.isGroundDetected();
+        return rearGroundDetector.isGroundDetected();
     }
 
-    public void sustain() {
-        // TODO: position PID to sustain?
-        liftMotorControllerFront.set(LIFT_SUSTAIN_SPEED);
-        liftMotorControllerRear.set(LIFT_SUSTAIN_SPEED);
+    /**
+     * Indicates whether the front of the robot is on solid ground.
+     *
+     * @return Whether the front of the robot is on solid ground. (true = yes)
+     */
+    public boolean isFrontOnSolidGround() {
+        return frontGroundDetector.isGroundDetected();
     }
 
-    public void kill() {
-        liftMotorControllerFront.set(0);
-        liftMotorControllerRear.set(0);
+    /**
+     * Explicitly sets the front leg engager state without regard for safeties. This SHOULD NOT be used outside of
+     * mechanism testing.
+     *
+     * @param isEngaged Which state to set the engager to (true = engaged, false = disengaged)
+     */
+    public void testFrontLegEngager(boolean isEngaged) {
+        if (isEngaged) {
+            frontLeg.engage();
+        } else {
+            frontLeg.disengage();
+        }
     }
 
-    public void testMotorControllerFront() {
-        // Make sure the rear motor isn't running and run the front motor at low power.
-        stopMotorControllerRear();
-        liftMotorControllerFront.set(0.25);
+    /**
+     * Explicitly sets the rear leg engager state without regard for safeties. This SHOULD NOT be used outside of
+     * mechanism testing.
+     *
+     * @param isEngaged Which state to set the engager to (true = engaged, false = disengaged)
+     */
+    public void testRearLegEngager(boolean isEngaged) {
+        if (isEngaged) {
+            rearLeg.engage();
+        } else {
+            rearLeg.disengage();
+        }
     }
 
-    public void testMotorControllerRear() {
-        // Make sure the front motor isn't running and run the front motor at low power.
-        stopMotorControllerFront();
-        liftMotorControllerRear.set(0.25);
+    /**
+     * Internal helper to set the same output power to both lift motors.
+     *
+     * @param power A value between -1 and 1 to use as the motor power.
+     */
+    private void setLiftPower(double power) {
+        frontLiftController.set(ControlMode.PercentOutput, power);
+        rearLiftController.set(ControlMode.PercentOutput, power);
     }
 
-    public void testDriveMotorController(){
-        // Run the drive motor at low power.
-        driveMotorController.set(0.25);
-    }
-
-    public void stopMotorControllerFront() {
-        liftMotorControllerFront.set(0);
-    }
-
-    public void stopMotorControllerRear() {
-        liftMotorControllerRear.set(0);
-    }
-
-    public void stopDriveMotorController(){
-        driveMotorController.set(0);
-    }
-
-
-    public boolean isFrontElevatorRetracted() {
-        return elevatorFrontUpperLimitSwitch.isActive() ||
-                elevatorFrontEncoder.getDistance() <= RETRACTED_DISTANCE_THRESHOLD;
-    }
-
-    public boolean isRearElevatorRetracted() {
-        return elevatorRearUpperLimitSwitch.isActive() || elevatorRearEncoder.getDistance() <= RETRACTED_DISTANCE_THRESHOLD;
-    }
-
-    public boolean isFrontLifted() {
-        return elevatorFrontLowerLimitSwitch.isActive() || elevatorFrontEncoder.getDistance() >= targetDistance;
-    }
-
-    public boolean isRearLifted() {
-        // Redundancy -- We'll accept either the switch or an threshold travel distance value from the encoder.
-        return elevatorRearLowerLimitSwitch.isActive() || elevatorRearEncoder.getDistance() >= targetDistance;
-    }
-
-    public boolean isLifted() {
-        return isFrontLifted() || isRearLifted();
-    }
-
-    public void printDiagnostics() {
-        System.out.println("Front: " + elevatorFrontEncoder.getDistance() + "/" + elevatorFrontEncoder.getVelocity() + " | Rear:" + elevatorRearEncoder.getDistance() + "/" + elevatorRearEncoder.getVelocity());
-    }
 
     @Override
     public void sendTelemetryData() {
-
+        // Sensor Data
         NetworkTable sensorTable = getSensorTable();
-        sensorTable.getEntry("frontEncoderDistance").setDouble(elevatorFrontEncoder.getDistance());
-        sensorTable.getEntry("frontEncoderVelocity").setDouble(elevatorFrontEncoder.getVelocity());
-        sensorTable.getEntry("frontEncoderPosition").setDouble(elevatorFrontEncoder.getPosition());
+        sensorTable.getEntry("rearGroundDetectState").setBoolean(rearGroundDetector.isGroundDetected());
+        sensorTable.getEntry("rearGroundDetectVoltage").setNumber(rearGroundDetector.getVoltage());
 
-        sensorTable.getEntry("rearEncoderDistance").setDouble(elevatorRearEncoder.getDistance());
-        sensorTable.getEntry("rearEncoderVelocity").setDouble(elevatorRearEncoder.getVelocity());
-        sensorTable.getEntry("rearEncoderPosition").setDouble(elevatorRearEncoder.getPosition());
-
-        sensorTable.getEntry("frontLowerLimitSwitch").setBoolean(elevatorFrontLowerLimitSwitch.isActive());
-        sensorTable.getEntry("frontLowerLimitSwitch").setBoolean(elevatorFrontLowerLimitSwitch.isActive());
-
-        sensorTable.getEntry("rearUpperLimitSwitch").setBoolean(elevatorRearUpperLimitSwitch.isActive());
-        sensorTable.getEntry("rearLowerLimitSwitch").setBoolean(elevatorRearLowerLimitSwitch.isActive());
-
-        sensorTable.getEntry("frontGroundDetect").setBoolean(groundDetectorFront.isGroundDetected());
-        sensorTable.getEntry("frontGroundDetectVoltage").setNumber(groundDetectorFront.getVoltage());
-
-        sensorTable.getEntry("rearGroundDetect").setBoolean(groundDetectorRear.isGroundDetected());
-        sensorTable.getEntry("rearGroundDetectVoltage").setNumber(groundDetectorRear.getVoltage());
-
+        // Subsystem state data
         NetworkTable stateTable = getStateTable();
-        stateTable.getEntry("isLifted").setBoolean(isLifted());
-        stateTable.getEntry("height").setDouble(Math.max(elevatorFrontEncoder.getDistance(), elevatorRearEncoder.getDistance()));
-        stateTable.getEntry("isFrontRetracted").setBoolean(isFrontElevatorRetracted());
-        stateTable.getEntry("isRearRetracted").setBoolean(isFrontElevatorRetracted());
+        stateTable.getEntry("hasReachedLiftTarget").setBoolean(hasReachedLiftTarget());
+        stateTable.getEntry("liftTargetHeight").setDouble(maxHeight);
+        stateTable.getEntry("isFrontRetracted").setBoolean(isFrontLegRetracted());
         stateTable.getEntry("isFrontOnSolidGround").setBoolean(isFrontOnSolidGround());
-        stateTable.getEntry("isRearOnSolidGround").setBoolean(isFrontOnSolidGround());
+        stateTable.getEntry("isRearRetracted").setBoolean(isRearLegRetracted());
+        stateTable.getEntry("isRearOnSolidGround").setBoolean(isRearOnSolidGround());
+
+        // Indirect telemetry data.
+        frontLeg.sendTelemetryData(sensorTable);
+        rearLeg.sendTelemetryData(sensorTable);
     }
 }

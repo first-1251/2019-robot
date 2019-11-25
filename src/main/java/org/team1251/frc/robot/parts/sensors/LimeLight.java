@@ -1,5 +1,5 @@
 
-package org.team1251.frc.robot.feedback;
+package org.team1251.frc.robot.parts.sensors;
 
 // TODO: Should write operations be part of a subsystem to avoid control conflicts?
 

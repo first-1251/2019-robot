@@ -1,4 +1,4 @@
-package org.team1251.frc.robot.feedback;
+package org.team1251.frc.robot.parts.sensors;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 

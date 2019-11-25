@@ -1,4 +1,4 @@
-package org.team1251.frc.robot.feedback;
+package org.team1251.frc.robot.parts.sensors;
 
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
@@ -8,14 +8,9 @@ public class MagEncoder {
     private final TalonSRX talon;
     private final double distancePerCount;
 
-
-    public MagEncoder(TalonSRX talon, double distancePerRevolution) {
+    public MagEncoder(TalonSRX talon, double distancePerRevolution, boolean isPhaseInverted) {
         this.talon = talon;
         this.distancePerCount = distancePerRevolution / COUNTS_PER_REVOLUTION;
-    }
-
-    public MagEncoder(TalonSRX talon, double distancePerRevolution, boolean isPhaseInverted) {
-        this(talon, distancePerRevolution);
         talon.setSensorPhase(isPhaseInverted);
     }
 

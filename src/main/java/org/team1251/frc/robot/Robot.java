@@ -4,16 +4,17 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.team1251.frc.robot.commands.*;
 import org.team1251.frc.robot.commands.test.LiftTest;
-import org.team1251.frc.robot.commands.test.MotorTest;
+import org.team1251.frc.robot.commands.test.DriveBaseMotorTest;
 import org.team1251.frc.robot.commands.test.PneumaticTest;
-import org.team1251.frc.robot.feedback.Gyro;
-import org.team1251.frc.robot.feedback.LimeLight;
-import org.team1251.frc.robot.feedback.PathUtils;
 import org.team1251.frc.robot.humanInterface.feedback.ITelemetryProvider;
 import org.team1251.frc.robot.humanInterface.feedback.TelemetryTables;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
-import org.team1251.frc.robot.robotMap.DeviceManager;
-import org.team1251.frc.robot.subsystems.*;
+import org.team1251.frc.robot.parts.controllers.ControllerFactory;
+import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
+import org.team1251.frc.robot.parts.sensors.LimeLight;
+import org.team1251.frc.robot.parts.sensors.SensorFactory;
+import org.team1251.frc.robot.subsystems.Climber;
+import org.team1251.frc.robot.subsystems.DriveBase;
 import org.team1251.frc.robotCore.TigerTimedRobot;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
@@ -30,22 +31,13 @@ import java.util.ArrayList;
 public class Robot extends TigerTimedRobot {
 
     /**
-     * Grab the PDP so that it shows up in NetworkTables
-     */
-//    private final PowerDistributionPanel pdp = deviceManager.getPDP();
-
-    /**
      * How many milliseconds in each robot tick.
      */
     public static final int TICK_PERIOD_MS = 20;
 
-    /**
-     * The device manager which is used to create various devices.
-     *
-     * The device manager will detect duplicate port assignments and throw meaningful exceptions instead of the
-     * not-so-useful ones thrown by default.
-     */
-    public static DeviceManager deviceManager = new DeviceManager();
+    public static final ControllerFactory controllerFactory = new ControllerFactory();
+    public static final MechanismFactory mechanismFactory = new MechanismFactory();
+    public static final SensorFactory sensorFactory = new SensorFactory();
 
     /**
      * A way for telemetry providers to easily get a handle to the appropriate high-level telemetry network tables.
@@ -68,21 +60,6 @@ public class Robot extends TigerTimedRobot {
     private DriveBase driveBase;
 
     /**
-     * The subsystem that controls the Claw and Arm for Cargo.
-     */
-    private CargoCollector collector;
-
-    /**
-     * The arm that holds the manipulators
-     */
-    private Arm arm;
-
-    /**
-     * The subsystem that controls all of the ManipulatorElevator.
-     */
-    private ManipulatorElevator manipulatorElevator;
-
-    /**
      * The subsystem that controls the climb Elevators
      */
     private Climber climber;
@@ -92,28 +69,7 @@ public class Robot extends TigerTimedRobot {
      */
     private TeleopDrive teleopDrive;
 
-    /**
-     * A command used to move Cargo Arm Up.
-     */
-    private MoveArmUp moveCargoArmUp;
-
-    /**
-     * A command used to outtake Cargo.
-     */
-    private OuttakeCargo outtakeCargo;
-
-    /**
-     * A command used to move Intake Cargo.
-     */
-    private IntakeCargo intakeCargo;
-
-    private Gyro gyro;
-
     private LimeLight limelight;
-
-    private PathUtils pathUtils;
-
-    //// TEST RELATED fields start here
 
     /**
      * The game pad used as input during test.
@@ -123,13 +79,9 @@ public class Robot extends TigerTimedRobot {
     /**
      * A command used to individually test motors.
      */
-    private MotorTest motorTestCmd;
+    private DriveBaseMotorTest motorTestCmd;
     private Climb climbLvl3;
     private Climb climbLvl2;
-    private MoveElevatorToSetPoint moveElevatorToHome;
-    private MoveElevatorToSetPoint moveElevatorToShipAndHumanCargo;
-    private MoveElevatorToSetPoint moveElevatorToRocketLevel2;
-    private MoveElevatorToSetPoint moveElevatorToRocketLevel3;
     private boolean wasTestModeActivated = false;
     private PneumaticTest pneumaticsTestCmd;
     private LiftTest liftTestCmd;
@@ -170,14 +122,6 @@ public class Robot extends TigerTimedRobot {
 
         limelight = new LimeLight(LimeLight.CameraId.CV);
         limelight.setCameraMode(LimeLight.CameraMode.DRIVER);
-
-//        gyro = new Gyro();
-//
-//        cvLimelight = new LimeLight(LimeLight.CameraId.CV);
-//        cvLimelight.setCameraMode(LimeLight.CameraMode.CV);
-//        cvLimelight.setLedMode(LimeLight.LedMode.ON);
-//
-//        pathUtils = new PathUtils(gyro, cvLimelight);
     }
 
     /**
@@ -204,11 +148,8 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void robotInitCreateSubsystems() {
-        driveBase = new DriveBase(gyro);
+        driveBase = new DriveBase();
         climber = new Climber();
-        arm = new Arm();
-        collector = new CargoCollector();
-        manipulatorElevator = new ManipulatorElevator();
     }
 
     /**
@@ -221,19 +162,9 @@ public class Robot extends TigerTimedRobot {
     @Override
     protected void robotInitCreateCommands() {
         teleopDrive = new TeleopDrive(driveBase, humanInput);
-        intakeCargo = new IntakeCargo(manipulatorElevator, collector, arm);
-        outtakeCargo = new OuttakeCargo(collector);
-        moveCargoArmUp = new MoveArmUp(arm);
-
-
-        climbLvl3 = new Climb(driveBase, climber, Climber.Target.HAB_LVL_3);
-        climbLvl2 = new Climb(driveBase, climber, Climber.Target.HAB_LVL_2);
+        climbLvl3 = new Climb(driveBase, climber, Climber.LiftTarget.HAB_LVL_3);
+        climbLvl2 = new Climb(driveBase, climber, Climber.LiftTarget.HAB_LVL_2);
         abandonClimb = new AbandonClimb(climbLvl2, climbLvl3);
-
-        moveElevatorToHome = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.HOME);
-        moveElevatorToShipAndHumanCargo = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.SHIP_AND_HUMAN_CARGO);
-        moveElevatorToRocketLevel2 = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.ROCKET_LEVEL_2);
-        moveElevatorToRocketLevel3 = new MoveElevatorToSetPoint(manipulatorElevator, ManipulatorElevator.SetPoint.ROCKET_LEVEL_3);
     }
 
     /**
@@ -296,8 +227,6 @@ public class Robot extends TigerTimedRobot {
         }
 
         driveBase.setDefaultCommand(teleopDrive);
-        climber.getElevatorFrontEngager().setState(true);
-        climber.getElevatorRearEngager().setState(true);
     }
 
     /**
@@ -330,7 +259,7 @@ public class Robot extends TigerTimedRobot {
     protected void testFirstInit() {
         // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
         testerGamePad = humanInput.getDriverPad();
-        motorTestCmd = new MotorTest(driveBase, arm, collector, climber, manipulatorElevator);
+        motorTestCmd = new DriveBaseMotorTest(driveBase);
         pneumaticsTestCmd = new PneumaticTest(testerGamePad, climber);
         liftTestCmd = new LiftTest(climber);
 

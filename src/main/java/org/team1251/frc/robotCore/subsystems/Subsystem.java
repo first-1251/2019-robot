@@ -4,7 +4,6 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.command.Command;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.humanInterface.feedback.ITelemetryProvider;
-import org.team1251.frc.robot.robotMap.DeviceManager;
 
 /**
  * A subsystem that does not have an internally defined default command.
@@ -14,8 +13,6 @@ import org.team1251.frc.robot.robotMap.DeviceManager;
  * the boilerplate operation of creating an empty `initDefaultCommand()` every time.
  */
 public abstract class Subsystem extends edu.wpi.first.wpilibj.command.Subsystem implements ITelemetryProvider {
-
-    private final DeviceManager deviceManager = Robot.deviceManager;
 
     private final NetworkTable sensorTable;
     private final NetworkTable stateTable;
@@ -35,9 +32,5 @@ public abstract class Subsystem extends edu.wpi.first.wpilibj.command.Subsystem 
 
     protected NetworkTable getStateTable() {
         return stateTable;
-    }
-
-    protected DeviceManager getDeviceManager() {
-        return deviceManager;
     }
 }

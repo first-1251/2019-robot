@@ -29,11 +29,11 @@ public class Climb extends Command {
 
     private final DriveBase driveBase;
     private final Climber climber;
-    private final Climber.Target target;
+    private final Climber.LiftTarget target;
 
     private ClimbPhase currentPhase;
 
-    public Climb(DriveBase driveBase, Climber climber, Climber.Target target) {
+    public Climb(DriveBase driveBase, Climber climber, Climber.LiftTarget target) {
         this.driveBase = driveBase;
         this.climber = climber;
         this.target = target;
@@ -77,46 +77,35 @@ public class Climb extends Command {
         System.out.println("next phase" + currentPhase.name());
         switch (currentPhase) {
             case ABANDON:
-                // Kill the climb motors and the drive motor
-                climber.drive(0);
-                climber.kill();
-
-                // Once a climb elevator is within 2.5 inches of retracted (.5 inch off ground), disengage it.
-                if (climber.getElevatorRearEncoder().getDistance() < 2.5 ||
-                        climber.isRearOnSolidGround() ||
-                        climber.isRearElevatorRetracted()) {
-                    climber.retractRear();
-                }
-
-                if (climber.getElevatorFrontEncoder().getDistance() < 2.5 ||
-                        climber.isFrontOnSolidGround() ||
-                        climber.isFrontElevatorRetracted()) {
-                    climber.retractFront();
-                }
-
+                // Stop lift motors, stop the lift drive motor, and initiate retracts.
+                climber.killLiftMotors();
+                climber.stopDrive();
+                climber.retractFrontLeg();
+                climber.retractRear();
                 break;
-
             case INITIALIZING:
                 break;
             case LIFTING:
-                climber.lift(target);
+                climber.liftTo(target);
                 break;
             case GAINING_FOOTHOLD:
-                climber.lift(target);
-                climber.drive(1);
+                climber.liftTo(target);
+                climber.startDrive();
                 break;
             case RETRACTING_FRONT:
-                climber.drive(0);
-                climber.retractFront();
+                climber.stopDrive();
+                climber.retractFrontLeg();
                 climber.relieveFrontPressure();
                 break;
             case GAINING_BALANCE:
+                // Go back to sustaining current height and drive forward with the main drive base now that we
+                // have wheels on the platform.
                 climber.sustain();
                 driveBase.drive(.25);
                 break;
             case RETRACTING_BACK:
-                driveBase.drive(0);
-                climber.kill();
+                // Kill the motors (so there isn't pressure on the leg engager) and issue a retract for the rear leg.
+                climber.killLiftMotors();
                 climber.retractRear();
                 break;
             case FINISHING:
@@ -142,8 +131,8 @@ public class Climb extends Command {
 
         switch(currentPhase) {
             case ABANDON:
-                // See if both elevators are fully retracted.
-                if (climber.isFrontElevatorRetracted() && climber.isRearElevatorRetracted()) {
+                // See if both lifters are fully retracted.
+                if (climber.isFrontLegRetracted() && climber.isRearLegRetracted()) {
                     // Done. We'll advance to ALL_THE_POINTS (even though we did not get all the points)
                     // so that the command will identify itself as being "finished".
                     currentPhase = ClimbPhase.ALL_THE_POINTS;
@@ -154,7 +143,7 @@ public class Climb extends Command {
                 currentPhase = ClimbPhase.LIFTING;
                 break;
             case LIFTING:
-                if (climber.isLifted()) {
+                if (climber.hasReachedLiftTarget()) {
                     currentPhase = ClimbPhase.GAINING_FOOTHOLD;
                 }
                 break;
@@ -166,7 +155,7 @@ public class Climb extends Command {
                 break;
             case RETRACTING_FRONT:
                 // TODO: Can we consider this complete sooner?
-                if (climber.isFrontElevatorRetracted()) {
+                if (climber.isFrontLegRetracted()) {
                     currentPhase = ClimbPhase.GAINING_BALANCE;
                 }
 
@@ -178,7 +167,7 @@ public class Climb extends Command {
 
                 break;
             case RETRACTING_BACK:
-                if (climber.isRearElevatorRetracted()) {
+                if (climber.isRearLegRetracted()) {
                     currentPhase = ClimbPhase.FINISHING;
                 }
 
