@@ -14,7 +14,7 @@ public enum PcmDevice {
     public final int channel;
     public final int module;
 
-    PcmDevice(int channel, int module) {
+    PcmDevice(int module, int channel) {
         this.channel = channel;
         this.module = module;
     }

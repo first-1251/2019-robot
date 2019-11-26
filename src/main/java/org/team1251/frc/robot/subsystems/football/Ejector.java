@@ -8,24 +8,22 @@ import org.team1251.frc.robotCore.subsystems.Subsystem;
 
 public class Ejector extends Subsystem {
 
-    private final TalonSRX spinController;
-    private final TalonSRX launchController;
-
-    private boolean isSmartDashboardInitialized = false;
+    private final TalonSRX rightController;
+    private final TalonSRX leftController;
 
     public Ejector() {
         ControllerFactory controllerFactory = Robot.controllerFactory;
-        launchController = controllerFactory.createFootballEjectorLaunchController();
-        spinController = controllerFactory.createFootballEjectorSpinController();
+        leftController = controllerFactory.createFootballEjectorLeftController();
+        rightController = controllerFactory.createFootballEjectorRightController();
     }
 
-    public void run(double launchPower, double spinPower) {
-        launchController.set(ControlMode.PercentOutput, launchPower);
-        spinController.set(ControlMode.PercentOutput, spinPower);
+    public void run(double leftPower, double rightPower) {
+        leftController.set(ControlMode.PercentOutput, leftPower);
+        rightController.set(ControlMode.PercentOutput, rightPower);
     }
 
     public void stop() {
-        launchController.set(ControlMode.PercentOutput, 0);
-        spinController.set(ControlMode.PercentOutput, 0);
+        leftController.set(ControlMode.PercentOutput, 0);
+        rightController.set(ControlMode.PercentOutput, 0);
     }
 }

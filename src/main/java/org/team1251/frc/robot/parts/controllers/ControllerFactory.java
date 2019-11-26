@@ -218,7 +218,6 @@ public class ControllerFactory {
 
     public DoubleSolenoid createClimberFrontLiftLegEngagerSolenoid() {
         return  new DoubleSolenoid(
-                PcmDevice.DSOL_CLIMB_FRONT_LEG_ENGAGER_FWD.module,
                 PcmDevice.DSOL_CLIMB_FRONT_LEG_ENGAGER_FWD.channel,
                 PcmDevice.DSOL_CLIMB_FRONT_LEG_ENGAGER_REV.channel
         );
@@ -226,7 +225,6 @@ public class ControllerFactory {
 
     public DoubleSolenoid createClimberRearLiftLegEngagerSolenoid() {
         return  new DoubleSolenoid(
-                PcmDevice.DSOL_CLIMB_REAR_LEG_ENGAGER_FWD.module,
                 PcmDevice.DSOL_CLIMB_REAR_LEG_ENGAGER_FWD.channel,
                 PcmDevice.DSOL_CLIMB_REAR_LEG_ENGAGER_REV.channel
         );
@@ -234,20 +232,19 @@ public class ControllerFactory {
 
     public DoubleSolenoid createFootballLoaderSolenoid() {
         return  new DoubleSolenoid(
-                PcmDevice.DSOL_FOOTBALL_LOADER_FWD.module,
                 PcmDevice.DSOL_FOOTBALL_LOADER_FWD.channel,
                 PcmDevice.DSOL_FOOTBALL_LOADER_REV.channel
         );
     }
 
-    public WPI_TalonSRX createFootballEjectorLaunchController() {
-        WPI_TalonSRX controller = new WPI_TalonSRX(CanDevice.MC_FOOTBALL_EJECTOR_LAUNCH.deviceNum);
+    public WPI_TalonSRX createFootballEjectorLeftController() {
+        WPI_TalonSRX controller = new WPI_TalonSRX(CanDevice.MC_FOOTBALL_EJECTOR_RIGHT.deviceNum);
         controller.configFactoryDefault(20);
         return controller;
     }
 
-    public WPI_TalonSRX createFootballEjectorSpinController() {
-        WPI_TalonSRX controller = new WPI_TalonSRX(CanDevice.MC_FOOTBALL_EJECTOR_LAUNCH.deviceNum);
+    public WPI_TalonSRX  createFootballEjectorRightController() {
+        WPI_TalonSRX controller = new WPI_TalonSRX(CanDevice.MC_FOOTBALL_EJECTOR_LEFT.deviceNum);
         controller.configFactoryDefault(20);
         return controller;
     }

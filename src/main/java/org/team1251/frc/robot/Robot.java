@@ -1,5 +1,8 @@
 package org.team1251.frc.robot;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.team1251.frc.robot.commands.AbandonClimb;
 import org.team1251.frc.robot.commands.Climb;
@@ -12,7 +15,6 @@ import org.team1251.frc.robot.commands.test.DriveBaseMotorTest;
 import org.team1251.frc.robot.commands.test.LiftTest;
 import org.team1251.frc.robot.commands.test.PneumaticTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
-import org.team1251.frc.robot.humanInterface.input.LongPressTrigger;
 import org.team1251.frc.robot.parts.controllers.ControllerFactory;
 import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
 import org.team1251.frc.robot.parts.sensors.SensorFactory;
@@ -23,6 +25,7 @@ import org.team1251.frc.robot.subsystems.football.Loader;
 import org.team1251.frc.robotCore.TigerTimedRobot;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.XBoxController;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
+import org.team1251.frc.robotCore.humanInterface.input.triggers.LongPressTrigger;
 import org.team1251.frc.robotCore.parts.sensors.LimeLight;
 
 /**
@@ -90,6 +93,11 @@ public class Robot extends TigerTimedRobot {
     private RetractLoader retractFootballLoaderCmd;
     private RunEjector runFootballEjector;
 
+    private NetworkTableEntry dashLeftEjectorWheelPowerCtl;
+    private NetworkTableEntry dashRightEjectorWheelPowerCtl;
+    private NetworkTableEntry dashFrontLiftInchesCtl;
+    private NetworkTable footballTable;
+
     /**
      * Creates the robot!
      */
@@ -121,7 +129,6 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void createSharedSensors() {
-
         limelight = new LimeLight();
         limelight.setCameraMode(LimeLight.CameraMode.DRIVER);
     }
@@ -138,6 +145,15 @@ public class Robot extends TigerTimedRobot {
     @Override
     protected void createHumanInterfaces() {
         humanInput = new HumanInput();
+
+        footballTable = NetworkTableInstance.getDefault().getTable("Football");
+        dashLeftEjectorWheelPowerCtl = footballTable.getEntry("Left Ejector Power");
+        dashRightEjectorWheelPowerCtl = footballTable.getEntry("Right Ejector Power");
+        dashFrontLiftInchesCtl = footballTable.getEntry("Lift Inches");
+
+        dashLeftEjectorWheelPowerCtl.setDefaultDouble(.5);
+        dashRightEjectorWheelPowerCtl.setDefaultDouble(.5);
+        dashFrontLiftInchesCtl.setDefaultDouble(0.);
     }
 
     /**
@@ -243,7 +259,7 @@ public class Robot extends TigerTimedRobot {
     }
 
     /**
-     * Called the first time the test game mode is activated.
+     * Called the every time the test game mode is activated.
      */
     @Override
     protected void onEveryTestActivation() {
@@ -252,23 +268,25 @@ public class Robot extends TigerTimedRobot {
         LiveWindow.setEnabled(false);
         motorTestCmd.reset(null);
         wasTestModeActivated = true;
+
+        limelight.setCameraMode(LimeLight.CameraMode.DRIVER);
+        limelight.setLedMode(LimeLight.LedMode.OFF);
     }
 
     /**
-     * Called every time the test game mode is activated.
+     * Called first time the test game mode is activated.
      */
     @Override
     protected void onFirstTestActivation() {
-        // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
         testerGamePad = humanInput.getDriverPad();
 
         footballEjector = new Ejector();
         footballLoader = new Loader();
 
-        liftFrontCmd = new LiftFront(climber);
+        liftFrontCmd = new LiftFront(climber, dashFrontLiftInchesCtl);
         loadFootballCmd = new Load(footballLoader);
         retractFootballLoaderCmd = new RetractLoader(footballLoader);
-        runFootballEjector = new RunEjector(footballEjector);
+        runFootballEjector = new RunEjector(footballEjector, dashLeftEjectorWheelPowerCtl, dashRightEjectorWheelPowerCtl);
 
         footballLoader.setDefaultCommand(retractFootballLoaderCmd);
         (new ButtonTrigger(testerGamePad.start())).toggleWhenPressed(liftFrontCmd);

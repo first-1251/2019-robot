@@ -1,35 +1,31 @@
 package org.team1251.frc.robot.commands.football;
 
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.team1251.frc.robot.subsystems.football.Ejector;
 
 public class RunEjector extends Command {
 
     private final Ejector ejector;
-    private double spinPower;
-    private double launchPower;
+    private final NetworkTableEntry leftPowerCtl;
+    private final NetworkTableEntry rightPowerCtl;
+    private double rightPower = .5;
+    private double leftPower = .5;
 
-    public RunEjector(Ejector ejector) {
+    public RunEjector(Ejector ejector, NetworkTableEntry leftPowerCtl, NetworkTableEntry rightPowerCtl) {
         this.ejector = ejector;
-
         requires(ejector);
-    }
 
-    @Override
-    protected void initialize() {
-        // Fetch current value in case it is already on the dashboard.
-        fetchSpeeds();
-
-        // Make sure value is on dashboard, by writing current values
-        SmartDashboard.putNumber("ejectorSpinPower", spinPower);
-        SmartDashboard.putNumber("ejectorLaunchPower", launchPower);
+        this.leftPowerCtl = leftPowerCtl;
+        this.rightPowerCtl = rightPowerCtl;
     }
 
     @Override
     protected void execute() {
-        fetchSpeeds();
-        ejector.run(launchPower, spinPower);
+        leftPower = leftPowerCtl.getDouble(leftPower);
+        rightPower = rightPowerCtl.getDouble(rightPower);
+
+        ejector.run(leftPower, rightPower);
     }
 
     @Override
@@ -40,10 +36,5 @@ public class RunEjector extends Command {
     @Override
     protected boolean isFinished() {
         return false;
-    }
-
-    private void fetchSpeeds() {
-        spinPower = SmartDashboard.getNumber("ejectorSpinPower", spinPower);
-        launchPower = SmartDashboard.getNumber("ejectorLaunchPower", launchPower);
     }
 }

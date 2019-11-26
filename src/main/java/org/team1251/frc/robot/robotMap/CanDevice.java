@@ -19,8 +19,8 @@ public enum CanDevice {
 
     MC_CLIMB_DRIVE(23), // Victor
 
-    MC_FOOTBALL_EJECTOR_LAUNCH(12),
-    MC_FOOTBALL_EJECTOR_SPIN(13);
+    MC_FOOTBALL_EJECTOR_LEFT(11),
+    MC_FOOTBALL_EJECTOR_RIGHT(13);
 
     public final int deviceNum;
 

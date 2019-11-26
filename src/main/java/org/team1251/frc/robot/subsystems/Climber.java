@@ -267,27 +267,29 @@ public class Climber extends TigerSubsystem implements ITelemetryProvider {
     }
 
     public void liftFront(double distance) {
+        double target = Math.min(Math.max(0, distance), 8); // Clamp to 0-8
         frontLeg.engage();
         rearLeg.disengage();
 
-        double error = distance - frontLeg.liftDistance();
+        double error = target - frontLeg.liftDistance();
         if (Math.abs(error) <= .10) {
             setLiftPower(.10);
         } else {
             if (error > 0) {
                 // Too low. Run forward if safe to do so.
+                System.out.println("Too low!" + error);
                 if (!frontLeg.isAtMechanicalMax()) {
-                    setLiftPower(.5);
+                    setLiftPower(.25);
                 }
             } else {
                 // Too high. Run backward if safe to do so.
+                System.out.println("Too High" + error);
                 if (frontLeg.liftDistance() > .5) {
-                    setLiftPower(-.25);
+                    setLiftPower(-.10);
                 }
             }
         }
     }
-
 
     @Override
     public void sendTelemetryData(TelemetryTables telemetryTables) {
@@ -304,9 +306,5 @@ public class Climber extends TigerSubsystem implements ITelemetryProvider {
         stateTable.getEntry("isFrontOnSolidGround").setBoolean(isFrontOnSolidGround());
         stateTable.getEntry("isRearRetracted").setBoolean(isRearLegRetracted());
         stateTable.getEntry("isRearOnSolidGround").setBoolean(isRearOnSolidGround());
-
-        // Indirect telemetry data.
-        frontLeg.sendTelemetryData(sensorTable);
-        rearLeg.sendTelemetryData(sensorTable);
     }
 }
