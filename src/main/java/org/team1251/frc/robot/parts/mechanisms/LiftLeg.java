@@ -61,6 +61,8 @@ public class LiftLeg {
             encoder = sensorFactory.createRearLiftLegEncoder(encoderTalon);
             encoder.reset();
         }
+
+        setTelemetryLabels(identifier);
     }
 
     private void setTelemetryLabels(Identifier identifier) {
@@ -99,12 +101,12 @@ public class LiftLeg {
     }
 
     public void sendTelemetryData(NetworkTable sensorTable) {
-//
-//        sensorTable.getEntry(telemetryLabelEncoderDistance).setDouble(encoder.getDistance());
-//        sensorTable.getEntry(telemetryLabelEncoderVelocity).setDouble(encoder.getVelocity());
-//        sensorTable.getEntry(telemetryLabelEncoderPosition).setDouble(encoder.getPosition());
-//
-//        sensorTable.getEntry(telemetryLabelLowerLimitSwitch).setBoolean(lowerLimitSwitch.isActive());
+
+        sensorTable.getEntry(telemetryLabelEncoderDistance).setDouble(encoder.getDistance());
+        sensorTable.getEntry(telemetryLabelEncoderVelocity).setDouble(encoder.getVelocity());
+        sensorTable.getEntry(telemetryLabelEncoderPosition).setDouble(encoder.getPosition());
+
+        sensorTable.getEntry(telemetryLabelLowerLimitSwitch).setBoolean(lowerLimitSwitch.isActive());
     }
 
 

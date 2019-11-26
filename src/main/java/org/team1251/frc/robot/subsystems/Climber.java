@@ -306,5 +306,8 @@ public class Climber extends TigerSubsystem implements ITelemetryProvider {
         stateTable.getEntry("isFrontOnSolidGround").setBoolean(isFrontOnSolidGround());
         stateTable.getEntry("isRearRetracted").setBoolean(isRearLegRetracted());
         stateTable.getEntry("isRearOnSolidGround").setBoolean(isRearOnSolidGround());
+
+        rearLeg.sendTelemetryData(sensorTable);
+        frontLeg.sendTelemetryData(sensorTable);
     }
 }
