@@ -267,7 +267,7 @@ public class Climber extends TigerSubsystem implements ITelemetryProvider {
     }
 
     public void liftFront(double distance) {
-        double target = Math.min(Math.max(0, distance), 8); // Clamp to 0-8
+        double target = Math.min(Math.max(0, distance), 10); // Clamp to 0-8
         frontLeg.engage();
         rearLeg.disengage();
 
