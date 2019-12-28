@@ -298,7 +298,7 @@ public class Robot extends TigerTimedRobot {
         pneumaticsTestCmd = new PneumaticTest(testerGamePad.y(), testerGamePad.x(), climber);
         liftTestCmd = new LiftTest(climber);
 
-        (new ButtonTrigger(testerGamePad.lt())).whileHeld(motorTestCmd);
+//        (new ButtonTrigger(testerGamePad.lt())).whileHeld(motorTestCmd);
         (new ButtonTrigger(testerGamePad.rt())).whileHeld(pneumaticsTestCmd);
         (new ButtonTrigger(testerGamePad.select())).whileHeld(liftTestCmd);
     }
