@@ -3,9 +3,9 @@ package org.team1251.frc.robot.robotMap;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.*;
-import org.team1251.frc.robot.feedback.GroundDetector;
-import org.team1251.frc.robot.feedback.NormallyClosedSwitch;
-import org.team1251.frc.robot.feedback.NormallyOpenSwitch;
+import org.team1251.frc.robot.parts.sensors.GroundDetector;
+import org.team1251.frc.robot.parts.sensors.NormallyClosedSwitch;
+import org.team1251.frc.robot.parts.sensors.NormallyOpenSwitch;
 import org.team1251.frc.robotCore.robotMap.AbstractDeviceManager;
 import org.team1251.frc.robotCore.robotMap.PortType;
 
