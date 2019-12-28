@@ -8,6 +8,8 @@ import org.team1251.frc.robot.commands.Climb;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
+import org.team1251.frc.robotCore.humanInterface.input.triggers.DualButtonTrigger;
+import org.team1251.frc.robotCore.humanInterface.input.triggers.LongPressTrigger;
 
 /**
  * The HumanInput encapsulates everything related to human input and provides a clean interface for all commands and

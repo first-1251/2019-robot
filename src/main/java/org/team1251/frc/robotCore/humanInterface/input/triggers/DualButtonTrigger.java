@@ -1,4 +1,4 @@
-package org.team1251.frc.robot.humanInterface.input;
+package org.team1251.frc.robotCore.humanInterface.input.triggers;
 
 import org.team1251.frc.robotCore.humanInterface.input.Button;
 
