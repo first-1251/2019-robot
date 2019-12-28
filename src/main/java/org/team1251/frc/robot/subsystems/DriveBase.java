@@ -5,12 +5,14 @@ import org.team1251.frc.robot.DrivePower;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.parts.mechanisms.DriveTrain;
 import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
+import org.team1251.frc.robotCore.humanInterface.feedback.ITelemetryProvider;
+import org.team1251.frc.robotCore.humanInterface.feedback.TelemetryTables;
 import org.team1251.frc.robotCore.subsystems.Subsystem;
 
 /**
  * The subsystem which moves the robot around the field.
  */
-public class DriveBase extends Subsystem {
+public class DriveBase extends Subsystem implements ITelemetryProvider {
 
     /**
      * An enumeration of all motors within the drive train.
@@ -33,8 +35,8 @@ public class DriveBase extends Subsystem {
     private final DriveTrain rightTrain;
 
     @Override
-    public void sendTelemetryData() {
-        NetworkTable sensorTable = getSensorTable();
+    public void sendTelemetryData(TelemetryTables telemetryTables) {
+        NetworkTable sensorTable = telemetryTables.getSensorTable().getSubTable(getName());
         sensorTable.getEntry("leftTrainVelocity").setDouble(rightTrain.getVelocity());
         sensorTable.getEntry("rightTrainVelocity").setDouble(leftTrain.getVelocity());
     }

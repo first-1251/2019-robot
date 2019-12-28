@@ -9,12 +9,14 @@ import org.team1251.frc.robot.parts.mechanisms.LiftLeg;
 import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
 import org.team1251.frc.robot.parts.sensors.GroundDetector;
 import org.team1251.frc.robot.parts.sensors.SensorFactory;
+import org.team1251.frc.robotCore.humanInterface.feedback.ITelemetryProvider;
+import org.team1251.frc.robotCore.humanInterface.feedback.TelemetryTables;
 import org.team1251.frc.robotCore.subsystems.Subsystem;
 
 /**
  * The subsystem that is responsible for making the Robot climb.
  */
-public class Climber extends Subsystem {
+public class Climber extends Subsystem implements ITelemetryProvider {
 
     /**
      * All possible lift targets.
@@ -266,14 +268,14 @@ public class Climber extends Subsystem {
 
 
     @Override
-    public void sendTelemetryData() {
+    public void sendTelemetryData(TelemetryTables telemetryTables) {
         // Sensor Data
-        NetworkTable sensorTable = getSensorTable();
+        NetworkTable sensorTable = telemetryTables.getSensorTable().getSubTable(getName());
         sensorTable.getEntry("rearGroundDetectState").setBoolean(rearGroundDetector.isGroundDetected());
         sensorTable.getEntry("rearGroundDetectVoltage").setNumber(rearGroundDetector.getVoltage());
 
         // Subsystem state data
-        NetworkTable stateTable = getStateTable();
+        NetworkTable stateTable = telemetryTables.getStateTable().getSubTable(getName());
         stateTable.getEntry("hasReachedLiftTarget").setBoolean(hasReachedLiftTarget());
         stateTable.getEntry("liftTargetHeight").setDouble(maxHeight);
         stateTable.getEntry("isFrontRetracted").setBoolean(isFrontLegRetracted());

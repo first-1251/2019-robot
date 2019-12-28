@@ -1,6 +1,8 @@
 package org.team1251.frc.robotCore;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import org.team1251.frc.robotCore.humanInterface.feedback.TelemetryProviderList;
+import org.team1251.frc.robotCore.humanInterface.feedback.TelemetryTables;
 
 /**
  * This abstract base creates additional structure to the way the robot is initialized during various phases.
@@ -45,6 +47,22 @@ abstract public class TigerTimedRobot extends TimedRobot {
      * Indicates whether or not teleop mode has been previously initialized.
      */
     private boolean teleopInitialized = false;
+
+    /**
+     * Network tables used for telemetry data. Robots generally do not need to access this directly -- instead they
+     * should be implementing `ITelemetryProvider` and adding them to the `telemetrySender`.
+     *
+     * @see org.team1251.frc.robotCore.humanInterface.feedback.ITelemetryProvider
+     * @see #telemetrySender
+     */
+    protected final TelemetryTables telemetryTables = new TelemetryTables();
+
+    /**
+     * A list of telemetry providers. Each will be asked to send their telemetry data every robot period.
+     *
+     * Specifically, each will be called, in the order they are added, during `robotPeriodic()`
+     */
+    protected final TelemetryProviderList telemetrySender = new TelemetryProviderList();
 
     /**
      * Creates a new instance with a particular tick period.
@@ -198,4 +216,9 @@ abstract public class TigerTimedRobot extends TimedRobot {
      * Called every time the test game mode is activated.
      */
     protected abstract void testFirstInit();
+
+    @Override
+    public void robotPeriodic() {
+        telemetrySender.sendTelemetryData(telemetryTables);
+    }
 }

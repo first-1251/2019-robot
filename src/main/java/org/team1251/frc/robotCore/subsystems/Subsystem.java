@@ -1,36 +1,26 @@
 package org.team1251.frc.robotCore.subsystems;
 
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.command.Command;
-import org.team1251.frc.robot.Robot;
-import org.team1251.frc.robot.humanInterface.feedback.ITelemetryProvider;
 
 /**
- * A subsystem that does not have an internally defined default command.
+ * A subsystem that follows the patterns used by Team 1251, Tech Tigers.
  *
- * A default command can still be applied using {@link edu.wpi.first.wpilibj.command.Subsystem#setDefaultCommand(Command)}.
- * This supports the Team 1251 pattern of using dependency injection. Using this class is simply a convenience over
- * the boilerplate operation of creating an empty `initDefaultCommand()` every time.
+ * ### No internally defined default command
+ *
+ *   This class does not force you to implement `initDefaultCommand()` because:
+ *     - It is tedious to implement an empty `initDefaultCommand()` for subsystems that don't have a default command.
+ *     - `initDefaultCommand()` pretty much forces static access of commands and we've found that prone to hard-to-find
+ *       bugs related to initialization order of static fields.
+ *
+ *   A default command can still be applied using `setDefaultCommand()` after the subsystem has been created.
+ *   (see {@link edu.wpi.first.wpilibj.command.Subsystem#setDefaultCommand(Command)})
  */
-public abstract class Subsystem extends edu.wpi.first.wpilibj.command.Subsystem implements ITelemetryProvider {
-
-    private final NetworkTable sensorTable;
-    private final NetworkTable stateTable;
+public abstract class Subsystem extends edu.wpi.first.wpilibj.command.Subsystem {
 
     public Subsystem() {
         super();
-        sensorTable = Robot.telemetryTables.getSensorTable().getSubTable(getName());
-        stateTable = Robot.telemetryTables.getStateTable().getSubTable(getName());
     }
 
     @Override
     protected void initDefaultCommand() { /* do nothing */ }
-
-    protected NetworkTable getSensorTable() {
-        return sensorTable;
-    }
-
-    protected NetworkTable getStateTable() {
-        return stateTable;
-    }
 }

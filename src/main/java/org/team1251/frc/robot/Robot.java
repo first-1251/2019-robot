@@ -2,12 +2,12 @@ package org.team1251.frc.robot;
 
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import org.team1251.frc.robot.commands.*;
-import org.team1251.frc.robot.commands.test.LiftTest;
+import org.team1251.frc.robot.commands.AbandonClimb;
+import org.team1251.frc.robot.commands.Climb;
+import org.team1251.frc.robot.commands.TeleopDrive;
 import org.team1251.frc.robot.commands.test.DriveBaseMotorTest;
+import org.team1251.frc.robot.commands.test.LiftTest;
 import org.team1251.frc.robot.commands.test.PneumaticTest;
-import org.team1251.frc.robot.humanInterface.feedback.ITelemetryProvider;
-import org.team1251.frc.robot.humanInterface.feedback.TelemetryTables;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.parts.controllers.ControllerFactory;
 import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
@@ -18,8 +18,6 @@ import org.team1251.frc.robot.subsystems.DriveBase;
 import org.team1251.frc.robotCore.TigerTimedRobot;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
-
-import java.util.ArrayList;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,15 +37,7 @@ public class Robot extends TigerTimedRobot {
     public static final MechanismFactory mechanismFactory = new MechanismFactory();
     public static final SensorFactory sensorFactory = new SensorFactory();
 
-    /**
-     * A way for telemetry providers to easily get a handle to the appropriate high-level telemetry network tables.
-     */
-    public static TelemetryTables telemetryTables = new TelemetryTables();
 
-    /**
-     * A list of telemetry providers. Each will be asked to send their values every period.
-     */
-    private final ArrayList<ITelemetryProvider> telemetryProviders = new ArrayList<>();
 
     /**
      * The source of all input that comes from the human players.
@@ -185,7 +175,7 @@ public class Robot extends TigerTimedRobot {
      */
     @Override
     protected void robotInitFinalize() {
-        telemetryProviders.add(climber);
+        telemetrySender.add(climber);
     }
 
     /**
@@ -315,10 +305,4 @@ public class Robot extends TigerTimedRobot {
         Scheduler.getInstance().run();
     }
 
-    @Override
-    public void robotPeriodic() {
-        for (ITelemetryProvider provider:telemetryProviders) {
-            provider.sendTelemetryData();
-        }
-    }
 }
