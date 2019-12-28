@@ -1,4 +1,4 @@
-package org.team1251.frc.robot.parts.sensors;
+package org.team1251.frc.robotCore.parts.sensors;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 

@@ -5,8 +5,8 @@ import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.parts.controllers.ControllerFactory;
-import org.team1251.frc.robot.parts.sensors.MagEncoder;
-import org.team1251.frc.robot.parts.sensors.NormallyOpenSwitch;
+import org.team1251.frc.robotCore.parts.sensors.TalonMagEncoder;
+import org.team1251.frc.robotCore.parts.sensors.NormallyOpenSwitch;
 import org.team1251.frc.robot.parts.sensors.SensorFactory;
 
 /**
@@ -14,7 +14,7 @@ import org.team1251.frc.robot.parts.sensors.SensorFactory;
  */
 public class LiftLeg {
 
-    private final MagEncoder encoder;
+    private final TalonMagEncoder encoder;
     private final NormallyOpenSwitch lowerLimitSwitch;
     private DoubleSolenoid engagerSolenoid;
     private boolean isEngagerSolenoidInverted;

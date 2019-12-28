@@ -11,7 +11,7 @@ import org.team1251.frc.robot.commands.test.PneumaticTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.parts.controllers.ControllerFactory;
 import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
-import org.team1251.frc.robot.parts.sensors.LimeLight;
+import org.team1251.frc.robotCore.parts.sensors.LimeLight;
 import org.team1251.frc.robot.parts.sensors.SensorFactory;
 import org.team1251.frc.robot.subsystems.Climber;
 import org.team1251.frc.robot.subsystems.DriveBase;
@@ -110,7 +110,7 @@ public class Robot extends TigerTimedRobot {
     @Override
     protected void robotInitCreateFeedbackSystems() {
 
-        limelight = new LimeLight(LimeLight.CameraId.CV);
+        limelight = new LimeLight();
         limelight.setCameraMode(LimeLight.CameraMode.DRIVER);
     }
 

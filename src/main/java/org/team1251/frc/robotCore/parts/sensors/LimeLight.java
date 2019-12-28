@@ -1,5 +1,5 @@
 
-package org.team1251.frc.robot.parts.sensors;
+package org.team1251.frc.robotCore.parts.sensors;
 
 // TODO: Should write operations be part of a subsystem to avoid control conflicts?
 
@@ -31,19 +31,12 @@ public class LimeLight {
         CV, DRIVER
     }
 
-    public enum CameraId {
-        CV("limelight"), DRIVER_ASSIST("limelight-assist");
-
-        public final String ntName;
-
-        CameraId(String ntName) {
-            this.ntName = ntName;
-        }
+    public LimeLight() {
+        this("limelight");
     }
 
-
-    public LimeLight(CameraId id) {
-        NetworkTable netTable = NetworkTableInstance.getDefault().getTable(id.ntName);
+    public LimeLight(String id) {
+        NetworkTable netTable = NetworkTableInstance.getDefault().getTable(id);
 
         tx = netTable.getEntry("tx");
         ty = netTable.getEntry("ty");

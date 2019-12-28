@@ -5,7 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.parts.controllers.ControllerFactory;
-import org.team1251.frc.robot.parts.sensors.MagEncoder;
+import org.team1251.frc.robotCore.parts.sensors.TalonMagEncoder;
 import org.team1251.frc.robot.parts.sensors.SensorFactory;
 
 /**
@@ -58,7 +58,7 @@ public class DriveTrain {
     /**
      * The encoder that tracks the behavior of this drive train.
      */
-    private final MagEncoder encoder;
+    private final TalonMagEncoder encoder;
 
     /**
      * Creates a DriveTrain instance for a specific side of the robot.
