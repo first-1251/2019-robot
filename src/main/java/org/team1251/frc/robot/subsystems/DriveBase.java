@@ -7,12 +7,12 @@ import org.team1251.frc.robot.parts.mechanisms.DriveTrain;
 import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
 import org.team1251.frc.robotCore.humanInterface.feedback.ITelemetryProvider;
 import org.team1251.frc.robotCore.humanInterface.feedback.TelemetryTables;
-import org.team1251.frc.robotCore.subsystems.Subsystem;
+import org.team1251.frc.robotCore.subsystems.TigerSubsystem;
 
 /**
  * The subsystem which moves the robot around the field.
  */
-public class DriveBase extends Subsystem implements ITelemetryProvider {
+public class DriveBase extends TigerSubsystem implements ITelemetryProvider {
 
     /**
      * An enumeration of all motors within the drive train.

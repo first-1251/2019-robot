@@ -1,6 +1,7 @@
 package org.team1251.frc.robotCore.subsystems;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
  * A subsystem that follows the patterns used by Team 1251, Tech Tigers.
@@ -15,9 +16,9 @@ import edu.wpi.first.wpilibj.command.Command;
  *   A default command can still be applied using `setDefaultCommand()` after the subsystem has been created.
  *   (see {@link edu.wpi.first.wpilibj.command.Subsystem#setDefaultCommand(Command)})
  */
-public abstract class Subsystem extends edu.wpi.first.wpilibj.command.Subsystem {
+public abstract class TigerSubsystem extends Subsystem {
 
-    public Subsystem() {
+    public TigerSubsystem() {
         super();
     }
 

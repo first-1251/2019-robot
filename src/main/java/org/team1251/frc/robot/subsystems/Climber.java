@@ -11,12 +11,12 @@ import org.team1251.frc.robot.parts.sensors.GroundDetector;
 import org.team1251.frc.robot.parts.sensors.SensorFactory;
 import org.team1251.frc.robotCore.humanInterface.feedback.ITelemetryProvider;
 import org.team1251.frc.robotCore.humanInterface.feedback.TelemetryTables;
-import org.team1251.frc.robotCore.subsystems.Subsystem;
+import org.team1251.frc.robotCore.subsystems.TigerSubsystem;
 
 /**
  * The subsystem that is responsible for making the Robot climb.
  */
-public class Climber extends Subsystem implements ITelemetryProvider {
+public class Climber extends TigerSubsystem implements ITelemetryProvider {
 
     /**
      * All possible lift targets.
