@@ -9,6 +9,8 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class LimeLight {
 
+    // According to the docs, the image is already (at least) 11 ms old before it makes it to the
+    // post-processing pipeline. Added to pipeline latency to get total picture latency
     static private double IMAGE_CAPTURE_LATENCY = 11;
 
 
