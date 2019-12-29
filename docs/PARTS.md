@@ -1,15 +1,18 @@
 # Robot "Parts"
 
-Robots are made up of Subsystems and Subsystems are made up of `Parts`. 
+Robots are made up of Subsystems and Subsystems are made up of `Parts`. A `Part` may be a single 
+component (such as a sensor) or it may be a logical grouping of other parts. We generalize parts 
+into three categories: `controllers', 'mechanisms`, and `sensors`. These are explained in more 
+detail further down.
 
 Some very common parts (such as the PDP) are represented by classes in the WPILib library and others 
 (like CTRE motor controllers) are represented by classes provided in vendor libraries. We even have 
 some parts that are used from year-to-year represented as classes in the `robotCore.parts` package. 
-Parts that are not already defined in one of these places are created as classes under the 
-`robot.parts` package.
+To use these parts, we just need to create an instance and configure it to meet the current Robot's
+needs.
 
-A `Part` may be a single component (such as a sensor) or it may be a logical grouping of other parts. 
-We generalize parts in three categories: `controllers', 'mechanisms`, and `sensors`.
+For parts that are not already defined in one of these places we can crate our own classes under 
+the `robot.parts` package.
 
 ## "Wrappers"
 
@@ -124,5 +127,5 @@ As a bonus, if two limit switches are added to all the elbows as a an extra fail
 class can be modified to include two switches instead of adding FOUR switches to the Arm subsystem. In
 fact, the Arm subsystem wouldn't need to change at all!
 
-# Part Factories
-
+> Pro-Tip: This is an example of the `DRY` principle of Software Design - `D`on't `R`epeat `Y`ourself.
+It encourages _reuse_ of code (through classes, functions, etc.) rather than _duplication_ of code.

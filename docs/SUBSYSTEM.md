@@ -67,8 +67,9 @@ class Collector extends TigerSubsystem {
 ### Step 2: Create parts owned by the subsystem
 
 We use the constructor to create the parts that make up the subsystem. Usually, we do this with the
-help of one or more `factories`. This Collector has one motor (controlled by a talon) and one switch
-used to detect whether or not the game piece has been collected.
+help of one or more _factories_ (see `/docs/PART_FACTORIES.md` for more about that). Our example
+Collector has one motor (controlled by a talon) and one switch used to detect whether or not the 
+game piece has been collected.
 
 All parts are assigned to `private` fields so that they can be accessed throughout the class, but not
 by other classes. The fields are also marked as `final` because they never get reassigned. 
@@ -125,10 +126,10 @@ class Collector extends TigerSubsystem {
 Commands need a way to send instructions to the Subsystem. They may also need to know details
 about the subsystem's state. We define these as `public` methods. (Don't forget the docs!)
 
-_Notice that Commands do not need to know a lot of the details of the collector. For example, the 
-Command doesn't need to know if it is using a switch or a proximity sensor to detect the game piece. It
-also doesn't need to know how many motor are controlling the collector. This is called `encapsulation`
-(or `information hiding`) and is one of the core principles of Object Oriented Programming._  
+>Pro Tip: Notice that Commands do not need to know a lot of the details of the collector. For example, 
+the Command doesn't need to know if it is using a switch or a proximity sensor to detect the game piece. 
+It also doesn't need to know how many motor are controlling the collector. This is called `encapsulation`
+(or `information hiding`) and is one of the key principles of Object-Oriented Design._  
 
 ```java
 class Collector extends TigerSubsystem {
