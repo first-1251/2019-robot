@@ -1,6 +1,5 @@
 package org.team1251.frc.robot;
 
-import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import org.team1251.frc.robot.commands.AbandonClimb;
 import org.team1251.frc.robot.commands.Climb;
@@ -11,13 +10,13 @@ import org.team1251.frc.robot.commands.test.PneumaticTest;
 import org.team1251.frc.robot.humanInterface.input.HumanInput;
 import org.team1251.frc.robot.parts.controllers.ControllerFactory;
 import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
-import org.team1251.frc.robotCore.parts.sensors.LimeLight;
 import org.team1251.frc.robot.parts.sensors.SensorFactory;
 import org.team1251.frc.robot.subsystems.Climber;
 import org.team1251.frc.robot.subsystems.DriveBase;
 import org.team1251.frc.robotCore.TigerTimedRobot;
 import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
+import org.team1251.frc.robotCore.parts.sensors.LimeLight;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -92,23 +91,22 @@ public class Robot extends TigerTimedRobot {
      * This method is useful for performing tasks which don't "fit" into other `robotInit*()` methods and don't rely
      * on objects created in those methods.
      *
-     * This is always invoked immediately before {@link #robotInitCreateFeedbackSystems()}}.
+     * This is always invoked immediately before {@link #createSharedSensors()}}.
      */
     @Override
     protected void robotInitPrep() { }
 
     /**
-     * Creates all standalone feedback systems that will be used by the robot. These may be systems which provide
-     * feedback to the robot or to the human players.
+     * Creates all sensors that need to be accessed by multiple parts of the robot. These are different from sensors
+     * that are isolated to a specific mechanism or subsystem.
      *
-     * These are the first to be created because it may be a dependency of anything else. However, because they are
-     * created first, they may not use anything else as a dependency. For feedback systems that rely on particular
-     * subsystems or commands, use the {@link #robotInitFinalize()} method.
+     * These are the first to be created because they may be utilized by any other component (human interfaces,
+     * subsystems, or commands).
      *
-     * This is always invoked immediately before {@link #robotInitCreateSubsystems()} and after {@link #robotInitPrep()}};
+     * This is always invoked immediately before {@link #createSubsystems()} and after {@link #robotInitPrep()}};
      */
     @Override
-    protected void robotInitCreateFeedbackSystems() {
+    protected void createSharedSensors() {
 
         limelight = new LimeLight();
         limelight.setCameraMode(LimeLight.CameraMode.DRIVER);
@@ -121,10 +119,10 @@ public class Robot extends TigerTimedRobot {
      * May rely on feedback systems since they have already been created. Subsystems or Commands may rely on these
      * since they are created later.
      *
-     * This is always invoked immediately before {@link #robotInitCreateSubsystems()} and after {@link #robotInitCreateFeedbackSystems()}};
+     * This is always invoked immediately before {@link #createSubsystems()} and after {@link #createSharedSensors()}};
      */
     @Override
-    protected void robotInitCreateHumanInterfaces() {
+    protected void createHumanInterfaces() {
         humanInput = new HumanInput();
     }
 
@@ -134,10 +132,10 @@ public class Robot extends TigerTimedRobot {
      * Feedback systems and human interfaces are now available for use as dependencies. Commands are not yet available,
      * so default commands are set into subsystems later.
      *
-     * This is always invoked immediately before {@link #robotInitCreateCommands()} and after {@link #robotInitCreateHumanInterfaces()};
+     * This is always invoked immediately before {@link #createCommands()} and after {@link #createHumanInterfaces()};
      */
     @Override
-    protected void robotInitCreateSubsystems() {
+    protected void createSubsystems() {
         driveBase = new DriveBase();
         climber = new Climber();
     }
@@ -147,10 +145,10 @@ public class Robot extends TigerTimedRobot {
      *
      * Feedback systems, human interfaces, and subsystems are now available for use as dependencies.
      *
-     * This is always invoked immediately before {@link #robotInitFinalize()} and after {@link #robotInitCreateSubsystems()};
+     * This is always invoked immediately before {@link #robotInitFinalize()} and after {@link #createSubsystems()};
      */
     @Override
-    protected void robotInitCreateCommands() {
+    protected void createCommands() {
         teleopDrive = new TeleopDrive(driveBase, humanInput);
         climbLvl3 = new Climb(driveBase, climber, Climber.LiftTarget.HAB_LVL_3);
         climbLvl2 = new Climb(driveBase, climber, Climber.LiftTarget.HAB_LVL_2);
@@ -171,7 +169,7 @@ public class Robot extends TigerTimedRobot {
      * This method is also useful for creating any additional objects which do not "fit" into the other `robotInit*()`
      * methods and rely on objects created by those methods.
      * 
-     * This is always invoked immediately after {@link #robotInitCreateCommands()}. By default, this method does nothing.
+     * This is always invoked immediately after {@link #createCommands()}. By default, this method does nothing.
      */
     @Override
     protected void robotInitFinalize() {
@@ -185,7 +183,7 @@ public class Robot extends TigerTimedRobot {
      * methods.
      */
     @Override
-    protected void autonomousFirstInit() { }
+    protected void onFirstAutonomousActivation() { }
 
 
     /**
@@ -195,7 +193,7 @@ public class Robot extends TigerTimedRobot {
      * methods.
      */
     @Override
-    protected void autonomousEveryInit() {
+    protected void onEveryAutonomousActivation() {
         if (wasTestModeActivated) {
             throw new RuntimeException("Can not run autonomous after test mode - restart robot code from driver station!");
         }
@@ -211,7 +209,7 @@ public class Robot extends TigerTimedRobot {
      * methods.
      */
     @Override
-    protected void teleopEveryInit() {
+    protected void onEveryTeleopActivation() {
         if (wasTestModeActivated) {
             throw new RuntimeException("Can not run teleop after test mode - restart robot code from driver station!");
         }
@@ -226,7 +224,7 @@ public class Robot extends TigerTimedRobot {
      * methods.
      */
     @Override
-    protected void teleopFirstInit() {
+    protected void onFirstTeleopActivation() {
         humanInput.attachCommandTriggers(climbLvl3, climbLvl2, abandonClimb);
     }
 
@@ -234,7 +232,7 @@ public class Robot extends TigerTimedRobot {
      * Called the first time the test game mode is activated.
      */
     @Override
-    protected void testEveryInit() {
+    protected void onEveryTestActivation() {
         // Turn off live window, we don't use it. This will re-enable our ability to use the command-based system
         // while in test mode.
         LiveWindow.setEnabled(false);
@@ -246,7 +244,7 @@ public class Robot extends TigerTimedRobot {
      * Called every time the test game mode is activated.
      */
     @Override
-    protected void testFirstInit() {
+    protected void onFirstTestActivation() {
         // Use port 4 for the tester game pad to make sure it does not conflict with the main game.
         testerGamePad = humanInput.getDriverPad();
         motorTestCmd = new DriveBaseMotorTest(driveBase);
@@ -266,43 +264,4 @@ public class Robot extends TigerTimedRobot {
     public void disabledInit() {
         // TODO: Clean up -- called once per disable.
     }
-
-    /**
-     * Runs once per tick when the robot is disabled.
-     */
-    @Override
-    public void disabledPeriodic() {
-        // TODO: Should we really be running scheduler? (I think so, because it will forcibly shutdown commands.. maybe?)
-        Scheduler.getInstance().run();
-    }
-
-    /**
-     * This function is called once per "tick" during the sandstorm.
-     *
-     * For the 2019 game, there is no strictly "autonomous" mode; it is replaced by the "sandstorm" which allows for
-     * human input. From a software-perspective, it is still called "autonomous". The terms "sandstorm" and
-     * "autonomous" may be used interchangeably for this robot, although "sandstorm" is preferred unless directly
-     * referencing method names.
-     */
-    @Override
-    public void autonomousPeriodic() {
-        Scheduler.getInstance().run();
-    }
-
-    /**
-     * This function is called once per tick during operator control mode.
-     */
-    @Override
-    public void teleopPeriodic() {
-        Scheduler.getInstance().run();
-    }
-
-    /**
-     * This function is called once per tick during test mode.
-     */
-    @Override
-    public void testPeriodic() {
-        Scheduler.getInstance().run();
-    }
-
 }
