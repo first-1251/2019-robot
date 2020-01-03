@@ -25,6 +25,12 @@ At the end of the day, this is a faithful representation of the logic used by Se
 Winning Alliance banner. But readers should, by no means, think that our code was this well maintained during the chaos
 of the build season!
 
+## Off-Season
+
+We were fortunate enough to participate in a "football-launcher" competition at the FAU Cheribundi Bowl during the 2019
+off-season. This great opportunity was brought to us by one of our wonderful sponsors, Florida Power and Light (FPL).
+To see the code that powered our winning design, check out the `football-launcher` branch!
+
 ## On to 2020!
 
 Good luck to all teams in the 2020 competition season! This code is graciously donated to the community, feel free to
