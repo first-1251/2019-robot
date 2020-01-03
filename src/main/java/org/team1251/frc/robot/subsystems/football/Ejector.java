@@ -4,9 +4,9 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import org.team1251.frc.robot.Robot;
 import org.team1251.frc.robot.parts.controllers.ControllerFactory;
-import org.team1251.frc.robotCore.subsystems.Subsystem;
+import org.team1251.frc.robotCore.subsystems.TigerSubsystem;
 
-public class Ejector extends Subsystem {
+public class Ejector extends TigerSubsystem {
 
     private final TalonSRX rightController;
     private final TalonSRX leftController;
