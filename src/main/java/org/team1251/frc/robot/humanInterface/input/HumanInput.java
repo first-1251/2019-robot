@@ -5,8 +5,7 @@ import edu.wpi.first.wpilibj.buttons.Button;
 import org.team1251.frc.robot.DrivePower;
 import org.team1251.frc.robot.commands.AbandonClimb;
 import org.team1251.frc.robot.commands.Climb;
-import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
-import org.team1251.frc.robotCore.humanInterface.input.gamepad.ModernGamePad;
+import org.team1251.frc.robotCore.humanInterface.input.gamepad.XBoxController;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.DualButtonTrigger;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.LongPressTrigger;
@@ -26,21 +25,8 @@ public class HumanInput {
      * Helper to get drive power from the human input.
      */
     private final HumanDriveInput humanDriveInput;
-//    private final ModernGamePad operatorPad;
-//    private final ButtonTrigger placePanelTrigger;
-//    private final ButtonTrigger collectPanelTrigger;
-//    private final ButtonTrigger ejectCargo;
-//    private final ButtonTrigger collectCargoTrigger;
     private final Button climbLvl3Trigger;
     private final Button climbLvl2Trigger;
-//    private final ButtonTrigger elevatorLvl3Trigger;
-//    private final ButtonTrigger elevatorLvl2Trigger;
-//    private final ButtonTrigger elevatorHomeTrigger;
-//    private final ButtonTrigger elevatorShipAndHumanCargoTrigger;
-//    private final ButtonTrigger autoDockHumanStation;
-//    private final ButtonTrigger autoDockShip;
-//    private final ButtonTrigger autoDockRocket;
-//    private final ButtonTrigger cycleCameraMode;
     private final DualButtonTrigger abandonClimbTrigger;
 
 
@@ -52,38 +38,20 @@ public class HumanInput {
     /**
      * The primary input device
      */
-    private ModernGamePad driverPad;
+    private XBoxController driverPad;
 
     /**
      * Creates a new instance
      */
     public HumanInput() {
-        driverPad = new ModernGamePad(new Joystick(0));
-//        operatorPad = new ModernGamePad(new Joystick(1));
+        driverPad = new XBoxController(new Joystick(0));
 
         humanDriveInput = new TigerDriveInput();
-
-//        collectPanelTrigger = new ButtonTrigger(operatorPad.rt());
-//        placePanelTrigger = new ButtonTrigger(operatorPad.lb());
-
-//        collectCargoTrigger = new ButtonTrigger(operatorPad.rt());
-//        ejectCargo = new ButtonTrigger(operatorPad.lb());
-//
-//        elevatorHomeTrigger = new ButtonTrigger(operatorPad.a());
-//        elevatorLvl2Trigger = new ButtonTrigger(operatorPad.b());
-//        elevatorLvl3Trigger = new ButtonTrigger(operatorPad.y());
-//        elevatorShipAndHumanCargoTrigger = new ButtonTrigger(operatorPad.x());
-//
-//        cycleCameraMode = new ButtonTrigger(driverPad.y());
-//        autoDockRocket = new ButtonTrigger(driverPad.b());
-//        autoDockShip = new ButtonTrigger(driverPad.a());
-//        autoDockHumanStation = new ButtonTrigger(driverPad.x());
 
         climbLvl3Trigger = new LongPressTrigger(new ButtonTrigger(driverPad.start()), .25);
         climbLvl2Trigger = new LongPressTrigger(new ButtonTrigger(driverPad.select()), .25);
 
         abandonClimbTrigger = new DualButtonTrigger(driverPad.rb(), driverPad.lb());
-
     }
 
     /**
@@ -94,7 +62,7 @@ public class HumanInput {
      *
      * @return The GamePad which the human uses to control the robot.
      */
-    public GamePad getDriverPad() {
+    public XBoxController getDriverPad() {
         return driverPad;
     }
 
@@ -120,18 +88,6 @@ public class HumanInput {
         climbLvl3Trigger.whenPressed(climbLvl3);
         climbLvl2Trigger.whenPressed(climbLvl2);
         abandonClimbTrigger.whenPressed(abandonClimb);
-
-
-//        elevatorHomeTrigger.whenPressed(moveElevatorToHome);
-//        elevatorLvl2Trigger.whenPressed(moveElevatorToRocketLevel2);
-//        elevatorLvl3Trigger.whenPressed(moveElevatorToRocketLevel3);
-//        elevatorShipAndHumanCargoTrigger.whenPressed(moveElevatorToShipAndHumanCargo);
-//
-//        collectPanelTrigger.whenPressed(grabPanel);
-//        placePanelTrigger.whenPressed(placePanel);
-//
-//        collectCargoTrigger.whileHeld(intakeCargo);
-//        ejectCargo.whileHeld(outtakeCargo);
     }
 
     /**

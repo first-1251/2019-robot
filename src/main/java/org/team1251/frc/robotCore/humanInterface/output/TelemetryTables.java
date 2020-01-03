@@ -1,4 +1,4 @@
-package org.team1251.frc.robotCore.humanInterface.feedback;
+package org.team1251.frc.robotCore.humanInterface.output;
 
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;

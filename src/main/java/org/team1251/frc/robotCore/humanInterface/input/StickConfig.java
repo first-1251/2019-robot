@@ -1,34 +1,57 @@
 package org.team1251.frc.robotCore.humanInterface.input;
 
-/**
- * Provides configuration for a stick-type input element.
- */
-public interface StickConfig {
+public class StickConfig {
+
+    private final double deadZone;
+    private final boolean isHorizontalInverted;
+    private final boolean isVerticalInverted;
+
+    /**
+     *
+     * @param deadZone Positive input values up to and including this value are ignored. Negative input values down to
+     *                 and including the negation of this value are ignored. Useful for handling tolerances in the
+     *                 resting position of the stick.
+     * @param isHorizontalInverted Indicates whether or not the horizontal axis values should be inverted.
+     * @param isVerticalInverted Indicates whether or not the vertical axis values should be inverted.
+     */
+    public StickConfig(double deadZone, boolean isHorizontalInverted, boolean isVerticalInverted) {
+        this.deadZone = deadZone;
+        this.isHorizontalInverted = isHorizontalInverted;
+        this.isVerticalInverted = isVerticalInverted;
+    }
 
     /**
      * Provides a "dead zone" which applies outward from the center in all directions.
      *
-     * The standard use of the dead zone is to ignore all values up to and including the dead zone (the dead zone is
-     * negated when working with values between 0 and -1). Values outside of the dead-zone are then "stretched" to fill
-     * the full space between 0 and 1 (or -1).
+     * When working with a positive input range (i.e. 1 through 0), all values up to and including the dead zone
+     * should be ignored and values outside of the dead-zone should be "stretched" to fill the full space between
+     * 0 and 1.
      *
-     * Implementations must always provide a positive number.
+     * When working with a negative input range (i.e. -1 through 0), all values down to and including the negated
+     * dead-zone should be ignored and values outside of the dead-zone range should be "stretched" to fill the full
+     * space between -1 and 0.
      *
      * @return Values up to this number are to be ignored when reading the stick values.
      */
-    double getDeadZone();
+    public double getDeadZone() {
+        return deadZone;
+    }
 
     /**
      * Indicates whether or not the horizontal axis values should be inverted. (e.g. treat left as right and right as left)
      *
      * @return Returns `true` if the horizontal access is inverted or `false` if it is in its "natural" state.
      */
-    boolean isHorizontalInverted();
+    public boolean isHorizontalInverted() {
+        return isHorizontalInverted;
+    }
 
     /**
      * Indicates whether or not the horizontal axis values should be inverted. (e.g. treat left as right and right as left)
      *
      * @return Returns `true` if the horizontal access is inverted or `false` if it is in its "natural" state.
      */
-    boolean isVerticalInverted();
+    public boolean isVerticalInverted() {
+        return isVerticalInverted;
+    }
 }

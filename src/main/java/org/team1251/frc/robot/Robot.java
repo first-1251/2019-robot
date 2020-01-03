@@ -14,7 +14,7 @@ import org.team1251.frc.robot.parts.sensors.SensorFactory;
 import org.team1251.frc.robot.subsystems.Climber;
 import org.team1251.frc.robot.subsystems.DriveBase;
 import org.team1251.frc.robotCore.TigerTimedRobot;
-import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
+import org.team1251.frc.robotCore.humanInterface.input.gamepad.XBoxController;
 import org.team1251.frc.robotCore.humanInterface.input.triggers.ButtonTrigger;
 import org.team1251.frc.robotCore.parts.sensors.LimeLight;
 
@@ -63,7 +63,7 @@ public class Robot extends TigerTimedRobot {
     /**
      * The game pad used as input during test.
      */
-    private GamePad testerGamePad;
+    private XBoxController testerGamePad;
 
     /**
      * A command used to individually test motors.

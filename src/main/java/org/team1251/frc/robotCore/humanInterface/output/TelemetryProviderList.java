@@ -1,4 +1,4 @@
-package org.team1251.frc.robotCore.humanInterface.feedback;
+package org.team1251.frc.robotCore.humanInterface.output;
 
 import java.util.ArrayList;
 

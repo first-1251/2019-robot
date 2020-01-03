@@ -6,7 +6,7 @@ import org.team1251.frc.robotCore.humanInterface.input.AnalogButton;
 /**
  * A digital button from a GenericHID device that is pretending to be an analog button.
  */
-public class HIDFakedAnalogDigitalButton implements AnalogButton {
+public class HIDFakedAnalogButton implements AnalogButton {
 
     private final HIDButton digitalButton;
 
@@ -15,7 +15,7 @@ public class HIDFakedAnalogDigitalButton implements AnalogButton {
      * @param rawDevice The raw HID device that contains this button.
      * @param buttonID The raw button to inspect to determine the trigger's simple "on/off" state.
      */
-    public HIDFakedAnalogDigitalButton(GenericHID rawDevice, int buttonID) {
+    public HIDFakedAnalogButton(GenericHID rawDevice, int buttonID) {
         this.digitalButton = new HIDButton(rawDevice, buttonID);
     }
 

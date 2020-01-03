@@ -3,8 +3,8 @@ package org.team1251.frc.robotCore;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import org.team1251.frc.robotCore.humanInterface.feedback.TelemetryProviderList;
-import org.team1251.frc.robotCore.humanInterface.feedback.TelemetryTables;
+import org.team1251.frc.robotCore.humanInterface.output.TelemetryProviderList;
+import org.team1251.frc.robotCore.humanInterface.output.TelemetryTables;
 
 /**
  * This abstract base creates additional structure to the way the robot is initialized during various phases.
@@ -57,7 +57,7 @@ abstract public class TigerTimedRobot extends TimedRobot {
      * Network tables used for telemetry data. Robots generally do not need to access this directly -- instead they
      * should be implementing `ITelemetryProvider` and adding them to the `telemetrySender`.
      *
-     * @see org.team1251.frc.robotCore.humanInterface.feedback.ITelemetryProvider
+     * @see org.team1251.frc.robotCore.humanInterface.output.ITelemetryProvider
      * @see #telemetrySender
      */
     protected final TelemetryTables telemetryTables = new TelemetryTables();

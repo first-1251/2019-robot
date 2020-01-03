@@ -1,4 +1,4 @@
-package org.team1251.frc.robotCore.humanInterface.feedback;
+package org.team1251.frc.robotCore.humanInterface.output;
 
 /**
  * Attached to classes that are capable of sending telemetry data to Network Tables.

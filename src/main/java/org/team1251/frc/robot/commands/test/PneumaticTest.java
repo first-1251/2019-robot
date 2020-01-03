@@ -2,15 +2,15 @@ package org.team1251.frc.robot.commands.test;
 
 import edu.wpi.first.wpilibj.command.Command;
 import org.team1251.frc.robot.subsystems.Climber;
-import org.team1251.frc.robotCore.humanInterface.input.gamepad.GamePad;
+import org.team1251.frc.robotCore.humanInterface.input.gamepad.XBoxController;
 
 public class PneumaticTest extends Command {
 
 
-    private final GamePad testerGamePad;
+    private final XBoxController testerGamePad;
     private final Climber climber;
 
-    public PneumaticTest(GamePad testerGamePad, Climber climber) {
+    public PneumaticTest(XBoxController testerGamePad, Climber climber) {
 
         this.testerGamePad = testerGamePad;
         this.climber = climber;

@@ -1,26 +1,45 @@
 package org.team1251.frc.robotCore.humanInterface.input;
 
-public interface AnalogButtonConfig {
+public class AnalogButtonConfig {
+
+    private final double deadZone;
+    private final double pressedThreshold;
 
     /**
-     * Provides a "dead zone" to be ignored.
      *
-     * The standard use of the dead zone is to ignore all values up to and including the dead zone. Values outside of
-     * the dead-zone are then "stretched" to fill the full space between 0 and 1 (or -1).
-     *
-     * Implementations must always provide a positive number.
-     *
-     * @return Values up to this number are to be ignored when reading the button value.
+     * @param deadZone Maximum input value of the dead zone. The dead zone is a range of input values to ignore and
+     *                 is useful for handling tolerances in the buttons "neutral" position. This value is clamped to
+     *                 a range of 0-1.
+     * @param pressedThreshold The input value at which the button should be considered to be "pressed". Useful when
+     *                         reading the analog button as simply "pressed" or "not pressed". The deadZone does not
+     *                         influence this value. This value is clamped to a a range of 0-1.
      */
-    double getDeadZone();
+    public AnalogButtonConfig(double deadZone, double pressedThreshold) {
+        this.deadZone = Math.min(Math.max(0, deadZone), 1);
+        this.pressedThreshold = Math.min(Math.max(0, pressedThreshold), 1);
+    }
 
     /**
-     * The value between 0 and 1 at which the button is considered "pressed".
+     * Maximum input value of the dead zone.
      *
-     * The standard use of this value is to consider the button "pressed" once it has reached this value without
-     * consideration for the dead-zone.
+     * The dead zone is a range of input values to ignore. This is useful for handling tolerances in the button's
+     * "neutral" position.
      *
-     * @return The value at which the button should be considered "pressed"
+     * @return A positive number between 0 and 1. Input values at or below this value are ignored.
      */
-    double getPressedThreshold();
+    public double getDeadZone() {
+        return deadZone;
+    }
+
+    /**
+     * The input value at which the button should be considered to be "pressed".
+     *
+     * Useful when reading the analog button as simply "pressed" or "not pressed". The deadZone does not influence
+     * this value.
+     *
+     * @return The input value at which the button should be considered "pressed"
+     */
+    public double getPressedThreshold() {
+        return pressedThreshold;
+    }
 }

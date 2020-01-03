@@ -9,8 +9,8 @@ import org.team1251.frc.robot.parts.mechanisms.LiftLeg;
 import org.team1251.frc.robot.parts.mechanisms.MechanismFactory;
 import org.team1251.frc.robot.parts.sensors.GroundDetector;
 import org.team1251.frc.robot.parts.sensors.SensorFactory;
-import org.team1251.frc.robotCore.humanInterface.feedback.ITelemetryProvider;
-import org.team1251.frc.robotCore.humanInterface.feedback.TelemetryTables;
+import org.team1251.frc.robotCore.humanInterface.output.ITelemetryProvider;
+import org.team1251.frc.robotCore.humanInterface.output.TelemetryTables;
 import org.team1251.frc.robotCore.subsystems.TigerSubsystem;
 
 /**
